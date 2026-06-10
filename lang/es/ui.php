@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'home' => 'Inicio',
+    'vehicles' => 'Vehículos',
+    'blog' => 'Blog',
+    'about' => 'Nosotros',
+    'contact' => 'Contacto',
+    'get_started' => 'Comenzar',
+    'quick_links' => 'Enlaces Rápidos',
+    'browse_vehicles' => 'Ver Vehículos',
+    'blog_news' => 'Blog y Noticias',
+    'about_us' => 'Sobre Nosotros',
+    'terms' => 'Términos de Servicio',
+    'contact_info' => 'Información de Contacto',
+    'whatsapp_us' => 'WhatsApp',
+    'book_vehicle' => 'Reservar Vehículo',
+    'book_vehicle_text' => '¿Listo para la carretera? Reserve su vehículo perfecto hoy.',
+    'start_booking' => 'Iniciar Reserva',
+    'browse_fleet' => 'Ver Flota',
+    'footer_about' => 'Su socio de confianza para alquiler de autos de lujo y económicos en Miami. Vehículos premium, servicio excepcional.',
+    'privacy' => 'Política de Privacidad',
+    'rights' => 'Todos los derechos reservados.',
+    'back_to_top' => 'Volver arriba',
+    'language' => 'Idioma',
+];

@@ -1,0 +1,31 @@
+/* Dropify tweaks for MV admin (Tailwind coexistence) */
+.dropify-wrapper {
+    border-radius: 0.75rem;
+    border: 2px dashed #d1d5db;
+    background: #f9fafb;
+    font-family: 'Inter', sans-serif;
+}
+.dropify-wrapper:hover {
+    background: #f3f4f6;
+    border-color: #a5b4fc;
+}
+.dropify-wrapper .dropify-message p {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+.dropify-wrapper .dropify-preview .dropify-render img {
+    border-radius: 0.5rem;
+}
+.dropify-wrapper .dropify-clear {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.dropify-multiple-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #4f46e5;
+}

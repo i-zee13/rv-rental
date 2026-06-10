@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'home' => 'Home',
+    'vehicles' => 'Vehicles',
+    'blog' => 'Blog',
+    'about' => 'About',
+    'contact' => 'Contact',
+    'get_started' => 'Get Started',
+    'quick_links' => 'Quick Links',
+    'browse_vehicles' => 'Browse Vehicles',
+    'blog_news' => 'Blog & News',
+    'about_us' => 'About Us',
+    'terms' => 'Terms of Service',
+    'contact_info' => 'Contact Info',
+    'whatsapp_us' => 'WhatsApp Us',
+    'book_vehicle' => 'Book a Vehicle',
+    'book_vehicle_text' => 'Ready to hit the road? Book your perfect rental vehicle today.',
+    'start_booking' => 'Start Booking',
+    'browse_fleet' => 'Browse Fleet',
+    'footer_about' => 'Your trusted partner for luxury and affordable car rentals in Miami. Premium vehicles, exceptional service.',
+    'privacy' => 'Privacy Policy',
+    'rights' => 'All Rights Reserved.',
+    'back_to_top' => 'Back to top',
+    'language' => 'Language',
+];

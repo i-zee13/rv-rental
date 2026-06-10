@@ -1,0 +1,636 @@
+/* ============================================================
+   MV Miami Rental — layout fixes (icons, nav, responsive)
+   ============================================================ */
+
+/* Logo + brand text */
+.navbar-brand h1 img {
+    max-height: 50px;
+    width: auto;
+    margin-right: 10px;
+}
+.navbar-brand .brand-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Inner pages: solid navbar (homepage uses transparent overlay) */
+body:not(.page-home) .nav-bar {
+    position: relative !important;
+    top: 0 !important;
+    background: var(--bs-white) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+body:not(.page-home) .nav-bar .navbar-nav .nav-link {
+    color: var(--bs-dark) !important;
+}
+body:not(.page-home) .nav-bar .navbar-brand h1,
+body:not(.page-home) .nav-bar .navbar-brand .brand-text {
+    color: var(--bs-primary) !important;
+}
+
+/* Homepage: hero sits under fixed navbar */
+body.page-home .header-carousel {
+    margin-top: 0;
+}
+body.page-home .carousel-caption .row.hero-row {
+    margin-top: 100px;
+}
+
+/* Page headers — offset only when navbar is relative (inner pages) */
+body:not(.page-home) .page-header {
+    margin-top: 0;
+}
+
+/* Carousel responsive heights */
+.carousel .carousel-item,
+.carousel .carousel-item img {
+    min-height: 520px;
+    max-height: 700px;
+    object-fit: cover;
+}
+@media (max-width: 991px) {
+    body.page-home .carousel-caption .row.hero-row {
+        margin-top: 20px !important;
+    }
+    .carousel .carousel-item,
+    .carousel .carousel-item img {
+        min-height: auto;
+        height: auto !important;
+        max-height: none;
+    }
+    .carousel-item .carousel-caption {
+        position: relative;
+        background: var(--bs-secondary);
+        padding: 1.5rem 0;
+    }
+    .header-carousel .carousel-control-prev,
+    .header-carousel .carousel-control-next {
+        display: none;
+    }
+}
+
+/* Booking step progress — wrap on small screens */
+.booking-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    align-items: center;
+}
+.booking-steps .step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+.booking-steps .step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+@media (max-width: 575px) {
+    .booking-steps .step-label {
+        display: none;
+    }
+    .booking-steps .step-item.active .step-label {
+        display: inline;
+    }
+}
+
+/* Owl carousel nav arrows */
+.categories .owl-nav,
+.testimonial-carousel .owl-nav {
+    margin-top: 1rem;
+}
+.categories .owl-nav button,
+.testimonial-carousel .owl-nav button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50% !important;
+    background: var(--bs-primary) !important;
+    color: #fff !important;
+    margin: 0 5px;
+    border: none;
+}
+.categories .owl-nav button:hover {
+    background: var(--bs-secondary) !important;
+}
+
+/* Feature items stack on tablet */
+@media (max-width: 1199px) {
+    .feature .feature-item.justify-content-end {
+        flex-direction: row !important;
+    }
+    .feature .feature-item.justify-content-end .text-end {
+        text-align: left !important;
+        margin-right: 0 !important;
+        margin-left: 1rem;
+        order: 2;
+    }
+    .feature .feature-item.justify-content-end .feature-icon {
+        order: 1;
+    }
+}
+
+/* Vehicle cards — full width on mobile */
+@media (max-width: 767px) {
+    .categories-item-inner .categories-img {
+        height: 200px;
+    }
+    .categories-item-inner .categories-img img {
+        height: 200px;
+        object-fit: cover;
+    }
+    .nav-actions {
+        width: 100%;
+    }
+    .footer .footer-item {
+        margin-bottom: 1.5rem;
+    }
+}
+
+/* Banner CTA responsive */
+@media (max-width: 575px) {
+    .banner .banner-content {
+        padding: 1.5rem;
+    }
+    .banner .banner-btn {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    .banner .banner-btn .btn {
+        margin: 0 !important;
+        width: 100%;
+    }
+}
+
+/* Back to top */
+.back-to-top {
+    display: none;
+    position: fixed;
+    right: 20px;
+    bottom: 24px;
+    z-index: 1050;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0;
+    border-radius: 50%;
+    line-height: 48px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    border: none;
+}
+.back-to-top i {
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+@media (max-width: 575.98px) {
+    .back-to-top {
+        right: 14px;
+        bottom: 16px;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* Footer buttons & social icons */
+.footer .btn.btn-primary,
+.footer .btn.btn-primary i {
+    color: #fff !important;
+}
+.footer .btn.btn-primary:hover,
+.footer .btn.btn-primary:hover i {
+    color: #fff !important;
+}
+.footer .btn.btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: #fff !important;
+}
+.footer .btn.btn-secondary i {
+    color: #fff !important;
+}
+.footer .btn.btn-secondary:hover {
+    background: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: #fff !important;
+}
+.footer .btn-md-square {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.footer .btn-md-square i {
+    color: #fff !important;
+    font-size: 1rem;
+    line-height: 1;
+}
+.footer .footer-item a.text-active,
+.footer .footer-item a:active {
+    color: var(--bs-primary) !important;
+}
+
+/* Spinner hide faster once fonts load */
+#spinner.show {
+    opacity: 1;
+}
+
+/* Hero quick-quote form (2-step, minimal fields) */
+.hero-quote-card {
+    backdrop-filter: blur(4px);
+}
+.lead-form--hero .form-control,
+.lead-form--hero .form-select {
+    border: none;
+    padding: 0.75rem 1rem;
+}
+.lead-form--hero .input-group-text {
+    background: #fff;
+    border: none;
+    padding-left: 1rem;
+}
+.lead-form--hero .form-label {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+.lead-form--hero [data-toggle-dropoff] {
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+.lead-form--hero [data-toggle-dropoff]:hover {
+    color: #fff !important;
+}
+@media (max-width: 991.98px) {
+    body.page-home .carousel-caption .hero-quote-card {
+        margin-top: 0.5rem;
+    }
+    .lead-form--hero .btn.py-3 {
+        padding-top: 0.65rem !important;
+        padding-bottom: 0.65rem !important;
+    }
+}
+
+/* Checkout / payment page */
+.checkout-summary-card {
+    background: #192a30;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+.checkout-summary-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.checkout-vehicle-preview {
+    display: flex;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    align-items: center;
+}
+.checkout-vehicle-preview img {
+    width: 88px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+}
+.checkout-vehicle-name {
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+.checkout-summary-body {
+    padding: 0 1.5rem 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+.checkout-detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.45rem 0;
+    font-size: 0.9rem;
+}
+.checkout-detail-row .label {
+    color: rgba(255, 255, 255, 0.55);
+    flex-shrink: 0;
+}
+.checkout-detail-row .value {
+    text-align: right;
+    font-weight: 500;
+}
+.checkout-divider {
+    border-color: rgba(255, 255, 255, 0.1);
+    margin: 1rem 0;
+}
+.checkout-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.35rem 0;
+    font-size: 0.9rem;
+}
+.checkout-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+}
+.checkout-total-amount {
+    color: var(--bs-primary);
+    font-size: 1.5rem;
+}
+.checkout-trust-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    padding: 1rem 1.5rem 1.25rem;
+    background: rgba(0, 0, 0, 0.2);
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+.checkout-payment-card {
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+.checkout-option {
+    position: relative;
+    border: 1px solid #e9ecef;
+    border-radius: 0.875rem;
+    padding: 1.25rem;
+    margin-bottom: 0;
+}
+.checkout-option--featured {
+    border: 2px solid var(--bs-primary);
+    background: linear-gradient(180deg, #fff9f3 0%, #fff 100%);
+}
+.checkout-option-badge {
+    position: absolute;
+    top: -11px;
+    right: 1rem;
+    background: var(--bs-primary);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+}
+.checkout-option-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+.checkout-or {
+    text-align: center;
+    margin: 1.5rem 0;
+    position: relative;
+}
+.checkout-or::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: #dee2e6;
+}
+.checkout-or span {
+    position: relative;
+    background: #fff;
+    padding: 0 1rem;
+    color: #adb5bd;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.brand-pill {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    color: #6c757d;
+}
+.checkout-pay-btn {
+    box-shadow: 0 8px 20px rgba(230, 132, 4, 0.35);
+}
+@media (max-width: 991.98px) {
+    .checkout-summary-card {
+        margin-bottom: 0.5rem;
+    }
+    .sticky-lg-top {
+        position: static !important;
+    }
+}
+
+/* ============================================================
+   Global responsive polish
+   ============================================================ */
+html {
+    overflow-x: hidden;
+}
+body {
+    overflow-x: hidden;
+}
+
+/* Prevent iOS zoom on form focus */
+@media (max-width: 767.98px) {
+    input.form-control,
+    select.form-select,
+    textarea.form-control {
+        font-size: 16px !important;
+    }
+}
+
+/* Page headers — scale down on small screens */
+.page-header {
+    background-position: center center !important;
+    background-size: cover !important;
+}
+.page-header .container {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+}
+@media (max-width: 767.98px) {
+    .page-header h1.display-3,
+    .page-header h1.display-4 {
+        font-size: 1.75rem;
+        line-height: 1.25;
+        margin-bottom: 0.75rem !important;
+    }
+    .page-header.py-5 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+        margin-bottom: 2rem !important;
+    }
+}
+
+/* Navbar — mobile brand + collapsed menu */
+@media (max-width: 991.98px) {
+    .navbar-brand .brand-text {
+        font-size: 1rem;
+    }
+    .navbar-brand h1 img {
+        max-height: 40px;
+    }
+    body.page-home .nav-bar:not(.scrolled) .navbar-collapse {
+        background: rgba(25, 42, 48, 0.97) !important;
+        border-radius: 0.5rem;
+        margin-top: 0.5rem;
+    }
+    .nav-actions .form-select {
+        max-width: 100%;
+    }
+}
+
+/* Homepage hero — mobile headline + compact form */
+.hero-mobile-tagline h2 {
+    font-size: 1.35rem;
+    line-height: 1.3;
+}
+@media (max-width: 575.98px) {
+    body.page-home .carousel-caption .container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+    .hero-quote-card {
+        padding: 1rem !important;
+    }
+    .hero-quote-card h4 {
+        font-size: 1rem;
+    }
+    .lead-form--hero .row.g-2 > [class*="col-6"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* Vehicle detail page */
+.vehicle-detail-image {
+    height: 220px;
+}
+@media (min-width: 576px) {
+    .vehicle-detail-image {
+        height: 300px;
+    }
+}
+@media (min-width: 768px) {
+    .vehicle-detail-image {
+        height: 400px;
+    }
+}
+.vehicle-booking-sidebar {
+    top: 90px;
+}
+@media (max-width: 991.98px) {
+    .vehicle-booking-sidebar {
+        position: static !important;
+    }
+}
+
+/* Booking flow — action buttons stack on mobile */
+.booking-form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: space-between;
+    align-items: center;
+}
+@media (max-width: 575.98px) {
+    .booking-form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+    .booking-form-actions .btn {
+        width: 100%;
+        text-align: center;
+    }
+    .booking-steps {
+        justify-content: center;
+    }
+}
+
+/* Checkout — stack summary rows on narrow screens */
+@media (max-width: 575.98px) {
+    .checkout-payment-card {
+        padding: 1.25rem;
+    }
+    .checkout-detail-row {
+        flex-direction: column;
+        gap: 0.15rem;
+    }
+    .checkout-detail-row .value {
+        text-align: left;
+    }
+    .checkout-total-amount {
+        font-size: 1.25rem;
+    }
+    .checkout-secure-note {
+        text-align: center;
+    }
+}
+
+/* Contact + content pages */
+@media (max-width: 767.98px) {
+    .display-5 {
+        font-size: 1.65rem;
+    }
+    .display-6 {
+        font-size: 1.35rem;
+    }
+}
+
+/* Confirmation / thank-you CTAs */
+@media (max-width: 575.98px) {
+    .confirmation-actions {
+        flex-direction: column !important;
+    }
+    .confirmation-actions .btn {
+        width: 100%;
+    }
+}
+
+/* Search results — vehicle card buttons */
+@media (max-width: 575.98px) {
+    .categories-content .d-flex.gap-2 {
+        flex-direction: column;
+    }
+    .categories-content .d-flex.gap-2 .btn {
+        width: 100%;
+    }
+}
+
+/* Override template fixed carousel height on mobile */
+@media (max-width: 768px) {
+    .carousel .carousel-item,
+    .carousel .carousel-item img {
+        height: auto !important;
+        min-height: 0 !important;
+    }
+}
