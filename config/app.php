@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'clear_key' => env('APP_CLEAR_KEY'),
+
 ];

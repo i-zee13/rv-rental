@@ -8,6 +8,7 @@ use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\VehicleController as AdminVehicleController;
+use App\Http\Controllers\ClearController;
 
 // ============================================================
 // Public routes WITHOUT locale prefix (primary URLs)
@@ -40,6 +41,7 @@ Route::prefix('{locale}')
 // Locale switcher
 // ============================================================
 Route::get('/set-locale', [LocaleController::class, 'setLocale'])->name('set-locale');
+Route::get('/clear', ClearController::class)->name('clear');
 
 // ============================================================
 // Auth routes
