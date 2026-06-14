@@ -32,15 +32,27 @@ class SeoManager
         $description = $dynamic['description']
             ?? $pageMeta?->meta_description
             ?? $global?->meta_description
-            ?? '';
+            ?? config('seotools.meta.defaults.description', '');
 
         $keywords = $dynamic['keywords']
             ?? $pageMeta?->meta_keywords
             ?? $global?->meta_keywords;
 
-        $ogTitle = $pageMeta?->og_title ?? $dynamic['og_title'] ?? $title;
-        $ogDescription = $pageMeta?->og_description ?? $dynamic['og_description'] ?? $description;
-        $ogImage = $dynamic['og_image'] ?? $pageMeta?->og_image ?? $global?->og_image;
+        $ogTitle = $pageMeta?->og_title
+            ?? $dynamic['og_title']
+            ?? $global?->og_title
+            ?? $title;
+
+        $ogDescription = $pageMeta?->og_description
+            ?? $dynamic['og_description']
+            ?? $global?->og_description
+            ?? $description;
+
+        $defaultOgImage = config('seotools.default_og_image', '/theme/img/THOR-Vision-Vehicle-TVV-electric-rv-2.jpg');
+        $ogImage = $dynamic['og_image']
+            ?? $pageMeta?->og_image
+            ?? $global?->og_image
+            ?? $defaultOgImage;
         $ogType = $dynamic['og_type'] ?? $pageMeta?->og_type ?? 'website';
 
         $canonical = $dynamic['canonical']
@@ -67,9 +79,7 @@ class SeoManager
         OpenGraph::setUrl($canonical);
         OpenGraph::setSiteName($siteName);
         OpenGraph::setType($ogType);
-        if ($ogImage) {
-            OpenGraph::addImage($this->absoluteUrl($ogImage));
-        }
+        OpenGraph::addImage($this->absoluteUrl($ogImage));
 
         TwitterCard::setType($pageMeta?->twitter_card ?? $global?->twitter_card ?? 'summary_large_image');
         TwitterCard::setTitle($ogTitle);
@@ -77,9 +87,7 @@ class SeoManager
         if ($twitterSite = $pageMeta?->twitter_site ?? $global?->twitter_site) {
             TwitterCard::setSite($twitterSite);
         }
-        if ($ogImage) {
-            TwitterCard::setImage($this->absoluteUrl($ogImage));
-        }
+        TwitterCard::setImage($this->absoluteUrl($ogImage));
 
         $this->applyJsonLd($pageMeta, $global, $dynamic, $title, $description, $canonical, $ogImage);
 

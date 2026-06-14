@@ -29,6 +29,9 @@ class SeoMetaTest extends TestCase
         $response->assertSee('Test Miami Rentals Home', false);
         $response->assertSee('Test description for homepage SEO.', false);
         $response->assertSee('og:title', false);
+        $response->assertSee('og:description', false);
+        $response->assertSee('og:image', false);
+        $response->assertSee('twitter:card', false);
         $response->assertSee('application/ld+json', false);
     }
 

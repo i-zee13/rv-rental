@@ -12,9 +12,9 @@ return [
         'defaults'       => [
             'title'        => env('APP_NAME', 'MV Miami Rental'),
             'titleBefore'  => false,
-            'description'  => 'Luxury and exotic car rentals in Miami.',
+            'description'  => 'Luxury and exotic car rentals in Miami. Rent premium vehicles, RVs, and SUVs — fully insured fleet, best prices.',
             'separator'    => ' | ',
-            'keywords'     => [],
+            'keywords'     => ['Miami car rental', 'luxury car rental Miami', 'exotic cars', 'rent a car Miami'],
             'canonical'    => 'current',
             'robots'       => 'index,follow',
         ],
@@ -38,13 +38,18 @@ return [
          */
         'defaults' => [
             'title'       => env('APP_NAME', 'MV Miami Rental'),
-            'description' => 'Luxury and exotic car rentals in Miami.',
+            'description' => 'Luxury and exotic car rentals in Miami. Rent premium vehicles, RVs, and SUVs — fully insured fleet, best prices.',
             'url'         => null,
             'type'        => 'website',
             'site_name'   => env('APP_NAME', 'MV Miami Rental'),
             'images'      => [],
         ],
     ],
+
+    /*
+    | Default share image when no page-specific OG image is set (must be a public URL path).
+    */
+    'default_og_image' => env('SEO_DEFAULT_OG_IMAGE', '/theme/img/THOR-Vision-Vehicle-TVV-electric-rv-2.jpg'),
     'twitter' => [
         /*
          * The default values to be used by the twitter cards generator.
@@ -60,7 +65,7 @@ return [
          */
         'defaults' => [
             'title'       => env('APP_NAME', 'MV Miami Rental'),
-            'description' => 'Luxury and exotic car rentals in Miami.',
+            'description' => 'Luxury and exotic car rentals in Miami. Rent premium vehicles, RVs, and SUVs — fully insured fleet, best prices.',
             'url'         => 'current',
             'type'        => 'WebPage',
             'images'      => [],
