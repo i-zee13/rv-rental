@@ -17,7 +17,7 @@ return new class extends Migration {
 
         Schema::create('vehicle_category_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehicle_category_id')->constrained('vehicle_categories')->cascadeOnDelete();
+            $table->unsignedBigInteger('vehicle_category_id');
             $table->string('locale')->index();
             $table->string('name');
             $table->text('description')->nullable();

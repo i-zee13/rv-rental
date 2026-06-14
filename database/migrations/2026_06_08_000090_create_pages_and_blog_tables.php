@@ -17,7 +17,7 @@ return new class extends Migration {
 
         Schema::create('page_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('page_id')->constrained('pages')->cascadeOnDelete();
+            $table->unsignedBigInteger('page_id');
             $table->string('locale')->index();
             $table->string('title')->nullable();
             $table->text('content')->nullable();
@@ -30,14 +30,14 @@ return new class extends Migration {
             $table->id();
             $table->string('slug')->unique();
             $table->string('status')->default('draft');
-            $table->foreignId('author_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->unsignedBigInteger('author_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
 
         Schema::create('blog_post_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('blog_post_id')->constrained('blog_posts')->cascadeOnDelete();
+            $table->unsignedBigInteger('blog_post_id');
             $table->string('locale')->index();
             $table->string('title')->nullable();
             $table->text('excerpt')->nullable();

@@ -19,7 +19,7 @@ return new class extends Migration {
 
         Schema::create('addon_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('addon_id')->constrained('addons')->cascadeOnDelete();
+            $table->unsignedBigInteger('addon_id');
             $table->string('locale')->index();
             $table->string('title')->nullable();
             $table->text('description')->nullable();

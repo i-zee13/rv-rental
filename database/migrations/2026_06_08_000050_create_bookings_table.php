@@ -10,11 +10,11 @@ return new class extends Migration {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->string('reference')->unique();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('customer_id')->nullable()->constrained('customers')->nullOnDelete();
-            $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->nullOnDelete();
-            $table->foreignId('pickup_location_id')->nullable()->constrained('locations')->nullOnDelete();
-            $table->foreignId('return_location_id')->nullable()->constrained('locations')->nullOnDelete();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('vehicle_id')->nullable();
+            $table->unsignedBigInteger('pickup_location_id')->nullable();
+            $table->unsignedBigInteger('return_location_id')->nullable();
             $table->dateTime('pickup_at');
             $table->dateTime('return_at');
             $table->json('extras')->nullable();
@@ -30,8 +30,8 @@ return new class extends Migration {
 
         Schema::create('booking_addons', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->constrained('bookings')->cascadeOnDelete();
-            $table->foreignId('addon_id')->constrained('addons')->cascadeOnDelete();
+            $table->unsignedBigInteger('booking_id');
+            $table->unsignedBigInteger('addon_id');
             $table->integer('quantity')->default(1);
             $table->decimal('price',10,2)->default(0);
             $table->timestamps();

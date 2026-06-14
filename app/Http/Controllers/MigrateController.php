@@ -15,7 +15,8 @@ class MigrateController extends Controller
             $options['--seed'] = true;
         }
 
-        $command = $request->boolean('refresh') ? 'migrate:refresh' : 'migrate';
+        // migrate:fresh drops all tables safely (MySQL FK-safe); refresh rolls back one-by-one and often fails on FKs
+        $command = $request->boolean('refresh') ? 'migrate:fresh' : 'migrate';
         $exitCode = Artisan::call($command, $options);
 
         return response()->json([

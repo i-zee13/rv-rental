@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('reference')->unique();
             $table->string('status')->default('new'); // new, lead, contacted, qualified, converted, spam, closed
             $table->string('source')->default('website'); // homepage, contact, vehicle, banner
-            $table->foreignId('vehicle_id')->nullable()->constrained()->nullOnDelete();
+            $table->unsignedBigInteger('vehicle_id')->nullable();
             $table->string('vehicle_name')->nullable();
             $table->string('first_name');
             $table->string('last_name')->nullable();

@@ -33,7 +33,7 @@ return new class extends Migration {
 
         Schema::create('audit_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('action');
             $table->text('detail')->nullable();
             $table->timestamps();
@@ -47,7 +47,7 @@ return new class extends Migration {
 
         Schema::create('email_template_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('email_template_id')->constrained('email_templates')->cascadeOnDelete();
+            $table->unsignedBigInteger('email_template_id');
             $table->string('locale')->index();
             $table->string('subject')->nullable();
             $table->text('body')->nullable();

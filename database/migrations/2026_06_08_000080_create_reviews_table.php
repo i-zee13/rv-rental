@@ -9,9 +9,9 @@ return new class extends Migration {
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('booking_id')->nullable()->constrained('bookings')->nullOnDelete();
-            $table->foreignId('vehicle_id')->nullable()->constrained('vehicles')->nullOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->unsignedBigInteger('booking_id')->nullable();
+            $table->unsignedBigInteger('vehicle_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->tinyInteger('rating')->default(5);
             $table->text('comment')->nullable();
             $table->timestamps();

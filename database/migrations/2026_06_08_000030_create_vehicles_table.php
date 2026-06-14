@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('vehicles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('category_id')->nullable()->constrained('vehicle_categories')->nullOnDelete();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->string('make')->nullable();
             $table->string('model')->nullable();
             $table->string('year')->nullable();
@@ -38,7 +38,7 @@ return new class extends Migration {
 
         Schema::create('vehicle_translations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehicle_id')->constrained('vehicles')->cascadeOnDelete();
+            $table->unsignedBigInteger('vehicle_id');
             $table->string('locale')->index();
             $table->string('title')->nullable();
             $table->text('description')->nullable();
@@ -48,7 +48,7 @@ return new class extends Migration {
 
         Schema::create('vehicle_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehicle_id')->constrained('vehicles')->cascadeOnDelete();
+            $table->unsignedBigInteger('vehicle_id');
             $table->string('path');
             $table->string('alt_text')->nullable();
             $table->integer('sort_order')->default(0);
