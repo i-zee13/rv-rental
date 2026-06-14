@@ -45,6 +45,7 @@ Route::get('/set-locale', [LocaleController::class, 'setLocale'])->name('set-loc
 Route::get('/clear', ClearController::class)->name('clear');
 Route::get('/migrate', MigrateController::class)->name('migrate');
 
+
 // ============================================================
 // Auth routes
 // ============================================================
