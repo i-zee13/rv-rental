@@ -42,8 +42,24 @@ Route::prefix('{locale}')
 // Locale switcher
 // ============================================================
 Route::get('/set-locale', [LocaleController::class, 'setLocale'])->name('set-locale');
-Route::get('/clear', ClearController::class)->name('clear');
-Route::get('/migrate', MigrateController::class)->name('migrate');
+Route::get('/clear', ClearController::class)
+    ->name('clear')
+    ->withoutMiddleware([
+        \Illuminate\Cookie\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\SetLocaleMiddleware::class,
+    ]);
+Route::get('/migrate', MigrateController::class)
+    ->name('migrate')
+    ->withoutMiddleware([
+        \Illuminate\Cookie\Middleware\EncryptCookies::class,
+        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+        \Illuminate\Session\Middleware\StartSession::class,
+        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+        \App\Http\Middleware\SetLocaleMiddleware::class,
+    ]);
 
 
 // ============================================================
