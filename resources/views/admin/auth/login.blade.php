@@ -1,22 +1,90 @@
-@extends('admin.layout')
+@extends('admin.auth.layout')
+
+@section('title', 'Admin Login')
 
 @section('content')
-<div class="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">
-    <h2 class="text-xl font-semibold mb-4">Admin Login</h2>
-    @if($errors->any())
-        <div class="text-red-600 text-sm mb-3">{{ $errors->first() }}</div>
+    @php
+        $logoPath = public_path('theme/img/logo.png');
+    @endphp
+
+    @if(file_exists($logoPath))
+        <img src="{{ asset('theme/img/logo.png') }}" alt="{{ config('app.name') }}" class="auth-logo">
+    @else
+        <div class="auth-brand-fallback">MV</div>
     @endif
-    <form method="POST" action="{{ route('admin.login.post') }}">
+
+    <p class="auth-subtitle">Sign in to the admin panel</p>
+
+    @if($errors->any())
+        <div class="alert alert-danger py-2 mb-4" role="alert">
+            {{ $errors->first() }}
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('admin.login.post') }}" novalidate>
         @csrf
-        <label class="block text-sm">Email
-            <input type="email" name="email" value="{{ old('email') }}" class="w-full border rounded px-2 py-2 mt-1">
-        </label>
-        <label class="block text-sm mt-3">Password
-            <input type="password" name="password" class="w-full border rounded px-2 py-2 mt-1">
-        </label>
-        <div class="mt-4">
-            <button class="w-full bg-yellow-500 text-black px-4 py-2 rounded">Login</button>
+
+        <div class="mb-4">
+            <label for="email" class="form-label auth-label">Email Address</label>
+            <input
+                id="email"
+                type="email"
+                name="email"
+                value="{{ old('email') }}"
+                class="form-control auth-input @error('email') is-invalid @enderror"
+                placeholder="you@example.com"
+                required
+                autocomplete="email"
+                autofocus
+            >
+            @error('email')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <div class="mb-4">
+            <label for="password" class="form-label auth-label">Password</label>
+            <div class="input-group">
+                <input
+                    id="password"
+                    type="password"
+                    name="password"
+                    class="form-control auth-input @error('password') is-invalid @enderror"
+                    placeholder="Enter your password"
+                    required
+                    autocomplete="current-password"
+                >
+                <button type="button" class="input-group-text auth-toggle" id="togglePassword" aria-label="Show password">
+                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                </button>
+            </div>
+            @error('password')
+                <div class="invalid-feedback d-block">{{ $message }}</div>
+            @enderror
+        </div>
+
+        <button type="submit" class="btn btn-auth btn-lg w-100 mb-3">
+            Sign In
+        </button>
+
+        <div class="text-center">
+            <a href="{{ route('home') }}" class="auth-back-link">
+                <i class="bi bi-arrow-left me-1"></i> Back to website
+            </a>
         </div>
     </form>
-</div>
 @endsection
+
+@push('scripts')
+<script>
+    document.getElementById('togglePassword')?.addEventListener('click', function () {
+        const input = document.getElementById('password');
+        const icon = document.getElementById('togglePasswordIcon');
+        const isHidden = input.type === 'password';
+
+        input.type = isHidden ? 'text' : 'password';
+        icon.classList.toggle('bi-eye', !isHidden);
+        icon.classList.toggle('bi-eye-slash', isHidden);
+    });
+</script>
+@endpush
