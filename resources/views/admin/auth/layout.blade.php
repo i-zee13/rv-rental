@@ -190,7 +190,7 @@
             <div class="col-lg-7 col-xl-8 d-none d-lg-block">
                 <div class="auth-cover" style="background-image: url('{{ asset('theme/img/carousel-1.jpg') }}');">
                     <div class="auth-cover-content">
-                        <h2>{{ config('app.name', 'MV Miami Rental') }}</h2>
+                        <h2 style="color: #ffc107 !important;">{{ config('app.name', 'MV Miami Rental') }}</h2>
                         <p class="mb-0 opacity-75">Manage vehicles, bookings, leads, and content from one place.</p>
                     </div>
                 </div>
