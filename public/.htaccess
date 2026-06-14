@@ -5,6 +5,15 @@
 
     RewriteEngine On
 
+    # Force HTTPS (production domain)
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} ^(www\.)?wwcsys\.worldwidecommerce\.us$ [NC]
+    RewriteRule ^ https://wwcsys.worldwidecommerce.us%{REQUEST_URI} [L,R=301]
+
+    RewriteCond %{HTTPS} on
+    RewriteCond %{HTTP_HOST} ^www\.wwcsys\.worldwidecommerce\.us$ [NC]
+    RewriteRule ^ https://wwcsys.worldwidecommerce.us%{REQUEST_URI} [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
