@@ -15,11 +15,12 @@ class MigrateController extends Controller
             $options['--seed'] = true;
         }
 
-        $exitCode = Artisan::call('migrate', $options);
+        $command = $request->boolean('refresh') ? 'migrate:refresh' : 'migrate';
+        $exitCode = Artisan::call($command, $options);
 
         return response()->json([
             'status' => $exitCode === 0 ? 'ok' : 'error',
-            'command' => 'migrate',
+            'command' => $command,
             'exit_code' => $exitCode,
             'output' => trim(Artisan::output()),
         ], $exitCode === 0 ? 200 : 500);
