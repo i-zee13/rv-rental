@@ -9,10 +9,6 @@ class MigrateController extends Controller
 {
     public function __invoke(Request $request)
     {
-        if (! app()->environment('local') && $request->query('key') !== config('app.clear_key')) {
-            abort(404);
-        }
-
         $options = ['--force' => true];
 
         if ($request->boolean('seed')) {
