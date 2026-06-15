@@ -31,7 +31,7 @@
     <!-- Theme Style -->
     <link rel="stylesheet" href="{{ asset('theme/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('theme/css/theme-fixes.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/mv-glass.css') }}?v=2">
+    <link rel="stylesheet" href="{{ asset('css/mv-glass.css') }}?v=3">
 
     @include('partials.booking-chat-assets')
     @stack('styles')
