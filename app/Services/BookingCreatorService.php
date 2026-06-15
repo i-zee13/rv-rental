@@ -102,7 +102,11 @@ class BookingCreatorService
                 ]);
             }
 
-            return $booking->fresh(['vehicle', 'addons']);
+            $booking = $booking->fresh(['vehicle', 'addons']);
+
+            app(BookingEmailService::class)->sendConfirmationEmails($booking);
+
+            return $booking;
         });
     }
 }

@@ -40,7 +40,7 @@ return [
     'confirm_prompt' => 'Should I confirm this booking?',
     'confirm_booking' => 'Confirm booking',
     'change_details' => 'Change details',
-    'booking_success' => 'Your booking is confirmed! Reference: :ref. Estimated total: :currency :total. Our team will contact you shortly.',
+    'booking_success' => 'Your booking is confirmed! Reference: :ref. Estimated total: :currency :total. A confirmation email has been sent to your inbox. Our team will contact you shortly.',
     'vehicle_unavailable' => 'Sorry, that vehicle is not available for those dates. Please choose new dates.',
     'dates_available' => 'Good news — this vehicle is available for your selected dates.',
     'dates_unavailable_early' => ':vehicle is not available from :start to :end. Please pick different dates or choose another vehicle.',

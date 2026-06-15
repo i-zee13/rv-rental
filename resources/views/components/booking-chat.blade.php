@@ -41,7 +41,6 @@
 
     <button type="button" class="chat-fab" aria-label="{{ __('chat.open_chat') }}" aria-expanded="false">
         <i class="bi bi-chat-dots-fill chat-fab-icon-open"></i>
-        <i class="bi bi-x-lg chat-fab-icon-close"></i>
         <span class="chat-fab-label">{{ __('chat.open_chat') }}</span>
     </button>
 </div>

@@ -8,6 +8,7 @@ use App\Models\Addon;
 use App\Models\Booking;
 use App\Models\Customer;
 use App\Services\BookingCreatorService;
+use App\Services\BookingEmailService;
 use App\Services\VehicleAvailabilityService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -209,6 +210,8 @@ class BookingController extends Controller
                 'quantity' => 1,
             ]);
         }
+
+        app(BookingEmailService::class)->sendConfirmationEmails($booking);
 
         $request->session()->forget('booking');
 

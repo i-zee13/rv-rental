@@ -40,7 +40,7 @@ return [
     'confirm_prompt' => '¿Confirmo esta reserva?',
     'confirm_booking' => 'Confirmar reserva',
     'change_details' => 'Cambiar datos',
-    'booking_success' => '¡Reserva confirmada! Referencia: :ref. Total estimado: :currency :total. Nuestro equipo te contactará pronto.',
+    'booking_success' => '¡Reserva confirmada! Referencia: :ref. Total estimado: :currency :total. Te enviamos un correo de confirmación. Nuestro equipo te contactará pronto.',
     'vehicle_unavailable' => 'Ese vehículo no está disponible en esas fechas. Elige otras fechas.',
     'dates_available' => 'Buenas noticias — el vehículo está disponible en las fechas seleccionadas.',
     'dates_unavailable_early' => ':vehicle no está disponible del :start al :end. Elige otras fechas u otro vehículo.',

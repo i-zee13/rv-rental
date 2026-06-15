@@ -22,4 +22,6 @@ return [
 
     'currency' => env('CURRENCY', 'USD'),
 
+    'admin_email' => env('BOOKING_ADMIN_EMAIL', env('LEADS_ADMIN_EMAIL', env('MAIL_FROM_ADDRESS'))),
+
 ];
