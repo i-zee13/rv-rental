@@ -12,9 +12,15 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         $now = Carbon::now();
+        $email = 'admin@example.com';
+
+        if (DB::table('users')->where('email', $email)->exists()) {
+            return;
+        }
+
         DB::table('users')->insert([
             'name' => 'Super Admin',
-            'email' => 'admin@example.com',
+            'email' => $email,
             'password' => Hash::make('password'),
             'role' => 'super_admin',
             'preferred_language' => 'en',
