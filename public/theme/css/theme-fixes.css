@@ -247,10 +247,7 @@ body:not(.page-home) .page-header {
     opacity: 1;
 }
 
-/* Hero quick-quote form (2-step, minimal fields) */
-.hero-quote-card {
-    backdrop-filter: blur(4px);
-}
+/* Hero quick-quote form (2-step, minimal fields) — glass handled in mv-glass.css */
 .lead-form--hero .form-control,
 .lead-form--hero .form-select {
     border: none;

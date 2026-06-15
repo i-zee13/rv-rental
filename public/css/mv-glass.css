@@ -1,0 +1,141 @@
+/* MV Miami Rental — frosted glass UI (inspired by premium agency sites) */
+
+:root {
+    --mv-brand: #e68404;
+    --mv-dark: #192a30;
+    --mv-glass-bg: rgba(255, 255, 255, 0.72);
+    --mv-glass-dark: rgba(25, 42, 48, 0.78);
+    --mv-glass-border: rgba(255, 255, 255, 0.22);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+    .mv-fade-up {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+/* Topbar — subtle frosted strip */
+.topbar {
+    background: rgba(25, 42, 48, 0.88) !important;
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Homepage navbar — glass over hero */
+body.page-home .nav-bar {
+    background: rgba(25, 42, 48, 0.18) !important;
+    backdrop-filter: blur(14px) saturate(150%);
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease, padding 0.3s ease;
+}
+
+body.page-home .nav-bar.scrolled {
+    background: var(--mv-glass-dark) !important;
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    box-shadow: 0 10px 40px rgba(15, 23, 42, 0.18);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Inner pages — light frosted navbar */
+body:not(.page-home) .nav-bar {
+    position: sticky !important;
+    top: 0 !important;
+    background: var(--mv-glass-bg) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+    z-index: 1030;
+}
+
+body:not(.page-home) .nav-bar .navbar-nav .nav-link {
+    color: var(--mv-dark) !important;
+}
+
+body:not(.page-home) .nav-bar .navbar-nav .nav-link:hover,
+body:not(.page-home) .nav-bar .navbar-nav .nav-link.active {
+    color: var(--mv-brand) !important;
+}
+
+/* Footer — soft gradient + glass copyright bar */
+.footer {
+    position: relative;
+    background: linear-gradient(165deg, #192a30 0%, #1a3340 55%, #192a30 100%) !important;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 20% 0%, rgba(230, 132, 4, 0.08), transparent 60%);
+    pointer-events: none;
+}
+
+.copyright {
+    background: rgba(0, 0, 0, 0.22) !important;
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Back to top — glass pill */
+.back-to-top {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Subtle entrance for sections (works alongside WOW.js) */
+.mv-fade-up {
+    animation: mvFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes mvFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Page header overlay polish */
+.page-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(25, 42, 48, 0.15) 0%, rgba(25, 42, 48, 0.45) 100%);
+    pointer-events: none;
+}
+
+.page-header {
+    position: relative;
+}
+
+.page-header .container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hero carousel forms — frosted glass (both slides) */
+body.page-home .carousel-caption .hero-quote-card {
+    background: rgba(25, 42, 48, 0.35) !important;
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}

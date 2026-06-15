@@ -21,6 +21,7 @@ class SeoMeta extends Model
         'home' => 'Homepage',
         'search' => 'Fleet / Search',
         'contact' => 'Contact',
+        'about' => 'About Us',
         'blog.index' => 'Blog Listing',
         'blog.show' => 'Blog Post (fallback)',
         'pages.show' => 'CMS Page (fallback)',

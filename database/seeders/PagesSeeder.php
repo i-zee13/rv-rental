@@ -12,7 +12,7 @@ class PagesSeeder extends Seeder
     {
         $now = Carbon::now();
 
-        $aboutId = DB::table('pages')->insertGetId(['slug'=>'about','is_published'=>true,'created_at'=>$now,'updated_at'=>$now]);
+        $aboutId = DB::table('pages')->insertGetId(['slug'=>'about-us','is_published'=>true,'created_at'=>$now,'updated_at'=>$now]);
         DB::table('page_translations')->insert([
             ['page_id'=>$aboutId,'locale'=>'en','title'=>'About Us','content'=>'<p>About our rental platform demo.</p>','meta_title'=>'About Us - MV Rental','meta_description'=>'About MV Rental'],
             ['page_id'=>$aboutId,'locale'=>'es','title'=>'Sobre Nosotros','content'=>'<p>Acerca de nuestra plataforma de alquiler (demo).</p>','meta_title'=>'Sobre Nosotros - MV Rental','meta_description'=>'Sobre MV Rental'],

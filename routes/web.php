@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\VehicleController as AdminVehicleController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/vehicles/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
+Route::get('/about-us', [\App\Http\Controllers\PagePublicController::class, 'about'])->name('about');
+Route::redirect('/pages/about', '/about-us', 301);
 Route::get('/pages/{slug}', [\App\Http\Controllers\PagePublicController::class, 'show'])->name('pages.show');
 Route::get('/blog', [\App\Http\Controllers\BlogPublicController::class, 'index'])->name('blog.index');
 Route::get('/blog/{slug}', [\App\Http\Controllers\BlogPublicController::class, 'show'])->name('blog.show');
@@ -31,6 +33,10 @@ Route::prefix('{locale}')
         Route::get('/', [HomeController::class, 'index']);
         Route::get('/search', [SearchController::class, 'index']);
         Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
+        Route::get('/about-us', [\App\Http\Controllers\PagePublicController::class, 'about']);
+        Route::get('/pages/about', function (string $locale) {
+            return redirect("/{$locale}/about-us", 301);
+        });
         Route::get('/pages/{slug}', [\App\Http\Controllers\PagePublicController::class, 'show']);
         Route::get('/blog', [\App\Http\Controllers\BlogPublicController::class, 'index']);
         Route::get('/blog/{slug}', [\App\Http\Controllers\BlogPublicController::class, 'show']);

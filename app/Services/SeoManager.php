@@ -170,6 +170,27 @@ class SeoManager
             ];
         }
 
+        if ($routeName === 'about') {
+            $page = Page::with('translations')->whereIn('slug', ['about-us', 'about'])->where('is_published', true)->first();
+            if (!$page) {
+                return $empty;
+            }
+
+            $t = $page->translations->firstWhere('locale', $locale) ?? $page->translations->first();
+
+            return [
+                'title' => $t->meta_title ?? $t->title,
+                'description' => $t->meta_description ?? Str::limit(strip_tags($t->content ?? ''), 160),
+                'keywords' => null,
+                'og_title' => $t->meta_title ?? $t->title,
+                'og_description' => $t->meta_description ?? Str::limit(strip_tags($t->content ?? ''), 160),
+                'og_image' => null,
+                'og_type' => 'website',
+                'canonical' => route('about'),
+                'schema' => null,
+            ];
+        }
+
         if ($routeName === 'pages.show') {
             $slug = $request->route('slug');
             $page = Page::with('translations')->where('slug', $slug)->where('is_published', true)->first();

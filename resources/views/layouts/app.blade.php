@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.svg') }}">
+    <meta name="theme-color" content="#192a30">
+
     {{-- SEO: artesaos/seotools (managed from Admin → SEO) --}}
     {!! \Artesaos\SEOTools\Facades\SEOTools::generate() !!}
 
@@ -27,6 +31,7 @@
     <!-- Theme Style -->
     <link rel="stylesheet" href="{{ asset('theme/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('theme/css/theme-fixes.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/mv-glass.css') }}?v=2">
 
     @include('partials.booking-chat-assets')
     @stack('styles')
@@ -81,7 +86,7 @@
                         <a href="{{ route('home') }}" class="nav-item nav-link {{ request()->routeIs('home') ? 'active' : '' }}">{{ __('ui.home') }}</a>
                         <a href="{{ route('search') }}" class="nav-item nav-link {{ request()->routeIs('search') ? 'active' : '' }}">{{ __('ui.vehicles') }}</a>
                         <a href="{{ route('blog.index') }}" class="nav-item nav-link {{ request()->routeIs('blog.*') ? 'active' : '' }}">{{ __('ui.blog') }}</a>
-                        <a href="{{ route('pages.show', ['slug'=>'about']) }}" class="nav-item nav-link {{ request()->is('pages/about') ? 'active' : '' }}">{{ __('ui.about') }}</a>
+                        <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">{{ __('ui.about') }}</a>
                         <a href="{{ route('contact') }}" class="nav-item nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">{{ __('ui.contact') }}</a>
                     </div>
                     <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2 nav-actions mt-3 mt-lg-0">
@@ -141,7 +146,7 @@
                         <a href="{{ route('home') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.home') }}</a>
                         <a href="{{ route('search') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.browse_vehicles') }}</a>
                         <a href="{{ route('blog.index') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.blog_news') }}</a>
-                        <a href="{{ route('pages.show', ['slug'=>'about']) }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.about_us') }}</a>
+                        <a href="{{ route('about') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.about_us') }}</a>
                         <a href="{{ route('contact') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.contact') }}</a>
                         <a href="{{ route('pages.show', ['slug'=>'terms']) }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.terms') }}</a>
                     </div>

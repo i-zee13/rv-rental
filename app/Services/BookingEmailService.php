@@ -17,10 +17,22 @@ class BookingEmailService
         try {
             if ($booking->email) {
                 Mail::to($booking->email)->send(new BookingCustomerConfirmationMail($booking));
+                Log::info('Booking customer email sent', [
+                    'booking_id' => $booking->id,
+                    'reference' => $booking->reference,
+                    'to' => $booking->email,
+                ]);
+            } else {
+                Log::warning('Booking customer email skipped — no email on booking', [
+                    'booking_id' => $booking->id,
+                    'reference' => $booking->reference,
+                ]);
             }
         } catch (\Throwable $e) {
             Log::error('Booking customer email failed', [
                 'booking_id' => $booking->id,
+                'reference' => $booking->reference,
+                'to' => $booking->email,
                 'error' => $e->getMessage(),
             ]);
         }
@@ -29,10 +41,17 @@ class BookingEmailService
             $adminEmail = config('booking.admin_email');
             if ($adminEmail) {
                 Mail::to($adminEmail)->send(new BookingAdminNotificationMail($booking));
+                Log::info('Booking admin email sent', [
+                    'booking_id' => $booking->id,
+                    'reference' => $booking->reference,
+                    'to' => $adminEmail,
+                ]);
             }
         } catch (\Throwable $e) {
             Log::error('Booking admin email failed', [
                 'booking_id' => $booking->id,
+                'reference' => $booking->reference,
+                'to' => config('booking.admin_email'),
                 'error' => $e->getMessage(),
             ]);
         }

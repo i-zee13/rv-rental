@@ -55,7 +55,7 @@ class BookingCreatorService
 
     public function create(array $data, ?string $notes = null): Booking
     {
-        return DB::transaction(function () use ($data, $notes) {
+        $booking = DB::transaction(function () use ($data, $notes) {
             $quote = $this->buildQuote($data);
             $vehicle = $quote['vehicle'];
             $start = $quote['start'];
@@ -102,11 +102,11 @@ class BookingCreatorService
                 ]);
             }
 
-            $booking = $booking->fresh(['vehicle', 'addons']);
-
-            app(BookingEmailService::class)->sendConfirmationEmails($booking);
-
-            return $booking;
+            return $booking->fresh(['vehicle', 'addons']);
         });
+
+        app(BookingEmailService::class)->sendConfirmationEmails($booking);
+
+        return $booking;
     }
 }

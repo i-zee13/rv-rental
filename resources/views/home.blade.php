@@ -29,7 +29,7 @@
                                     <h2 class="text-white fw-bold mb-2">Get 15% off your rental!</h2>
                                     <p class="text-white-50 small mb-0">Luxury RVs, Cars &amp; more — Miami</p>
                                 </div>
-                                <div class="bg-secondary rounded p-4 hero-quote-card">
+                                <div class="rounded p-4 hero-quote-card">
                                     <h4 class="text-white mb-1">RESERVE YOUR RIDE</h4>
                                     <p class="text-white-50 small mb-3">Pick dates → we’ll confirm availability in minutes</p>
                                     <x-lead-form
@@ -66,7 +66,7 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 fadeInRight animated">
-                                <div class="bg-secondary rounded p-4">
+                                <div class="rounded p-4 hero-quote-card">
                                     <h4 class="text-white mb-3">QUICK SEARCH</h4>
                                     <form action="{{ route('search') }}" method="GET">
                                         <div class="row g-3">
@@ -233,7 +233,7 @@
                             </div>
                         </div>
                         <div class="col-lg-5 d-flex align-items-center">
-                            <a href="{{ route('pages.show', ['slug'=>'about']) }}" class="btn btn-primary rounded py-3 px-5">More About Us</a>
+                            <a href="{{ route('about') }}" class="btn btn-primary rounded py-3 px-5">More About Us</a>
                         </div>
                         <div class="col-lg-7">
                             <div class="d-flex align-items-center">

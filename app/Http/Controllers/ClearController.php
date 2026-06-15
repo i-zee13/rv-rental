@@ -9,17 +9,16 @@ class ClearController extends Controller
 {
     public function __invoke(Request $request)
     {
-        if (! app()->environment('local') && $request->query('key') !== config('app.clear_key')) {
-            abort(404);
-        }
+        $commands = ['optimize:clear'];
 
-        $commands = [
-            'optimize:clear',
-            'config:cache',
-            'route:cache',
-            'view:cache',
-            'event:cache',
-        ];
+        if (! $request->boolean('no_cache')) {
+            $commands = array_merge($commands, [
+                'config:cache',
+                'route:cache',
+                'view:cache',
+                'event:cache',
+            ]);
+        }
 
         $results = [];
 
