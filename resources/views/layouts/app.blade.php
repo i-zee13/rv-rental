@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="{{ asset('theme/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('theme/css/theme-fixes.css') }}">
 
+    @include('partials.booking-chat-assets')
     @stack('styles')
 </head>
 <body class="@yield('body_class')">
@@ -199,5 +200,8 @@
     <script src="{{ asset('theme/js/main.js') }}"></script>
 
     @stack('scripts')
+
+    @include('components.booking-chat')
+    @include('partials.booking-chat-scripts')
 </body>
 </html>

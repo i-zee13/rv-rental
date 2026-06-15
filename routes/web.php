@@ -42,6 +42,16 @@ Route::prefix('{locale}')
 Route::get('/set-locale', [LocaleController::class, 'setLocale'])->name('set-locale');
 
 // ============================================================
+// AI booking chat assistant
+// ============================================================
+Route::prefix('booking-chat')->name('booking-chat.')->group(function () {
+    Route::post('/start', [\App\Http\Controllers\BookingChatController::class, 'start'])->name('start');
+    Route::post('/message', [\App\Http\Controllers\BookingChatController::class, 'message'])->name('message');
+    Route::post('/action', [\App\Http\Controllers\BookingChatController::class, 'action'])->name('action');
+    Route::post('/reset', [\App\Http\Controllers\BookingChatController::class, 'reset'])->name('reset');
+});
+
+// ============================================================
 // Auth routes
 // ============================================================
 Route::get('admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');

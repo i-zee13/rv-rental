@@ -7,6 +7,8 @@ use App\Models\Vehicle;
 use App\Models\Addon;
 use App\Models\Booking;
 use App\Models\Customer;
+use App\Services\BookingCreatorService;
+use App\Services\VehicleAvailabilityService;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
@@ -161,18 +163,8 @@ class BookingController extends Controller
         $start = $quote['start'];
         $end = $quote['end'];
 
-        $overlap = Booking::where('vehicle_id', $vehicle->id)
-            ->where('status', '!=', 'cancelled')
-            ->where(function ($q) use ($start, $end) {
-                $q->whereBetween('start_date', [$start->toDateString(), $end->toDateString()])
-                    ->orWhereBetween('end_date', [$start->toDateString(), $end->toDateString()])
-                    ->orWhere(function ($q2) use ($start, $end) {
-                        $q2->where('start_date', '<=', $start->toDateString())
-                            ->where('end_date', '>=', $end->toDateString());
-                    });
-            })->exists();
-
-        if ($overlap) {
+        $availability = app(VehicleAvailabilityService::class);
+        if ($availability->isEnabled() && !$availability->isVehicleBookable($vehicle->id, $start->toDateString(), $end->toDateString())) {
             return redirect()->route('booking.step1')->with('error', 'Selected vehicle is not available for those dates.');
         }
 
