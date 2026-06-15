@@ -191,6 +191,10 @@ body.page-home .header-carousel .carousel-item > img {
 
 /* Tablet */
 @media (min-width: 576px) and (max-width: 991.98px) {
+    body.page-home .header-carousel {
+        padding-top: 62px;
+    }
+
     body.page-home .header-carousel .carousel-item {
         min-height: 440px !important;
         max-height: 500px !important;
@@ -219,20 +223,43 @@ body.page-home .header-carousel .carousel-item > img {
     body.page-home .carousel-caption .container {
         padding-bottom: 2.5rem !important;
     }
+
+    body.page-home .lead-form--hero .form-control,
+    body.page-home .lead-form--hero .form-select,
+    body.page-home .hero-search-form .form-control,
+    body.page-home .hero-search-form .form-select {
+        font-size: 0.875rem;
+        padding: 0.55rem 0.7rem;
+    }
+
+    body.page-home .hero-form-cta {
+        font-size: 0.9rem;
+        padding: 0.55rem 1rem !important;
+    }
+
+    body.page-home .hero-card-title {
+        font-size: 0.95rem;
+    }
 }
 
 /* Mobile — compact slider, form + text over image */
 @media (max-width: 575.98px) {
+    /* Clear fixed navbar so form is not cut off */
+    body.page-home .header-carousel {
+        padding-top: 62px;
+    }
+
     body.page-home .header-carousel .carousel-item {
-        min-height: 420px !important;
-        max-height: 480px !important;
+        min-height: calc(100svh - 62px) !important;
+        min-height: calc(100dvh - 62px) !important;
+        max-height: none !important;
     }
 
     body.page-home .header-carousel .hero-slide-media,
     body.page-home .header-carousel .hero-slide-media img {
         position: absolute;
         inset: 0;
-        object-position: center 40%;
+        object-position: center 35%;
     }
 
     body.page-home .carousel-item .carousel-caption {
@@ -242,52 +269,124 @@ body.page-home .header-carousel .carousel-item > img {
         width: 100% !important;
         height: 100% !important;
         margin: 0;
-        padding: 0 !important;
+        padding: 0.5rem 0 0 !important;
         display: flex !important;
-        align-items: flex-end !important;
+        align-items: center !important;
+        justify-content: center !important;
         background: linear-gradient(
             180deg,
-            rgba(25, 42, 48, 0.05) 0%,
-            rgba(25, 42, 48, 0.45) 42%,
-            rgba(25, 42, 48, 0.92) 100%
+            rgba(25, 42, 48, 0.15) 0%,
+            rgba(25, 42, 48, 0.55) 38%,
+            rgba(25, 42, 48, 0.94) 100%
         ) !important;
     }
 
     body.page-home .carousel-caption .container {
-        padding-left: 0.75rem !important;
-        padding-right: 0.75rem !important;
-        padding-bottom: 2.5rem !important;
+        padding-left: 0.65rem !important;
+        padding-right: 0.65rem !important;
+        padding-bottom: 2rem !important;
         padding-top: 0 !important;
         width: 100%;
+        max-height: calc(100% - 0.5rem);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body.page-home .carousel-caption .row.hero-row {
+        --bs-gutter-y: 0.5rem;
     }
 
     body.page-home .carousel-caption .hero-quote-card {
-        padding: 0.85rem !important;
+        padding: 0.75rem !important;
+        border-radius: 0.85rem !important;
+    }
+
+    body.page-home .hero-mobile-tagline {
+        margin-bottom: 0.35rem !important;
     }
 
     body.page-home .hero-mobile-tagline h2 {
-        font-size: 1.15rem;
+        font-size: 0.95rem !important;
+        margin-bottom: 0.15rem !important;
     }
 
-    body.page-home .carousel-caption .hero-quote-card h4 {
-        font-size: 0.95rem;
+    body.page-home .hero-mobile-tagline p {
+        font-size: 0.72rem !important;
+    }
+
+    body.page-home .hero-card-title {
+        font-size: 0.82rem !important;
+        letter-spacing: 0.04em;
+        margin-bottom: 0.25rem !important;
+    }
+
+    body.page-home .hero-card-sub {
+        font-size: 0.68rem !important;
+        line-height: 1.35;
         margin-bottom: 0.5rem !important;
+    }
+
+    /* Hero forms — compact fields (all 3 slides) */
+    body.page-home .lead-form--hero .form-control,
+    body.page-home .lead-form--hero .form-select,
+    body.page-home .hero-search-form .form-control,
+    body.page-home .hero-search-form .form-select {
+        font-size: 0.8125rem !important;
+        padding: 0.45rem 0.6rem !important;
+        min-height: 2.35rem;
+        border-radius: 0.5rem;
+    }
+
+    body.page-home .lead-form--hero .input-group-text {
+        padding: 0.45rem 0.55rem !important;
+    }
+
+    body.page-home .lead-form--hero .input-group-text i {
+        font-size: 0.8rem;
+    }
+
+    body.page-home .lead-form--hero .form-label {
+        font-size: 0.62rem !important;
+        margin-bottom: 0.15rem !important;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+    }
+
+    body.page-home .lead-form--hero .mb-2,
+    body.page-home .lead-form--hero .mb-3 {
+        /* spacing handled by g-2 row / compact padding */
+    }
+
+    body.page-home .lead-form--hero [data-toggle-dropoff] {
+        font-size: 0.68rem !important;
+        line-height: 1.2;
+    }
+
+    body.page-home .hero-form-cta {
+        font-size: 0.8125rem !important;
+        padding: 0.5rem 0.85rem !important;
+        margin-top: 0.15rem;
+    }
+
+    body.page-home .hero-search-form .row {
+        --bs-gutter-y: 0.5rem;
     }
 
     body.page-home .carousel .carousel-indicators {
         left: 50%;
         right: auto;
         top: auto;
-        bottom: 0.5rem;
+        bottom: 0.45rem;
         margin: 0;
         transform: translateX(-50%);
         flex-direction: row;
         gap: 0.35rem;
+        z-index: 2;
     }
 
     body.page-home .carousel-indicators [data-bs-target] {
-        width: 8px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
         border-width: 0;
         margin: 0;
         border-radius: 50%;

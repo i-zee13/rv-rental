@@ -20,8 +20,8 @@
     <div class="lead-form-steps" data-lead-form>
         <div class="lead-form-step" data-step="1">
             @if($vehicles->isNotEmpty())
-            <div class="mb-3">
-                <select class="form-select form-select-lg" name="vehicle_id">
+            <div class="mb-2 mb-md-3">
+                <select class="form-select" name="vehicle_id">
                     <option value="">Select your vehicle</option>
                     @foreach($vehicles as $v)
                         @php $vt = $v->translations->firstWhere('locale', app()->getLocale()) ?? $v->translations->first(); @endphp
@@ -33,24 +33,24 @@
             </div>
             @endif
 
-            <div class="input-group mb-3">
+            <div class="input-group mb-2 mb-md-3">
                 <span class="input-group-text"><i class="fas fa-map-marker-alt text-primary"></i></span>
                 <input class="form-control" type="text" name="pickup_location" value="{{ old('pickup_location', 'Miami, FL') }}"
                     placeholder="Pick-up location" required>
             </div>
 
-            <div class="lead-form-dropoff mb-3" data-dropoff-wrap style="display:none;">
+            <div class="lead-form-dropoff mb-2 mb-md-3" data-dropoff-wrap style="display:none;">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-map-marker-alt text-primary"></i></span>
                     <input class="form-control" type="text" name="dropoff_location" value="{{ old('dropoff_location') }}"
                         placeholder="Drop-off location" data-dropoff-input>
                 </div>
             </div>
-            <button type="button" class="btn btn-link btn-sm text-white-50 p-0 mb-3" data-toggle-dropoff>
+            <button type="button" class="btn btn-link btn-sm text-white-50 p-0 mb-2 mb-md-3" data-toggle-dropoff>
                 + Different drop-off location?
             </button>
 
-            <div class="row g-2 mb-3">
+            <div class="row g-2 mb-2 mb-md-3">
                 <div class="col-6">
                     <label class="form-label text-white-50 small mb-1">Pick-up</label>
                     <input class="form-control" type="date" name="pickup_date" value="{{ old('pickup_date') }}"
@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <button type="button" class="btn btn-primary w-100 py-3 fw-bold rounded-pill" data-next-step>
+            <button type="button" class="btn btn-primary w-100 py-2 py-md-3 fw-bold rounded-pill hero-form-cta" data-next-step>
                 Check Availability <i class="fas fa-arrow-right ms-2"></i>
             </button>
         </div>
@@ -90,7 +90,7 @@
                 <button type="button" class="btn btn-outline-light rounded-pill px-4" data-prev-step>
                     <i class="fas fa-arrow-left"></i>
                 </button>
-                <button type="submit" class="btn btn-light flex-grow-1 py-3 fw-bold rounded-pill">
+                <button type="submit" class="btn btn-light flex-grow-1 py-2 py-md-3 fw-bold rounded-pill hero-form-cta">
                     Book Now
                 </button>
             </div>

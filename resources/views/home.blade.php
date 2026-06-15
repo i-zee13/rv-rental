@@ -33,9 +33,9 @@
                                     <h2 class="text-white fw-bold mb-2">Get 15% off your rental!</h2>
                                     <p class="text-white-50 small mb-0">Luxury RVs, Cars &amp; more — Miami</p>
                                 </div>
-                                <div class="rounded p-4 hero-quote-card">
-                                    <h4 class="text-white mb-1">RESERVE YOUR RIDE</h4>
-                                    <p class="text-white-50 small mb-3">Pick dates → we’ll confirm availability in minutes</p>
+                                <div class="rounded p-3 p-md-4 hero-quote-card">
+                                    <h4 class="text-white mb-1 hero-card-title">RESERVE YOUR RIDE</h4>
+                                    <p class="text-white-50 small mb-2 mb-md-3 hero-card-sub">Pick dates → we’ll confirm availability in minutes</p>
                                     <x-lead-form
                                         variant="hero"
                                         source="homepage"
@@ -74,10 +74,10 @@
                                 </div>
                             </div>
                             <div class="col-lg-6 fadeInRight animated">
-                                <div class="rounded p-4 hero-quote-card">
-                                    <h4 class="text-white mb-3">QUICK SEARCH</h4>
-                                    <form action="{{ route('search') }}" method="GET">
-                                        <div class="row g-3">
+                                <div class="rounded p-3 p-md-4 hero-quote-card">
+                                    <h4 class="text-white mb-2 hero-card-title">QUICK SEARCH</h4>
+                                    <form action="{{ route('search') }}" method="GET" class="hero-search-form">
+                                        <div class="row g-2">
                                             <div class="col-12">
                                                 <input class="form-control" name="q" placeholder="Search make, model...">
                                             </div>
@@ -91,7 +91,7 @@
                                                 </select>
                                             </div>
                                             <div class="col-12">
-                                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                                <button type="submit" class="btn btn-primary w-100 py-2 hero-form-cta">
                                                     <i class="fas fa-search me-2"></i>Search Vehicles
                                                 </button>
                                             </div>
