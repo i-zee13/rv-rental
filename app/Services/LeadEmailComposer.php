@@ -13,6 +13,10 @@ class LeadEmailComposer
 {
     public function customerSubject(Lead $lead): string
     {
+        if ($lead->property_name) {
+            return "Your rental inquiry — {$lead->property_name} | {$lead->reference}";
+        }
+
         $vehicle = $lead->vehicle_name ?: 'your rental';
 
         return "Your Miami rental request — {$vehicle} | {$lead->reference}";
@@ -30,7 +34,9 @@ class LeadEmailComposer
             "Thank you for reaching out to " . config('app.name') . ". We've received your reservation inquiry and our team is already reviewing the details.",
         ];
 
-        if ($lead->vehicle_name) {
+        if ($lead->property_name) {
+            $paragraphs[] = "You inquired about <strong>{$lead->property_name}</strong>. Our rentals team will share availability, pricing details, and next steps.";
+        } elseif ($lead->vehicle_name) {
             $paragraphs[] = "You expressed interest in the <strong>{$lead->vehicle_name}</strong>. Great choice — it's one of our most popular options in Miami.";
         }
 
@@ -55,8 +61,8 @@ class LeadEmailComposer
         return [
             'greeting' => $intro,
             'paragraphs' => $paragraphs,
-            'cta_text' => 'Browse Our Fleet',
-            'cta_url' => route('search'),
+            'cta_text' => $lead->property_name ? 'Browse Rentals' : 'Browse Our Fleet',
+            'cta_url' => $lead->property_name ? route('properties.search') : route('search'),
         ];
     }
 
@@ -73,6 +79,7 @@ class LeadEmailComposer
             'email' => $lead->email,
             'phone' => $lead->phone ?: '—',
             'vehicle' => $lead->vehicle_name ?: '—',
+            'property' => $lead->property_name ?: '—',
             'dates' => $lead->pickup_date
                 ? $lead->pickup_date->format('Y-m-d') . ' → ' . ($lead->dropoff_date?->format('Y-m-d') ?? '—')
                 : '—',

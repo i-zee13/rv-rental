@@ -47,6 +47,9 @@
             <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Rental Details</h2>
             <dl class="space-y-3 text-sm">
                 <div><dt class="text-gray-400">Vehicle</dt><dd class="font-medium">{{ $lead->vehicle_name ?: '—' }}</dd></div>
+                @if($lead->property_name)
+                <div><dt class="text-gray-400">Property</dt><dd class="font-medium">{{ $lead->property_name }}</dd></div>
+                @endif
                 <div><dt class="text-gray-400">Pick-up</dt><dd>{{ $lead->pickup_location ?: '—' }} {{ $lead->pickup_time ? "({$lead->pickup_time})" : '' }}</dd></div>
                 <div><dt class="text-gray-400">Drop-off</dt><dd>{{ $lead->dropoff_location ?: '—' }} {{ $lead->dropoff_time ? "({$lead->dropoff_time})" : '' }}</dd></div>
                 <div><dt class="text-gray-400">Dates</dt>

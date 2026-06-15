@@ -1,3 +1,3 @@
 @if(config('ai.enabled'))
-<link rel="stylesheet" href="{{ asset('css/booking-chat.css') }}?v=7">
+<link rel="stylesheet" href="{{ asset('css/booking-chat.css') }}?v=8">
 @endif

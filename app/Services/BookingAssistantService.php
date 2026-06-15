@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Addon;
 use App\Models\AiLog;
 use App\Models\Booking;
+use App\Models\Lead;
+use App\Models\Property;
 use App\Models\Vehicle;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -19,18 +21,18 @@ class BookingAssistantService
         protected OpenAiClient $openAi,
         protected VehicleAvailabilityService $availability,
         protected BookingCreatorService $bookingCreator,
+        protected LeadNotificationService $leadNotifier,
     ) {}
 
     public function start(): array
     {
         $state = $this->freshState();
-        $state['step'] = 'vehicle';
+        $state['step'] = 'choose_type';
         $this->saveState($state);
 
         return $this->respond($state, [
             $this->assistantMessage(__('chat.welcome')),
-            $this->assistantMessage(__('chat.pick_vehicle')),
-        ], $this->vehicleOptions());
+        ], $this->typeOptions());
     }
 
     public function reset(): array
@@ -56,7 +58,9 @@ class BookingAssistantService
         }
 
         if ($state['step'] === 'done') {
-            return $this->respond($state, [$this->assistantMessage(__('chat.already_booked', ['ref' => $state['data']['booking_reference']]))]);
+            $ref = $state['data']['booking_reference'] ?? $state['data']['lead_reference'] ?? '';
+
+            return $this->respond($state, [$this->assistantMessage(__('chat.already_booked', ['ref' => $ref]))]);
         }
 
         if ($state['step'] === 'confirm') {
@@ -64,6 +68,15 @@ class BookingAssistantService
                 return $this->finalizeBooking($state);
             }
             if ($this->matchesAny($message, ['no', 'change', 'edit', 'cambiar'])) {
+                if (($state['data']['booking_type'] ?? '') === 'property') {
+                    $state['step'] = 'property';
+                    $this->saveState($state);
+
+                    return $this->respond($state, [
+                        $this->assistantMessage(__('chat.restart_pick_property')),
+                    ], $this->propertyOptions());
+                }
+
                 $state['step'] = 'vehicle';
                 $this->saveState($state);
 
@@ -91,7 +104,10 @@ class BookingAssistantService
         $state = $this->getState();
 
         return match ($action) {
+            'choose_vehicle' => $this->beginVehicleFlow($state),
+            'choose_property' => $this->beginPropertyFlow($state),
             'select_vehicle' => $this->selectVehicle($state, (int) ($payload['vehicle_id'] ?? 0)),
+            'select_property' => $this->selectProperty($state, (int) ($payload['property_id'] ?? 0)),
             'toggle_addon' => $this->toggleAddon($state, (int) ($payload['addon_id'] ?? 0)),
             'skip_addons' => $this->skipAddons($state),
             'skip_phone' => $this->skipPhone($state),
@@ -104,6 +120,8 @@ class BookingAssistantService
     protected function processStep(array $state, string $message): array
     {
         return match ($state['step']) {
+            'choose_type' => $this->stepChooseType($state, $message),
+            'property' => $this->stepProperty($state, $message),
             'vehicle' => $this->stepVehicle($state, $message),
             'start_date' => $this->stepStartDate($state, $message),
             'end_date' => $this->stepEndDate($state, $message),
@@ -117,6 +135,85 @@ class BookingAssistantService
             'confirm' => $this->stepConfirm($state, $message),
             default => $this->start(),
         };
+    }
+
+    protected function stepChooseType(array $state, string $message): array
+    {
+        if ($this->matchesPropertyIntent($message)) {
+            return $this->beginPropertyFlow($state);
+        }
+
+        if ($vehicleId = $this->parseVehicleId($message)) {
+            $state['data']['booking_type'] = 'vehicle';
+            $this->saveState($state);
+
+            return $this->selectVehicle($state, $vehicleId);
+        }
+
+        if ($this->matchesVehicleIntent($message)) {
+            return $this->beginVehicleFlow($state);
+        }
+
+        return $this->respond($state, [
+            $this->assistantMessage(__('chat.choose_type_prompt')),
+        ], $this->typeOptions());
+    }
+
+    protected function beginVehicleFlow(array $state): array
+    {
+        $state['data']['booking_type'] = 'vehicle';
+        $state['step'] = 'vehicle';
+        $this->saveState($state);
+
+        return $this->respond($state, [
+            $this->assistantMessage(__('chat.pick_vehicle')),
+        ], $this->vehicleOptions());
+    }
+
+    protected function beginPropertyFlow(array $state): array
+    {
+        $state['data']['booking_type'] = 'property';
+        $state['step'] = 'property';
+        $this->saveState($state);
+
+        return $this->respond($state, [
+            $this->assistantMessage(__('chat.pick_property')),
+        ], $this->propertyOptions());
+    }
+
+    protected function stepProperty(array $state, string $message): array
+    {
+        $propertyId = $this->parsePropertyId($message);
+        if (!$propertyId) {
+            return $this->respond($state, [
+                $this->assistantMessage(__('chat.property_not_found')),
+            ], $this->propertyOptions());
+        }
+
+        return $this->selectProperty($state, $propertyId);
+    }
+
+    protected function selectProperty(array $state, int $propertyId): array
+    {
+        $property = $this->availableProperties()->firstWhere('id', $propertyId);
+        if (!$property) {
+            return $this->respond($state, [
+                $this->assistantMessage(__('chat.property_not_found')),
+            ], $this->propertyOptions());
+        }
+
+        $state['data']['booking_type'] = 'property';
+        $state['data']['property_id'] = $property->id;
+        $state['step'] = 'first_name';
+        $this->saveState($state);
+
+        return $this->respond($state, [
+            $this->assistantMessage(__('chat.property_selected', [
+                'name' => $this->propertyLabel($property),
+                'price' => $property->displayPrice(),
+            ])),
+            $this->assistantMessage(__('chat.ask_first_name')),
+        ]);
     }
 
     protected function stepVehicle(array $state, string $message): array
@@ -141,6 +238,7 @@ class BookingAssistantService
         }
 
         $state['data']['vehicle_id'] = $vehicle->id;
+        $state['data']['booking_type'] = 'vehicle';
         $state['step'] = 'start_date';
         $this->saveState($state);
 
@@ -352,6 +450,15 @@ class BookingAssistantService
 
     protected function cancelConfirm(array $state): array
     {
+        if (($state['data']['booking_type'] ?? '') === 'property') {
+            $state['step'] = 'property';
+            $this->saveState($state);
+
+            return $this->respond($state, [
+                $this->assistantMessage(__('chat.restart_pick_property')),
+            ], $this->propertyOptions());
+        }
+
         $state['step'] = 'vehicle';
         $this->saveState($state);
 
@@ -362,6 +469,10 @@ class BookingAssistantService
 
     protected function showConfirmation(array $state): array
     {
+        if (($state['data']['booking_type'] ?? '') === 'property') {
+            return $this->showPropertyConfirmation($state);
+        }
+
         if ($failed = $this->validateDatesOrFail($state)) {
             return $failed;
         }
@@ -391,8 +502,34 @@ class BookingAssistantService
         ]);
     }
 
+    protected function showPropertyConfirmation(array $state): array
+    {
+        $property = Property::with('translations')->find($state['data']['property_id'] ?? 0);
+        $name = $property ? $this->propertyLabel($property) : __('chat.property_fallback');
+
+        $summary = __('chat.property_confirm_summary', [
+            'property' => $name,
+            'price' => $property?->displayPrice() ?? '—',
+            'name' => trim(($state['data']['first_name'] ?? '') . ' ' . ($state['data']['last_name'] ?? '')),
+            'email' => $state['data']['email'] ?? '',
+            'phone' => $state['data']['phone'] ?? '—',
+        ]);
+
+        return $this->respond($state, [
+            $this->assistantMessage($summary),
+            $this->assistantMessage(__('chat.confirm_prompt')),
+        ], [], [
+            ['id' => 'confirm', 'label' => __('chat.confirm_inquiry'), 'action' => 'confirm'],
+            ['id' => 'cancel_confirm', 'label' => __('chat.change_details'), 'action' => 'cancel_confirm'],
+        ]);
+    }
+
     protected function finalizeBooking(array $state): array
     {
+        if (($state['data']['booking_type'] ?? 'vehicle') === 'property') {
+            return $this->finalizePropertyInquiry($state);
+        }
+
         try {
             $data = $state['data'];
             $required = ['vehicle_id', 'start_date', 'end_date', 'pickup_location', 'dropoff_location', 'first_name', 'last_name', 'email'];
@@ -444,6 +581,63 @@ class BookingAssistantService
 
             return $this->respond($state, [
                 $this->assistantMessage($message),
+            ]);
+        }
+    }
+
+    protected function finalizePropertyInquiry(array $state): array
+    {
+        try {
+            $data = $state['data'];
+            $required = ['property_id', 'first_name', 'last_name', 'email'];
+            foreach ($required as $field) {
+                if (empty($data[$field])) {
+                    return $this->respond($state, [$this->assistantMessage(__('chat.missing_fields'))]);
+                }
+            }
+
+            $property = Property::with('translations')->find($data['property_id']);
+            if (!$property) {
+                return $this->respond($state, [
+                    $this->assistantMessage(__('chat.property_not_found')),
+                ], $this->propertyOptions());
+            }
+
+            $lead = Lead::create([
+                'reference' => Lead::generateReference(),
+                'status' => 'new',
+                'source' => 'ai_chat',
+                'property_id' => $property->id,
+                'property_name' => $this->propertyLabel($property),
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'message' => 'Property rental inquiry submitted via AI chat assistant.',
+                'locale' => app()->getLocale(),
+            ]);
+
+            $this->leadNotifier->sendEmails($lead);
+
+            $state['step'] = 'done';
+            $state['data']['lead_reference'] = $lead->reference;
+            $state['data']['lead_id'] = $lead->id;
+            $this->saveState($state);
+
+            return $this->respond($state, [
+                $this->assistantMessage(__('chat.property_inquiry_success', [
+                    'ref' => $lead->reference,
+                    'property' => $this->propertyLabel($property),
+                ])),
+            ], [], [], true, $lead->reference);
+        } catch (\Throwable $e) {
+            Log::error('AI property inquiry failed', [
+                'error' => $e->getMessage(),
+                'data' => $state['data'] ?? [],
+            ]);
+
+            return $this->respond($state, [
+                $this->assistantMessage(__('chat.booking_failed')),
             ]);
         }
     }
@@ -508,20 +702,33 @@ class BookingAssistantService
         ])->values()->all();
 
         $locale = app()->getLocale();
+        $bookingType = $state['data']['booking_type'] ?? 'unknown';
+        $properties = $this->availableProperties()->map(fn (Property $p) => [
+            'id' => $p->id,
+            'name' => $this->propertyLabel($p),
+            'price' => $p->displayPrice(),
+        ])->values()->all();
 
         $system = <<<PROMPT
-You are a friendly booking assistant for a Miami vehicle rental website.
+You are a friendly booking assistant for a Miami vehicle and property rental website.
 Current step: {$state['step']}
+Booking type: {$bookingType}
 Collected data JSON: {$this->json($state['data'])}
 Available vehicles: {$this->json($fleet)}
+Available properties: {$this->json($properties)}
 Available add-ons: {$this->json($addons)}
 Locale: {$locale}
+
+If the user asks about homes, apartments, houses, or condos, guide them toward property_id and booking_type "property".
+If the user asks about cars or vehicles, use booking_type "vehicle" and vehicle_id.
 
 Return JSON only:
 {
   "reply": "short helpful reply to the user",
   "extracted": {
+    "booking_type": null,
     "vehicle_id": null,
+    "property_id": null,
     "start_date": "YYYY-MM-DD or null",
     "end_date": "YYYY-MM-DD or null",
     "pickup_location": null,
@@ -563,6 +770,17 @@ PROMPT;
             }
             if ($key === 'addon_ids' && is_array($value)) {
                 $state['data']['addon_ids'] = array_values(array_unique(array_map('intval', $value)));
+
+                continue;
+            }
+            if ($key === 'booking_type' && in_array($value, ['vehicle', 'property'], true)) {
+                $state['data']['booking_type'] = $value;
+
+                continue;
+            }
+            if ($key === 'property_id' && (int) $value > 0) {
+                $state['data']['property_id'] = (int) $value;
+                $state['data']['booking_type'] = 'property';
 
                 continue;
             }
@@ -656,6 +874,8 @@ PROMPT;
         }
 
         $prompt = match ($state['step']) {
+            'choose_type' => __('chat.choose_type_prompt'),
+            'property' => __('chat.pick_property'),
             'vehicle' => __('chat.pick_vehicle'),
             'start_date' => __('chat.ask_start_date'),
             'end_date' => __('chat.ask_end_date'),
@@ -674,6 +894,8 @@ PROMPT;
         }
 
         $options = match ($state['step']) {
+            'choose_type' => $this->typeOptions(),
+            'property' => $this->propertyOptions(),
             'vehicle' => $this->vehicleOptions(),
             'addons' => $this->addonOptions($state),
             default => [],
@@ -695,6 +917,84 @@ PROMPT;
     protected function buildQuote(array $data): array
     {
         return $this->bookingCreator->buildQuote($data);
+    }
+
+    protected function typeOptions(): array
+    {
+        return [
+            [
+                'id' => 'type_vehicle',
+                'label' => __('chat.option_vehicle'),
+                'action' => 'choose_vehicle',
+            ],
+            [
+                'id' => 'type_property',
+                'label' => __('chat.option_property'),
+                'action' => 'choose_property',
+            ],
+        ];
+    }
+
+    protected function propertyOptions(): array
+    {
+        return $this->availableProperties()->map(function (Property $property) {
+            return [
+                'id' => 'property_' . $property->id,
+                'label' => $this->propertyLabel($property),
+                'meta' => $property->displayPrice(),
+                'action' => 'select_property',
+                'property_id' => $property->id,
+            ];
+        })->values()->all();
+    }
+
+    protected function availableProperties()
+    {
+        return Property::where('status', 'available')
+            ->with(['translations', 'type.translations'])
+            ->orderByDesc('featured')
+            ->limit(8)
+            ->get();
+    }
+
+    protected function propertyLabel(Property $property): string
+    {
+        return $property->title();
+    }
+
+    protected function parsePropertyId(string $message): ?int
+    {
+        if (preg_match('/\b(\d+)\b/', $message, $m)) {
+            $id = (int) $m[1];
+            if ($this->availableProperties()->contains('id', $id)) {
+                return $id;
+            }
+        }
+
+        $needle = Str::lower($message);
+        foreach ($this->availableProperties() as $property) {
+            $label = Str::lower($this->propertyLabel($property));
+            if (Str::contains($label, $needle) || Str::contains($needle, Str::lower($property->neighborhood ?? ''))) {
+                return $property->id;
+            }
+        }
+
+        return null;
+    }
+
+    protected function matchesPropertyIntent(string $message): bool
+    {
+        return $this->matchesAny($message, [
+            'house', 'home', 'apartment', 'condo', 'townhouse', 'villa', 'property', 'rental',
+            'casa', 'apartamento', 'condominio', 'alquiler', 'vivienda', 'hogar',
+        ]);
+    }
+
+    protected function matchesVehicleIntent(string $message): bool
+    {
+        return $this->matchesAny($message, [
+            'vehicle', 'car', 'rv', 'fleet', 'drive', 'vehiculo', 'vehículo', 'auto', 'coche',
+        ]);
     }
 
     protected function vehicleOptions(): array
@@ -825,7 +1125,9 @@ PROMPT;
         return [
             'step' => 'welcome',
             'data' => [
+                'booking_type' => null,
                 'vehicle_id' => null,
+                'property_id' => null,
                 'start_date' => null,
                 'end_date' => null,
                 'pickup_location' => null,

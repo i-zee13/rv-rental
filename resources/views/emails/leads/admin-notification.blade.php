@@ -24,6 +24,7 @@
                                 'Email' => $summary['email'],
                                 'Phone' => $summary['phone'],
                                 'Vehicle' => $summary['vehicle'],
+                                'Property' => $summary['property'],
                                 'Dates' => $summary['dates'],
                                 'Pick-up' => $summary['pickup'],
                                 'Drop-off' => $summary['dropoff'],

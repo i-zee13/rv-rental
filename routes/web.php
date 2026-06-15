@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\VehicleController as AdminVehicleController;
 // ============================================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
+Route::get('/rentals', [\App\Http\Controllers\PropertySearchController::class, 'index'])->name('properties.search');
+Route::get('/properties/{id}', [\App\Http\Controllers\PropertyController::class, 'show'])->name('properties.show');
 Route::get('/vehicles/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
 Route::get('/about-us', [\App\Http\Controllers\PagePublicController::class, 'about'])->name('about');
 Route::redirect('/pages/about', '/about-us', 301);
@@ -32,6 +34,8 @@ Route::prefix('{locale}')
     ->group(function () {
         Route::get('/', [HomeController::class, 'index']);
         Route::get('/search', [SearchController::class, 'index']);
+        Route::get('/rentals', [\App\Http\Controllers\PropertySearchController::class, 'index']);
+        Route::get('/properties/{id}', [\App\Http\Controllers\PropertyController::class, 'show']);
         Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
         Route::get('/about-us', [\App\Http\Controllers\PagePublicController::class, 'about']);
         Route::get('/pages/about', function (string $locale) {
@@ -79,6 +83,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/vehicles/{id}', [AdminVehicleController::class, 'update'])->name('vehicles.update');
         Route::delete('/vehicles/{vehicleId}/images/{imageId}', [AdminVehicleController::class, 'destroyImage'])->name('vehicles.images.destroy');
 
+        // Properties (Homes & Apartments)
+        Route::get('/properties', [\App\Http\Controllers\Admin\PropertyController::class, 'index'])->name('properties.index');
+        Route::get('/properties/create', [\App\Http\Controllers\Admin\PropertyController::class, 'create'])->name('properties.create');
+        Route::post('/properties', [\App\Http\Controllers\Admin\PropertyController::class, 'store'])->name('properties.store');
+        Route::get('/properties/{id}/edit', [\App\Http\Controllers\Admin\PropertyController::class, 'edit'])->name('properties.edit');
+        Route::put('/properties/{id}', [\App\Http\Controllers\Admin\PropertyController::class, 'update'])->name('properties.update');
+        Route::delete('/properties/{propertyId}/images/{imageId}', [\App\Http\Controllers\Admin\PropertyController::class, 'destroyImage'])->name('properties.images.destroy');
+
         // Pages
         Route::get('/pages', [\App\Http\Controllers\Admin\PageController::class, 'index'])->name('pages.index');
         Route::get('/pages/create', [\App\Http\Controllers\Admin\PageController::class, 'create'])->name('pages.create');
@@ -112,6 +124,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/seo', [\App\Http\Controllers\Admin\SeoController::class, 'index'])->name('seo.index');
         Route::get('/seo/{id}/edit', [\App\Http\Controllers\Admin\SeoController::class, 'edit'])->name('seo.edit');
         Route::put('/seo/{id}', [\App\Http\Controllers\Admin\SeoController::class, 'update'])->name('seo.update');
+
+        // Site texts (static UI strings EN/ES)
+        Route::get('/site-texts', [\App\Http\Controllers\Admin\SiteTextController::class, 'index'])->name('site-texts.index');
+        Route::put('/site-texts', [\App\Http\Controllers\Admin\SiteTextController::class, 'update'])->name('site-texts.update');
 
         // Leads
         Route::get('/leads', [\App\Http\Controllers\Admin\LeadController::class, 'index'])->name('leads.index');

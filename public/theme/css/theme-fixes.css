@@ -436,9 +436,11 @@ body:not(.page-home) .page-header {
    ============================================================ */
 html {
     overflow-x: hidden;
+    max-width: 100%;
 }
 body {
     overflow-x: hidden;
+    max-width: 100%;
 }
 
 /* Prevent iOS zoom on form focus */

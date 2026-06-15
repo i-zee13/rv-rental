@@ -15,6 +15,7 @@
     const formEl = root.querySelector('.chat-input-wrap');
 
     let started = false;
+    let savedScrollY = 0;
 
     function csrfToken() {
         return document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
@@ -62,8 +63,14 @@
             chip.className = 'chat-chip';
             chip.innerHTML = option.label + (option.meta ? '<small>' + option.meta + '</small>' : '');
             chip.addEventListener('click', function () {
-                if (option.action === 'select_vehicle') {
+                if (option.action === 'choose_vehicle') {
+                    handleAction('choose_vehicle', {});
+                } else if (option.action === 'choose_property') {
+                    handleAction('choose_property', {});
+                } else if (option.action === 'select_vehicle') {
                     handleAction('select_vehicle', { vehicle_id: option.vehicle_id });
+                } else if (option.action === 'select_property') {
+                    handleAction('select_property', { property_id: option.property_id });
                 } else if (option.action === 'toggle_addon') {
                     handleAction('toggle_addon', { addon_id: option.addon_id });
                 } else if (option.action === 'message' && option.value) {
@@ -82,7 +89,7 @@
             btn.className = 'chat-action-btn' + (action.action === 'cancel_confirm' ? ' secondary' : '');
             btn.textContent = action.label;
             btn.addEventListener('click', function () {
-                if (action.action === 'confirm' || action.action === 'cancel_confirm' || action.action === 'skip_addons' || action.action === 'skip_phone') {
+                if (action.action === 'confirm' || action.action === 'cancel_confirm' || action.action === 'skip_addons' || action.action === 'skip_phone' || action.action === 'choose_vehicle' || action.action === 'choose_property') {
                     handleAction(action.action, {});
                 }
             });
@@ -153,16 +160,22 @@
     }
 
     function openChat() {
+        savedScrollY = window.scrollY || window.pageYOffset || 0;
         root.classList.add('is-open');
         document.body.classList.add('chat-sidebar-open');
+        if (window.matchMedia('(max-width: 768px)').matches) {
+            document.body.style.top = '-' + savedScrollY + 'px';
+        }
         fab.setAttribute('aria-expanded', 'true');
         startChat();
-        setTimeout(function () { inputEl.focus(); }, 380);
+        setTimeout(function () { inputEl.focus({ preventScroll: true }); }, 380);
     }
 
     function closeChat() {
         root.classList.remove('is-open');
         document.body.classList.remove('chat-sidebar-open');
+        document.body.style.top = '';
+        window.scrollTo(0, savedScrollY);
         fab.setAttribute('aria-expanded', 'false');
     }
 

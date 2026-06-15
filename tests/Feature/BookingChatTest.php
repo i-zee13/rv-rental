@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Mail\BookingAdminNotificationMail;
 use App\Mail\BookingCustomerConfirmationMail;
+use App\Mail\LeadThankYouMail;
+use App\Mail\NewLeadAdminMail;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
@@ -27,8 +29,45 @@ class BookingChatTest extends TestCase
             'actions',
             'completed',
         ]);
-        $response->assertJsonPath('step', 'vehicle');
+        $response->assertJsonPath('step', 'choose_type');
         $this->assertNotEmpty($response->json('options'));
+    }
+
+    public function test_booking_chat_property_inquiry_sends_emails(): void
+    {
+        Mail::fake();
+        config(['leads.admin_email' => 'admin@example.com']);
+
+        $this->seed([\Database\Seeders\PropertyTypesSeeder::class, \Database\Seeders\PropertiesSeeder::class]);
+        $propertyId = \App\Models\Property::query()->value('id');
+
+        session([
+            'booking_chat' => [
+                'step' => 'confirm',
+                'data' => [
+                    'booking_type' => 'property',
+                    'property_id' => $propertyId,
+                    'first_name' => 'Maria',
+                    'last_name' => 'Lopez',
+                    'email' => 'maria@example.com',
+                    'phone' => null,
+                ],
+                'history' => [],
+            ],
+        ]);
+
+        $this->postJson(route('booking-chat.action'), [
+            'action' => 'confirm',
+            'payload' => [],
+        ])->assertOk()->assertJsonPath('completed', true);
+
+        Mail::assertSent(LeadThankYouMail::class);
+        Mail::assertSent(NewLeadAdminMail::class);
+        $this->assertDatabaseHas('leads', [
+            'email' => 'maria@example.com',
+            'property_id' => $propertyId,
+            'source' => 'ai_chat',
+        ]);
     }
 
     public function test_booking_chat_confirm_creates_booking(): void

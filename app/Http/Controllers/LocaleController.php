@@ -15,8 +15,6 @@ class LocaleController extends Controller
 
         session(['app_locale' => $locale]);
 
-        return redirect()->back()->with('success',
-            $locale === 'es' ? 'Idioma cambiado a Español.' : 'Language switched to English.'
-        );
+        return redirect()->back();
     }
 }

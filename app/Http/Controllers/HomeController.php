@@ -32,6 +32,11 @@ class HomeController extends Controller
             ->where('status', 'available')
             ->get();
 
-        return view('home', compact('featured', 'categories', 'latestPosts', 'totalVehicles', 'allVehicles'));
+        $featuredProperties = \App\Models\Property::with(['translations', 'images', 'type.translations'])
+            ->where('featured', true)
+            ->where('status', 'available')
+            ->take(6)->get();
+
+        return view('home', compact('featured', 'categories', 'latestPosts', 'totalVehicles', 'allVehicles', 'featuredProperties'));
     }
 }

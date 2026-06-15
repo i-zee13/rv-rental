@@ -19,7 +19,7 @@
         <div class="carousel-inner" role="listbox">
 
             {{-- Slide 1 --}}
-            <div class="carousel-item active">
+            <div class="carousel-item active hero-slide hero-slide--booking">
                 <x-hero-slide-image
                     slug="slide-1"
                     desktop="theme/img/THOR-Vision-Vehicle-TVV-electric-rv-2.jpg"
@@ -29,13 +29,14 @@
                     <div class="container py-4">
                                 <div class="row g-5 hero-row">
                             <div class="col-lg-6 fadeInLeft animated">
-                                <div class="d-lg-none hero-mobile-tagline text-center mb-3">
-                                    <h2 class="text-white fw-bold mb-2">Get 15% off your rental!</h2>
-                                    <p class="text-white-50 small mb-0">Luxury RVs, Cars &amp; more — Miami</p>
+                                <div class="d-lg-none hero-mobile-tagline hero-mobile-tagline--booking hero-mobile-stack hero-mobile-stack--slide1 text-center">
+                                    <h2 class="text-white fw-bold hero-mobile-title">{{ __('ui.hero_slide1_title') }}</h2>
+                                    <p class="text-white-50 small hero-mobile-sub">{{ __('ui.hero_slide1_sub') }}</p>
+                                    <a href="{{ route('search') }}" class="btn btn-primary rounded-pill py-2 px-4 hero-mobile-btn">{{ __('ui.browse_fleet') }}</a>
                                 </div>
-                                <div class="rounded p-3 p-md-4 hero-quote-card">
-                                    <h4 class="text-white mb-1 hero-card-title">RESERVE YOUR RIDE</h4>
-                                    <p class="text-white-50 small mb-2 mb-md-3 hero-card-sub">Pick dates → we’ll confirm availability in minutes</p>
+                                <div class="rounded p-3 p-md-4 hero-quote-card hero-quote-card--slide1">
+                                    <h4 class="text-white mb-1 hero-card-title">{{ __('ui.hero_reserve_title') }}</h4>
+                                    <p class="text-white-50 small mb-2 mb-md-3 hero-card-sub">{{ __('ui.hero_reserve_sub') }}</p>
                                     <x-lead-form
                                         variant="hero"
                                         source="homepage"
@@ -45,9 +46,9 @@
                             </div>
                             <div class="col-lg-6 d-none d-lg-flex fadeInRight animated">
                                 <div class="text-start">
-                                    <h1 class="display-5 text-white">Get 15% off your rental!<br>Choose Your Model</h1>
-                                    <p class="text-white-50">Luxury RVs, Cars & more — drive in style across Miami</p>
-                                    <a href="{{ route('search') }}" class="btn btn-primary rounded-pill py-3 px-5 me-3">Browse Fleet</a>
+                                    <h1 class="display-5 text-white">{{ __('ui.hero_slide1_title') }}</h1>
+                                    <p class="text-white-50">{{ __('ui.hero_slide1_sub') }}</p>
+                                    <a href="{{ route('search') }}" class="btn btn-primary rounded-pill py-3 px-5 me-3">{{ __('ui.browse_fleet') }}</a>
                                     <a href="https://wa.me/+17869785809" class="btn btn-secondary rounded-pill py-3 px-5">WhatsApp</a>
                                 </div>
                             </div>
@@ -57,7 +58,7 @@
             </div>
 
             {{-- Slide 2 --}}
-            <div class="carousel-item">
+            <div class="carousel-item hero-slide hero-slide--search">
                 <x-hero-slide-image
                     slug="slide-2"
                     desktop="theme/img/carousel-2.jpg"
@@ -68,22 +69,27 @@
                                 <div class="row g-5 hero-row">
                             <div class="col-lg-6 d-none d-lg-flex fadeInLeft animated">
                                 <div class="text-start">
-                                    <h1 class="display-5 text-white">Luxury Cars<br>for Every Occasion</h1>
-                                    <p class="text-white-50">From sports cars to family SUVs — we have it all</p>
-                                    <a href="{{ route('search') }}" class="btn btn-primary rounded-pill py-3 px-5">View All Vehicles</a>
+                                    <h1 class="display-5 text-white">{{ __('ui.hero_slide2_title') }}</h1>
+                                    <p class="text-white-50">{{ __('ui.hero_slide2_sub') }}</p>
+                                    <a href="{{ route('search') }}" class="btn btn-primary rounded-pill py-3 px-5">{{ __('ui.hero_view_all') }}</a>
                                 </div>
                             </div>
                             <div class="col-lg-6 fadeInRight animated">
-                                <div class="rounded p-3 p-md-4 hero-quote-card">
-                                    <h4 class="text-white mb-2 hero-card-title">QUICK SEARCH</h4>
+                                <div class="d-lg-none hero-mobile-tagline hero-mobile-tagline--search hero-mobile-stack hero-mobile-stack--slide2 text-center">
+                                    <h2 class="text-white fw-bold hero-mobile-title">{{ __('ui.hero_slide2_title') }}</h2>
+                                    <p class="text-white-50 small hero-mobile-sub">{{ __('ui.hero_slide2_sub') }}</p>
+                                    <a href="{{ route('search') }}" class="btn btn-primary rounded-pill py-2 px-4 hero-mobile-btn">{{ __('ui.hero_view_all') }}</a>
+                                </div>
+                                <div class="rounded p-3 p-md-4 hero-quote-card hero-quote-card--slide2">
+                                    <h4 class="text-white mb-2 hero-card-title">{{ __('ui.hero_quick_search') }}</h4>
                                     <form action="{{ route('search') }}" method="GET" class="hero-search-form">
                                         <div class="row g-2">
                                             <div class="col-12">
-                                                <input class="form-control" name="q" placeholder="Search make, model...">
+                                                <input class="form-control" name="q" placeholder="{{ __('ui.hero_search_placeholder') }}">
                                             </div>
                                             <div class="col-12">
                                                 <select class="form-select" name="category">
-                                                    <option value="">All Categories</option>
+                                                    <option value="">{{ __('ui.hero_all_categories') }}</option>
                                                     @foreach($categories as $cat)
                                                         @php $ct = $cat->translations->firstWhere('locale', app()->getLocale()) ?? $cat->translations->first(); @endphp
                                                         <option value="{{ $cat->slug }}">{{ $ct->name ?? $cat->slug }}</option>
@@ -92,7 +98,7 @@
                                             </div>
                                             <div class="col-12">
                                                 <button type="submit" class="btn btn-primary w-100 py-2 hero-form-cta">
-                                                    <i class="fas fa-search me-2"></i>Search Vehicles
+                                                    <i class="fas fa-search me-2"></i>{{ __('ui.hero_search_btn') }}
                                                 </button>
                                             </div>
                                         </div>
@@ -105,7 +111,7 @@
             </div>
 
             {{-- Slide 3 --}}
-            <div class="carousel-item">
+            <div class="carousel-item hero-slide hero-slide--cta">
                 <x-hero-slide-image
                     slug="slide-3"
                     desktop="theme/img/carousel-1.jpg"
@@ -115,10 +121,22 @@
                     <div class="container py-4">
                         <div class="row hero-row">
                             <div class="col-lg-8 mx-auto text-center fadeInUp animated">
-                                <h1 class="display-4 text-white fw-bold mb-3">Miami's Premier<br>Vehicle Rental Service</h1>
-                                <p class="text-white-50 fs-5 mb-4">{{ $totalVehicles ?? '50' }}+ premium vehicles available for rent today</p>
-                                <a href="{{ route('booking.step1') }}" class="btn btn-primary rounded-pill py-3 px-5 me-3 fs-5">Book Now</a>
-                                <a href="{{ route('search') }}" class="btn btn-secondary rounded-pill py-3 px-5 fs-5">Browse Vehicles</a>
+                                <div class="d-lg-none hero-mobile-tagline hero-mobile-tagline--cta hero-mobile-stack hero-mobile-stack--slide3 text-center">
+                                    <h2 class="text-white fw-bold hero-mobile-title">{{ __('ui.hero_slide3_title') }}</h2>
+                                    <p class="text-white-50 small hero-mobile-sub">{{ __('ui.hero_slide3_sub', ['count' => $totalVehicles ?? '50']) }}</p>
+                                    <p class="hero-slide3-extra text-white-50 small">{{ __('ui.hero_slide3_extra') }}</p>
+                                    <div class="hero-mobile-actions d-flex flex-wrap justify-content-center gap-2">
+                                        <a href="{{ route('booking.step1') }}" class="btn btn-primary rounded-pill py-2 px-4">{{ __('ui.hero_book_now') }}</a>
+                                        <a href="{{ route('search') }}" class="btn btn-secondary rounded-pill py-2 px-4">{{ __('ui.browse_vehicles') }}</a>
+                                    </div>
+                                </div>
+                                <div class="d-none d-lg-block">
+                                    <h1 class="display-4 text-white fw-bold mb-3">{{ __('ui.hero_slide3_title') }}</h1>
+                                    <p class="text-white-50 fs-5 mb-3">{{ __('ui.hero_slide3_sub', ['count' => $totalVehicles ?? '50']) }}</p>
+                                    <p class="text-white-50 mb-4 mx-auto hero-slide3-extra-desktop">{{ __('ui.hero_slide3_extra') }}</p>
+                                    <a href="{{ route('booking.step1') }}" class="btn btn-primary rounded-pill py-3 px-5 me-3 fs-5">{{ __('ui.hero_book_now') }}</a>
+                                    <a href="{{ route('search') }}" class="btn btn-secondary rounded-pill py-3 px-5 fs-5">{{ __('ui.browse_vehicles') }}</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -141,8 +159,8 @@
 <div class="container-fluid feature py-5">
     <div class="container py-5">
         <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
-            <h1 class="display-5 text-capitalize mb-3">Rental <span class="text-primary">Features</span></h1>
-            <p class="mb-0">At {{ config('app.name') }}, we make every journey smooth and memorable. Book with us today and experience the convenience of hassle-free car rentals!</p>
+            <h1 class="display-5 text-capitalize mb-3">{{ __('ui.home_features_title') }}</h1>
+            <p class="mb-0">{{ __('ui.home_features_sub', ['name' => config('app.name')]) }}</p>
         </div>
         <div class="row g-4 align-items-center">
             <div class="col-xl-4">
@@ -151,8 +169,8 @@
                         <div class="feature-item">
                             <div class="feature-icon"><span class="fa fa-trophy fa-2x"></span></div>
                             <div class="ms-4">
-                                <h5 class="mb-3">First Class Services</h5>
-                                <p class="mb-0">We prioritize customer satisfaction by offering top-notch rental services, ensuring you receive a premium and hassle-free experience from start to finish.</p>
+                                <h5 class="mb-3">{{ __('ui.home_feature1_title') }}</h5>
+                                <p class="mb-0">{{ __('ui.home_feature1_text') }}</p>
                             </div>
                         </div>
                     </div>
@@ -160,8 +178,8 @@
                         <div class="feature-item">
                             <div class="feature-icon"><span class="fa fa-road fa-2x"></span></div>
                             <div class="ms-4">
-                                <h5 class="mb-3">24/7 Road Assistance</h5>
-                                <p class="mb-0">Our dedicated support team is available round the clock to assist you on the road — flat tire, battery issue, or any emergency.</p>
+                                <h5 class="mb-3">{{ __('ui.home_feature2_title') }}</h5>
+                                <p class="mb-0">{{ __('ui.home_feature2_text') }}</p>
                             </div>
                         </div>
                     </div>
@@ -175,8 +193,8 @@
                     <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="feature-item justify-content-end">
                             <div class="text-end me-4">
-                                <h5 class="mb-3">Quality at Minimum</h5>
-                                <p class="mb-0">We believe in offering the best value for your money, providing high-quality vehicles and services at the most competitive rates in the market.</p>
+                                <h5 class="mb-3">{{ __('ui.home_feature3_title') }}</h5>
+                                <p class="mb-0">{{ __('ui.home_feature3_text') }}</p>
                             </div>
                             <div class="feature-icon"><span class="fa fa-tag fa-2x"></span></div>
                         </div>
@@ -184,8 +202,8 @@
                     <div class="col-12 wow fadeInUp" data-wow-delay="0.3s">
                         <div class="feature-item justify-content-end">
                             <div class="text-end me-4">
-                                <h5 class="mb-3">Free Pick-Up &amp; Drop-Off</h5>
-                                <p class="mb-0">Enjoy the convenience of free vehicle pick-up and drop-off services at designated locations, making your rental process effortless.</p>
+                                <h5 class="mb-3">{{ __('ui.home_feature4_title') }}</h5>
+                                <p class="mb-0">{{ __('ui.home_feature4_text') }}</p>
                             </div>
                             <div class="feature-icon"><span class="fa fa-map-pin fa-2x"></span></div>
                         </div>
@@ -341,8 +359,8 @@
 <div class="container-fluid categories pb-5">
     <div class="container pb-5">
         <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
-            <h1 class="display-5 text-capitalize mb-3">Our <span class="text-primary">Fleet</span></h1>
-            <p class="mb-0">At {{ config('app.name') }}, we offer a wide range of vehicles to cater to different customer needs. Browse our top picks below.</p>
+            <h1 class="display-5 text-capitalize mb-3">{{ __('ui.home_fleet_title') }}</h1>
+            <p class="mb-0">{{ __('ui.home_fleet_sub') }}</p>
         </div>
         <div class="categories-carousel owl-carousel wow fadeInUp" data-wow-delay="0.1s">
             @foreach($featured as $v)
@@ -401,7 +419,33 @@
         </div>
         <div class="text-center mt-4">
             <a href="{{ route('search') }}" class="btn btn-primary rounded-pill py-3 px-5">
-                <i class="fas fa-car me-2"></i>View All Vehicles
+                <i class="fas fa-car me-2"></i>{{ __('ui.home_view_all_vehicles') }}
+            </a>
+        </div>
+    </div>
+</div>
+@endif
+
+{{-- ============================================================
+     HOMES & APARTMENTS
+============================================================ --}}
+@if(isset($featuredProperties) && $featuredProperties->isNotEmpty())
+<div class="container-fluid py-5 bg-light">
+    <div class="container py-5">
+        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
+            <h1 class="display-5 text-capitalize mb-3">{{ __('ui.home_properties_title') }}</h1>
+            <p class="mb-0">{{ __('ui.home_properties_sub') }}</p>
+        </div>
+        <div class="row g-4">
+            @foreach($featuredProperties as $property)
+            <div class="col-md-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
+                <x-property-card :property="$property" />
+            </div>
+            @endforeach
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ route('properties.search') }}" class="btn btn-primary rounded-pill py-3 px-5">
+                <i class="fas fa-home me-2"></i>{{ __('ui.browse_rentals') }}
             </a>
         </div>
     </div>
@@ -414,28 +458,28 @@
 <div class="container-fluid steps py-5">
     <div class="container py-5">
         <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
-            <h1 class="display-5 text-capitalize text-white mb-3">MV Rental<span class="text-primary"> Process</span></h1>
-            <p class="mb-0 text-white">At {{ config('app.name') }}, we make every journey smooth and memorable. Book with us today!</p>
+            <h1 class="display-5 text-capitalize text-white mb-3">{{ config('app.name') }} {{ __('ui.home_process_title') }}</h1>
+            <p class="mb-0 text-white">{{ __('ui.home_process_sub', ['name' => config('app.name')]) }}</p>
         </div>
         <div class="row g-4">
             <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
                 <div class="steps-item p-4 mb-4">
-                    <h4>Come In Contact</h4>
-                    <p class="mb-0">Reach out via phone, email, or visit our location to get expert assistance in selecting the best vehicle for your needs.</p>
+                    <h4>{{ __('ui.home_step1_title') }}</h4>
+                    <p class="mb-0">{{ __('ui.home_step1_text') }}</p>
                     <div class="setps-number">01.</div>
                 </div>
             </div>
             <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="steps-item p-4 mb-4">
-                    <h4>Choose A Car</h4>
-                    <p class="mb-0">Browse our diverse fleet and select a vehicle that suits your budget, preferences, and travel requirements.</p>
+                    <h4>{{ __('ui.home_step2_title') }}</h4>
+                    <p class="mb-0">{{ __('ui.home_step2_text') }}</p>
                     <div class="setps-number">02.</div>
                 </div>
             </div>
             <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
                 <div class="steps-item p-4 mb-4">
-                    <h4>Enjoy Driving</h4>
-                    <p class="mb-0">Hit the road with confidence, knowing that you are driving a well-maintained, insured rental vehicle from {{ config('app.name') }}.</p>
+                    <h4>{{ __('ui.home_step3_title') }}</h4>
+                    <p class="mb-0">{{ __('ui.home_step3_text') }}</p>
                     <div class="setps-number">03.</div>
                 </div>
             </div>

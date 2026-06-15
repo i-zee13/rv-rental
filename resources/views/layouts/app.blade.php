@@ -31,7 +31,7 @@
     <!-- Theme Style -->
     <link rel="stylesheet" href="{{ asset('theme/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('theme/css/theme-fixes.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/mv-glass.css') }}?v=5">
+    <link rel="stylesheet" href="{{ asset('css/mv-glass.css') }}?v=6">
 
     @include('partials.booking-chat-assets')
     @stack('styles')
@@ -85,6 +85,7 @@
                     <div class="navbar-nav mx-auto py-0">
                         <a href="{{ route('home') }}" class="nav-item nav-link {{ request()->routeIs('home') ? 'active' : '' }}">{{ __('ui.home') }}</a>
                         <a href="{{ route('search') }}" class="nav-item nav-link {{ request()->routeIs('search') ? 'active' : '' }}">{{ __('ui.vehicles') }}</a>
+                        <a href="{{ route('properties.search') }}" class="nav-item nav-link {{ request()->routeIs('properties.*') ? 'active' : '' }}">{{ __('ui.homes_apartments') }}</a>
                         <a href="{{ route('blog.index') }}" class="nav-item nav-link {{ request()->routeIs('blog.*') ? 'active' : '' }}">{{ __('ui.blog') }}</a>
                         <a href="{{ route('about') }}" class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">{{ __('ui.about') }}</a>
                         <a href="{{ route('contact') }}" class="nav-item nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">{{ __('ui.contact') }}</a>
@@ -145,6 +146,7 @@
                         <h4 class="text-white mb-4">{{ __('ui.quick_links') }}</h4>
                         <a href="{{ route('home') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.home') }}</a>
                         <a href="{{ route('search') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.browse_vehicles') }}</a>
+                        <a href="{{ route('properties.search') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.browse_rentals') }}</a>
                         <a href="{{ route('blog.index') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.blog_news') }}</a>
                         <a href="{{ route('about') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.about_us') }}</a>
                         <a href="{{ route('contact') }}"><i class="fas fa-angle-right me-2"></i> {{ __('ui.contact') }}</a>
@@ -181,18 +183,15 @@
         <div class="container">
             <div class="row g-4 align-items-center">
                 <div class="col-md-6 text-center text-md-start mb-md-0">
-                    <span class="text-body"><a href="{{ route('home') }}" class="border-bottom text-white">{{ config('app.name', 'MV Rental') }}</a> © {{ date('Y') }}. {{ __('ui.rights') }}</span>
+                    <span class="text-white-50"><a href="{{ route('home') }}" class="border-bottom text-white">{{ config('app.name', 'MV Rental') }}</a> © {{ date('Y') }}. {{ __('ui.rights') }}</span>
                 </div>
-                <div class="col-md-6 text-center text-md-end text-body">
+                <div class="col-md-6 text-center text-md-end">
                     <a href="{{ route('pages.show', ['slug'=>'privacy']) }}" class="text-white border-bottom me-3">{{ __('ui.privacy') }}</a>
                     <a href="{{ route('pages.show', ['slug'=>'terms']) }}" class="text-white border-bottom">{{ __('ui.terms') }}</a>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Back to Top -->
-    <a href="#" class="btn btn-primary rounded-circle back-to-top" aria-label="{{ __('ui.back_to_top') }}" title="{{ __('ui.back_to_top') }}"><i class="fa fa-arrow-up"></i></a>
 
     <!-- JS Libraries -->
     <script src="{{ asset('theme/js/jquery.min.js') }}"></script>

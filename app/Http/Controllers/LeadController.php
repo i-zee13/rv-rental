@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\LeadThankYouMail;
-use App\Mail\NewLeadAdminMail;
 use App\Models\Lead;
 use App\Models\Vehicle;
+use App\Services\LeadNotificationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\RateLimiter;
 
 class LeadController extends Controller
 {
+    public function __construct(
+        protected LeadNotificationService $leadNotifier,
+    ) {}
+
     public function store(Request $request)
     {
         // Honeypot — bots fill hidden field
@@ -32,6 +33,7 @@ class LeadController extends Controller
             'email'            => 'required|email|max:191',
             'phone'            => 'nullable|string|max:30',
             'vehicle_id'       => 'nullable|integer|exists:vehicles,id',
+            'property_id'      => 'nullable|integer|exists:properties,id',
             'pickup_location'  => 'nullable|string|max:255',
             'dropoff_location' => 'nullable|string|max:255',
             'pickup_date'      => 'nullable|date|after_or_equal:today',
@@ -43,6 +45,7 @@ class LeadController extends Controller
         ]);
 
         $vehicleName = null;
+        $propertyName = null;
         if (!empty($validated['vehicle_id'])) {
             $vehicle = Vehicle::with('translations')->find($validated['vehicle_id']);
             if ($vehicle) {
@@ -52,12 +55,21 @@ class LeadController extends Controller
             }
         }
 
+        if (!empty($validated['property_id'])) {
+            $property = \App\Models\Property::with('translations')->find($validated['property_id']);
+            if ($property) {
+                $propertyName = $property->title();
+            }
+        }
+
         $lead = Lead::create([
             'reference'        => Lead::generateReference(),
             'status'           => 'new',
             'source'           => $validated['source'] ?? 'website',
             'vehicle_id'       => $validated['vehicle_id'] ?? null,
             'vehicle_name'     => $vehicleName,
+            'property_id'      => $validated['property_id'] ?? null,
+            'property_name'    => $propertyName,
             'first_name'       => $validated['first_name'],
             'last_name'        => $validated['last_name'] ?? null,
             'email'            => $validated['email'],
@@ -74,7 +86,7 @@ class LeadController extends Controller
             'locale'           => app()->getLocale(),
         ]);
 
-        $this->sendLeadEmails($lead);
+        $this->leadNotifier->sendEmails($lead);
 
         return redirect()->route('leads.thank-you', ['ref' => $lead->reference])
             ->with('success', 'Thank you! We received your inquiry.');
@@ -87,23 +99,4 @@ class LeadController extends Controller
         ]);
     }
 
-    protected function sendLeadEmails(Lead $lead): void
-    {
-        try {
-            Mail::to($lead->email)->send(new LeadThankYouMail($lead));
-            $lead->update(['customer_email_sent' => true]);
-        } catch (\Throwable $e) {
-            Log::error('Lead customer email failed', ['lead_id' => $lead->id, 'error' => $e->getMessage()]);
-        }
-
-        try {
-            $adminEmail = config('leads.admin_email');
-            if ($adminEmail) {
-                Mail::to($adminEmail)->send(new NewLeadAdminMail($lead));
-                $lead->update(['admin_email_sent' => true]);
-            }
-        } catch (\Throwable $e) {
-            Log::error('Lead admin email failed', ['lead_id' => $lead->id, 'error' => $e->getMessage()]);
-        }
-    }
 }

@@ -10,13 +10,16 @@
     --chat-glass-strong: rgba(255, 255, 255, 0.88);
     --chat-border: rgba(255, 255, 255, 0.45);
     --chat-shadow: 0 24px 80px rgba(25, 42, 48, 0.22);
-    --chat-sidebar-width: min(420px, 100vw);
+    --chat-sidebar-width: min(420px, 100%);
     font-family: 'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     position: fixed;
     inset: 0;
     z-index: 99999;
     pointer-events: none;
     isolation: isolate;
+    overflow: hidden;
+    max-width: 100%;
+    width: 100%;
 }
 
 #mv-booking-chat * {
@@ -151,11 +154,12 @@
 #mv-booking-chat .chat-messages {
     flex: 1;
     overflow-y: auto;
-    padding: 1.1rem;
+    padding: 1rem 1.1rem 0.35rem;
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
     scroll-behavior: smooth;
+    scroll-padding-top: 0.5rem;
 }
 
 #mv-booking-chat .chat-message {
@@ -232,8 +236,10 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
-    padding: 0 1.1rem 0.85rem;
+    padding: 0.85rem 1.1rem 0.65rem;
     flex-shrink: 0;
+    border-top: 1px solid rgba(25, 42, 48, 0.07);
+    background: rgba(255, 255, 255, 0.35);
 }
 
 #mv-booking-chat .chat-chip {
@@ -406,10 +412,26 @@
     pointer-events: none !important;
 }
 
-/* Body scroll lock when open (desktop only — mobile keeps page context) */
+/* Body scroll lock when chat open — prevent horizontal bleed on all screens */
+body.chat-sidebar-open {
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+    max-width: 100%;
+    overscroll-behavior: none;
+}
+
 @media (min-width: 769px) {
     body.chat-sidebar-open {
         overflow: hidden;
+    }
+}
+
+@media (max-width: 768px) {
+    body.chat-sidebar-open {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        right: 0;
     }
 }
 
@@ -417,7 +439,7 @@
 @media (max-width: 768px) {
     #mv-booking-chat:not(.is-open) .chat-sidebar {
         visibility: hidden;
-        transform: translateY(calc(100% + 3rem));
+        transform: translate3d(0, 110vh, 0);
     }
 
     #mv-booking-chat .chat-backdrop {
@@ -429,22 +451,47 @@
     #mv-booking-chat .chat-sidebar {
         top: auto;
         bottom: 4.75rem;
-        right: 0.75rem;
         left: 0.75rem;
+        right: 0.75rem;
         width: auto;
-        max-width: none;
+        max-width: calc(100% - 1.5rem);
         height: min(68vh, 520px);
         max-height: calc(100dvh - 5.5rem);
         border-radius: 1.25rem;
         border: 1px solid rgba(255, 255, 255, 0.35);
         box-shadow: 0 20px 60px rgba(25, 42, 48, 0.35);
-        transform: translateY(calc(100% + 2rem));
+        transform: translate3d(0, 110vh, 0);
         transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
     #mv-booking-chat.is-open .chat-sidebar {
         visibility: visible;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
+    }
+
+    #mv-booking-chat .chat-body {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #mv-booking-chat .chat-messages {
+        flex: 0 0 auto;
+        overflow: visible;
+        padding-top: 0.85rem;
+        min-height: auto;
+    }
+
+    #mv-booking-chat .chat-options {
+        margin-top: 0.15rem;
+        padding-top: 1rem;
+    }
+
+    #mv-booking-chat .chat-message.assistant:first-child {
+        margin-top: 0.15rem;
+    }
+
+    #mv-booking-chat .chat-input {
+        font-size: 16px;
     }
 
     #mv-booking-chat .chat-fab {

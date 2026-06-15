@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
 
@@ -36,6 +37,8 @@ class VehicleController extends Controller
             'bags' => $data['bags'] ?? 2,
             'status' => $data['status'] ?? 'available',
         ]);
+
+        $this->syncTranslations($vehicle, $data);
 
         // handle images
         if ($request->hasFile('images')) {
@@ -73,6 +76,8 @@ class VehicleController extends Controller
             'bags' => $data['bags'] ?? $vehicle->bags,
             'status' => $data['status'] ?? $vehicle->status,
         ]);
+
+        $this->syncTranslations($vehicle, $data);
 
         // handle new images upload
         if ($request->hasFile('images')) {
@@ -114,5 +119,37 @@ class VehicleController extends Controller
         $img = $vehicle->images()->where('id', $imageId)->firstOrFail();
         $img->delete();
         return back()->with('success', 'Image removed.');
+    }
+
+    protected function syncTranslations(Vehicle $vehicle, array $data): void
+    {
+        $titleEn = trim($data['title_en'] ?? '');
+        if ($titleEn === '') {
+            $titleEn = trim(($data['make'] ?? $vehicle->make ?? '') . ' ' . ($data['model'] ?? $vehicle->model ?? ''));
+        }
+
+        $vehicle->translations()->updateOrCreate(
+            ['locale' => 'en'],
+            [
+                'title' => $titleEn,
+                'description' => $data['description_en'] ?? null,
+                'meta_title' => Str::limit($titleEn . ' | ' . config('app.name'), 255, ''),
+                'meta_description' => isset($data['description_en'])
+                    ? Str::limit(trim(strip_tags($data['description_en'])), 320, '')
+                    : null,
+            ]
+        );
+
+        $vehicle->translations()->updateOrCreate(
+            ['locale' => 'es'],
+            [
+                'title' => trim($data['title_es'] ?? '') ?: $titleEn,
+                'description' => $data['description_es'] ?? null,
+                'meta_title' => Str::limit(trim($data['title_es'] ?? $titleEn) . ' | ' . config('app.name'), 255, ''),
+                'meta_description' => isset($data['description_es'])
+                    ? Str::limit(trim(strip_tags($data['description_es'])), 320, '')
+                    : (isset($data['description_en']) ? Str::limit(trim(strip_tags($data['description_en'])), 320, '') : null),
+            ]
+        );
     }
 }

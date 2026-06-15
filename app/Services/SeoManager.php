@@ -170,6 +170,43 @@ class SeoManager
             ];
         }
 
+        if ($routeName === 'properties.search') {
+            return [
+                'title' => 'Homes & Apartments for Rent in Miami',
+                'description' => 'Browse houses, apartments, condos and villas for monthly rent in Miami. Filter by price, beds, baths, pets and amenities.',
+                'keywords' => 'Miami rentals, apartments for rent, houses for rent, monthly rental',
+                'og_title' => 'Homes & Apartments for Rent',
+                'og_description' => 'Find your next home in Miami — browse rental listings with photos, amenities and inquiry forms.',
+                'og_image' => null,
+                'og_type' => 'website',
+                'canonical' => route('properties.search'),
+                'schema' => null,
+            ];
+        }
+
+        if ($routeName === 'properties.show') {
+            $id = $request->route('id');
+            $property = \App\Models\Property::with(['translations', 'images'])->find($id);
+            if (!$property) {
+                return $empty;
+            }
+
+            $t = $property->translations->firstWhere('locale', $locale) ?? $property->translations->first();
+            $name = $t->title ?? $property->fullAddress();
+
+            return [
+                'title' => $t->meta_title ?? ($name . ' for Rent'),
+                'description' => $t->meta_description ?? Str::limit(strip_tags($t->description ?? ''), 160),
+                'keywords' => null,
+                'og_title' => $t->meta_title ?? $name,
+                'og_description' => $t->meta_description ?? Str::limit(strip_tags($t->description ?? ''), 160),
+                'og_image' => $property->images->first()?->path,
+                'og_type' => 'website',
+                'canonical' => route('properties.show', $property->id),
+                'schema' => null,
+            ];
+        }
+
         if ($routeName === 'about') {
             $page = Page::with('translations')->whereIn('slug', ['about-us', 'about'])->where('is_published', true)->first();
             if (!$page) {

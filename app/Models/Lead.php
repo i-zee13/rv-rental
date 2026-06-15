@@ -22,6 +22,7 @@ class Lead extends Model
 
     protected $fillable = [
         'reference', 'status', 'source', 'vehicle_id', 'vehicle_name',
+        'property_id', 'property_name',
         'first_name', 'last_name', 'email', 'phone',
         'pickup_location', 'dropoff_location',
         'pickup_date', 'dropoff_date', 'pickup_time', 'dropoff_time',
@@ -40,6 +41,11 @@ class Lead extends Model
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class);
+    }
+
+    public function property(): BelongsTo
+    {
+        return $this->belongsTo(Property::class);
     }
 
     public function getFullNameAttribute(): string

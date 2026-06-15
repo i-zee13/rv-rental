@@ -59,6 +59,10 @@
                 class="sidebar-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
                 <span class="icon">🚗</span> Vehicles
             </a>
+            <a href="{{ route('admin.properties.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.properties.*') ? 'active' : '' }}">
+                <span class="icon">🏠</span> Homes & Apartments
+            </a>
 
             <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-2 pt-4 pb-1">Reservations</div>
             <a href="{{ route('admin.bookings.index') }}"
@@ -88,6 +92,10 @@
             <a href="{{ route('admin.pages.index') }}"
                 class="sidebar-link {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
                 <span class="icon">📄</span> Pages
+            </a>
+            <a href="{{ route('admin.site-texts.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.site-texts.*') ? 'active' : '' }}">
+                <span class="icon">🌐</span> Site Texts (EN/ES)
             </a>
         </nav>
 

@@ -8,5 +8,5 @@
         locale: @json(app()->getLocale()),
     };
 </script>
-<script src="{{ asset('js/booking-chat.js') }}?v=4"></script>
+<script src="{{ asset('js/booking-chat.js') }}?v=5"></script>
 @endif

@@ -84,17 +84,27 @@ body:not(.page-home) .nav-bar .navbar-nav .nav-link.active {
 }
 
 .copyright {
-    background: rgba(0, 0, 0, 0.22) !important;
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: #111a1e !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
 }
 
-/* Back to top — glass pill */
+.copyright .text-white-50,
+.copyright a {
+    color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.copyright a.text-white,
+.copyright a.border-bottom {
+    color: #fff !important;
+}
+
+.copyright a:hover {
+    color: var(--mv-brand, #e68404) !important;
+}
+
+/* Back to top removed — overlapped AI chat FAB */
 .back-to-top {
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    display: none !important;
 }
 
 /* Subtle entrance for sections (works alongside WOW.js) */
@@ -138,6 +148,74 @@ body.page-home .carousel-caption .hero-quote-card {
     -webkit-backdrop-filter: blur(18px) saturate(160%);
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Hero form fields — frosted glass (all slides) */
+body.page-home .lead-form--hero .form-control,
+body.page-home .lead-form--hero .form-select,
+body.page-home .hero-search-form .form-control,
+body.page-home .hero-search-form .form-select {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: #fff !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+body.page-home .lead-form--hero .form-select,
+body.page-home .hero-search-form .form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px 8px;
+    padding-right: 2.25rem !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e") !important;
+}
+
+body.page-home .lead-form--hero .form-control::placeholder,
+body.page-home .hero-search-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.62) !important;
+}
+
+body.page-home .lead-form--hero .form-control:focus,
+body.page-home .lead-form--hero .form-select:focus,
+body.page-home .hero-search-form .form-control:focus,
+body.page-home .hero-search-form .form-select:focus {
+    border-color: var(--mv-brand, #e68404) !important;
+    box-shadow: 0 0 0 0.2rem rgba(230, 132, 4, 0.28) !important;
+    background-color: rgba(255, 255, 255, 0.18) !important;
+    color: #fff !important;
+}
+
+body.page-home .lead-form--hero .form-select option,
+body.page-home .hero-search-form .form-select option {
+    background-color: #192a30;
+    color: #fff;
+}
+
+body.page-home .lead-form--hero .form-select option:checked,
+body.page-home .hero-search-form .form-select option:checked {
+    background: linear-gradient(0deg, #e68404, #e68404);
+    color: #fff;
+}
+
+body.page-home .lead-form--hero .input-group-text {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.28) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+body.page-home .lead-form--hero .form-label {
+    color: rgba(255, 255, 255, 0.88) !important;
+}
+
+body.page-home .hero-slide3-extra-desktop {
+    max-width: 640px;
+    font-size: 1.05rem;
+    line-height: 1.5;
 }
 
 /* ============================================================
@@ -211,13 +289,37 @@ body.page-home .header-carousel .carousel-item > img {
         position: absolute !important;
         inset: 0;
         display: flex !important;
-        align-items: flex-end !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
         background: linear-gradient(
             180deg,
             rgba(25, 42, 48, 0.08) 0%,
             rgba(25, 42, 48, 0.5) 50%,
             rgba(25, 42, 48, 0.9) 100%
         ) !important;
+    }
+
+    /* All hero slides — same top spacing on tablet */
+    body.page-home .carousel-item.hero-slide--booking .carousel-caption,
+    body.page-home .carousel-item.hero-slide--search .carousel-caption,
+    body.page-home .carousel-item.hero-slide--cta .carousel-caption {
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        padding-top: 1.1rem !important;
+    }
+
+    body.page-home .carousel-item.hero-slide--booking .carousel-caption .container,
+    body.page-home .carousel-item.hero-slide--search .carousel-caption .container,
+    body.page-home .carousel-item.hero-slide--cta .carousel-caption .container {
+        padding-top: 0.65rem !important;
+    }
+
+    body.page-home .carousel-item.hero-slide--search .hero-mobile-tagline {
+        margin-bottom: 1.25rem !important;
+    }
+
+    body.page-home .hero-quote-card--after-tagline {
+        margin-top: 0.85rem !important;
     }
 
     body.page-home .carousel-caption .container {
@@ -271,8 +373,8 @@ body.page-home .header-carousel .carousel-item > img {
         margin: 0;
         padding: 0.5rem 0 0 !important;
         display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
         background: linear-gradient(
             180deg,
             rgba(25, 42, 48, 0.15) 0%,
@@ -281,14 +383,102 @@ body.page-home .header-carousel .carousel-item > img {
         ) !important;
     }
 
+    /* All hero slides — unified top spacing on mobile */
+    body.page-home .carousel-item.hero-slide--booking .carousel-caption,
+    body.page-home .carousel-item.hero-slide--search .carousel-caption,
+    body.page-home .carousel-item.hero-slide--cta .carousel-caption {
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        padding-top: 1.35rem !important;
+    }
+
+    body.page-home .carousel-item.hero-slide--booking .carousel-caption .container,
+    body.page-home .carousel-item.hero-slide--search .carousel-caption .container,
+    body.page-home .carousel-item.hero-slide--cta .carousel-caption .container {
+        padding-top: 0.75rem !important;
+        max-height: none;
+    }
+
+    body.page-home .hero-mobile-tagline--booking,
+    body.page-home .hero-mobile-tagline--search,
+    body.page-home .hero-mobile-tagline--cta {
+        margin-bottom: 0 !important;
+    }
+
+    /* Slide 1 — title + sub tight → button → double gap → form */
+    body.page-home .hero-mobile-stack--slide1 .hero-mobile-title {
+        margin-bottom: 0.2rem !important;
+    }
+
+    body.page-home .hero-mobile-stack--slide1 .hero-mobile-sub {
+        margin-bottom: 0.65rem !important;
+    }
+
+    body.page-home .hero-mobile-stack--slide1 .hero-mobile-btn {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    body.page-home .hero-quote-card--slide1 {
+        margin-top: 1.75rem !important;
+    }
+
+    /* Slide 2 — title → gap → sub → double gap → button → gap → form */
+    body.page-home .hero-mobile-stack--slide2 .hero-mobile-title {
+        margin-bottom: 0.85rem !important;
+    }
+
+    body.page-home .hero-mobile-stack--slide2 .hero-mobile-sub {
+        margin-bottom: 1.35rem !important;
+    }
+
+    body.page-home .hero-mobile-stack--slide2 .hero-mobile-btn {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    body.page-home .hero-quote-card--slide2 {
+        margin-top: 1.25rem !important;
+    }
+
+    /* Slide 3 — title → gap → subheading block → double gap → buttons */
+    body.page-home .hero-mobile-stack--slide3 .hero-mobile-title {
+        margin-bottom: 0.85rem !important;
+    }
+
+    body.page-home .hero-mobile-stack--slide3 .hero-mobile-sub {
+        margin-bottom: 0.2rem !important;
+    }
+
+    body.page-home .hero-mobile-stack--slide3 .hero-slide3-extra {
+        margin-bottom: 1.35rem !important;
+    }
+
+    body.page-home .hero-mobile-stack--slide3 .hero-mobile-actions {
+        margin-top: 0 !important;
+    }
+
+    body.page-home .hero-slide3-extra {
+        font-size: 0.76rem !important;
+        line-height: 1.45;
+        opacity: 0.92;
+    }
+
+    body.page-home .hero-mobile-actions .btn {
+        font-size: 0.78rem !important;
+        padding: 0.45rem 1rem !important;
+    }
+
     body.page-home .carousel-caption .container {
         padding-left: 0.65rem !important;
         padding-right: 0.65rem !important;
         padding-bottom: 2rem !important;
-        padding-top: 0 !important;
+        padding-top: 0.35rem !important;
         width: 100%;
+        max-width: 100%;
         max-height: calc(100% - 0.5rem);
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
     }
 
@@ -301,17 +491,19 @@ body.page-home .header-carousel .carousel-item > img {
         border-radius: 0.85rem !important;
     }
 
-    body.page-home .hero-mobile-tagline {
-        margin-bottom: 0.35rem !important;
+    body.page-home .hero-mobile-tagline .hero-mobile-title {
+        font-size: 1.05rem !important;
+        line-height: 1.25;
     }
 
-    body.page-home .hero-mobile-tagline h2 {
-        font-size: 0.95rem !important;
-        margin-bottom: 0.15rem !important;
+    body.page-home .hero-mobile-tagline .hero-mobile-sub {
+        font-size: 0.78rem !important;
+        line-height: 1.35;
     }
 
-    body.page-home .hero-mobile-tagline p {
-        font-size: 0.72rem !important;
+    body.page-home .hero-mobile-tagline .hero-mobile-btn {
+        font-size: 0.8rem !important;
+        padding: 0.45rem 1.1rem !important;
     }
 
     body.page-home .hero-card-title {
@@ -331,10 +523,11 @@ body.page-home .header-carousel .carousel-item > img {
     body.page-home .lead-form--hero .form-select,
     body.page-home .hero-search-form .form-control,
     body.page-home .hero-search-form .form-select {
-        font-size: 0.8125rem !important;
+        font-size: 16px !important;
         padding: 0.45rem 0.6rem !important;
         min-height: 2.35rem;
         border-radius: 0.5rem;
+        max-width: 100%;
     }
 
     body.page-home .lead-form--hero .input-group-text {

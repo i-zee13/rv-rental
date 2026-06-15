@@ -20,6 +20,8 @@ class SeoMeta extends Model
         'global' => 'Global Defaults',
         'home' => 'Homepage',
         'search' => 'Fleet / Search',
+        'properties.search' => 'Homes & Apartments Search',
+        'properties.show' => 'Property Detail (fallback)',
         'contact' => 'Contact',
         'about' => 'About Us',
         'blog.index' => 'Blog Listing',

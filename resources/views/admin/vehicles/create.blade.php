@@ -71,6 +71,34 @@
             </label>
         </div>
 
+        <div class="mt-6 border-t pt-6">
+            <h3 class="font-semibold text-gray-800 mb-3">English Content</h3>
+            <div class="grid grid-cols-1 gap-4">
+                <label class="block">
+                    <div class="text-sm">Display Title (English)</div>
+                    <input name="title_en" class="w-full border rounded px-2 py-2" value="{{ old('title_en') }}" placeholder="Leave blank to use Make + Model">
+                </label>
+                <label class="block">
+                    <div class="text-sm">Description (English)</div>
+                    <textarea name="description_en" rows="4" class="w-full border rounded px-2 py-2">{{ old('description_en') }}</textarea>
+                </label>
+            </div>
+        </div>
+
+        <div class="mt-6 border-t pt-6">
+            <h3 class="font-semibold text-gray-800 mb-3">Contenido en Español</h3>
+            <div class="grid grid-cols-1 gap-4">
+                <label class="block">
+                    <div class="text-sm">Título (Español)</div>
+                    <input name="title_es" class="w-full border rounded px-2 py-2" value="{{ old('title_es') }}">
+                </label>
+                <label class="block">
+                    <div class="text-sm">Descripción (Español)</div>
+                    <textarea name="description_es" rows="4" class="w-full border rounded px-2 py-2">{{ old('description_es') }}</textarea>
+                </label>
+            </div>
+        </div>
+
         <div class="mt-4">
             <button class="bg-yellow-500 text-black px-4 py-2 rounded">Save Vehicle</button>
         </div>
