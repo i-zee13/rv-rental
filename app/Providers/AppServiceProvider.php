@@ -4,10 +4,12 @@ namespace App\Providers;
 
 use App\Services\SeoManager;
 use App\Models\SiteText;
+use App\Support\ExtensionMimeTypeGuesser;
 use Illuminate\Support\Facades\Lang;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\Mime\MimeTypes;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->registerMimeTypeFallback();
+
         Schema::defaultStringLength(191);
 
         View::composer('layouts.app', function ($view) {
@@ -45,5 +49,14 @@ class AppServiceProvider extends ServiceProvider
         } catch (\Throwable) {
             // DB may be unavailable during deploy/migrate
         }
+    }
+
+    protected function registerMimeTypeFallback(): void
+    {
+        if (extension_loaded('fileinfo')) {
+            return;
+        }
+
+        MimeTypes::getDefault()->registerGuesser(new ExtensionMimeTypeGuesser());
     }
 }

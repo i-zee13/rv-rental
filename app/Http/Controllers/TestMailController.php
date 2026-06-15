@@ -35,6 +35,7 @@ class TestMailController extends Controller
             'app_env' => config('app.env'),
             'config_cached' => app()->configurationIsCached(),
             'openssl_loaded' => extension_loaded('openssl'),
+            'fileinfo_loaded' => extension_loaded('fileinfo'),
         ];
 
         try {
@@ -69,6 +70,7 @@ class TestMailController extends Controller
                     'After changing .env run /clear?no_cache=1 then test again.',
                     'Gmail needs an App Password (2FA on): https://myaccount.google.com/apppasswords',
                     'Some hosts block port 587 — try MAIL_PORT=465 and MAIL_ENCRYPTION=ssl',
+                    'Enable php_fileinfo in cPanel → Select PHP Version → Extensions (recommended).',
                     'Check storage/logs/laravel.log for "Booking customer email failed".',
                 ],
             ], 500);
