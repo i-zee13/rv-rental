@@ -396,6 +396,16 @@
     transform: scale(0.92);
 }
 
+#mv-booking-chat:not(.is-open) .chat-sidebar {
+    pointer-events: none;
+}
+
+#mv-booking-chat:not(.is-open) .chat-backdrop {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
 /* Body scroll lock when open (desktop only — mobile keeps page context) */
 @media (min-width: 769px) {
     body.chat-sidebar-open {
@@ -405,6 +415,11 @@
 
 /* Tablet & mobile — compact bottom-sheet popup (not full screen) */
 @media (max-width: 768px) {
+    #mv-booking-chat:not(.is-open) .chat-sidebar {
+        visibility: hidden;
+        transform: translateY(calc(100% + 3rem));
+    }
+
     #mv-booking-chat .chat-backdrop {
         background: rgba(25, 42, 48, 0.25);
         backdrop-filter: blur(4px);
@@ -428,6 +443,7 @@
     }
 
     #mv-booking-chat.is-open .chat-sidebar {
+        visibility: visible;
         transform: translateY(0);
     }
 

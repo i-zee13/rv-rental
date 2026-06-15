@@ -183,14 +183,10 @@ body:not(.page-home) .page-header {
     font-size: 1.1rem;
     line-height: 1;
 }
-@media (max-width: 575.98px) {
+@media (max-width: 768px) {
+    /* Hide back-to-top on mobile — overlaps chat FAB */
     .back-to-top {
-        right: 14px;
-        bottom: 16px;
-        width: 44px;
-        height: 44px;
-        min-width: 44px;
-        min-height: 44px;
+        display: none !important;
     }
 }
 
@@ -612,10 +608,10 @@ body {
     }
 }
 
-/* Override template fixed carousel height on mobile */
+/* Override template fixed carousel height on mobile (not homepage hero) */
 @media (max-width: 768px) {
-    body.page-home .carousel .carousel-item,
-    body.page-home .carousel .carousel-item img {
+    body:not(.page-home) .carousel .carousel-item,
+    body:not(.page-home) .carousel .carousel-item img {
         height: auto !important;
         min-height: 0 !important;
         max-height: none !important;

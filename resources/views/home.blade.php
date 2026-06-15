@@ -20,7 +20,11 @@
 
             {{-- Slide 1 --}}
             <div class="carousel-item active">
-                <img src="/theme/img/THOR-Vision-Vehicle-TVV-electric-rv-2.jpg" class="img-fluid w-100" alt="RV Rental Miami">
+                <x-hero-slide-image
+                    slug="slide-1"
+                    desktop="theme/img/THOR-Vision-Vehicle-TVV-electric-rv-2.jpg"
+                    alt="RV Rental Miami"
+                />
                 <div class="carousel-caption">
                     <div class="container py-4">
                                 <div class="row g-5 hero-row">
@@ -54,7 +58,11 @@
 
             {{-- Slide 2 --}}
             <div class="carousel-item">
-                <img src="/theme/img/carousel-2.jpg" class="img-fluid w-100" alt="Car Rental Miami">
+                <x-hero-slide-image
+                    slug="slide-2"
+                    desktop="theme/img/carousel-2.jpg"
+                    alt="Car Rental Miami"
+                />
                 <div class="carousel-caption">
                     <div class="container py-4">
                                 <div class="row g-5 hero-row">
@@ -98,7 +106,11 @@
 
             {{-- Slide 3 --}}
             <div class="carousel-item">
-                <img src="/theme/img/carousel-1.jpg" class="img-fluid w-100" alt="Luxury Rental">
+                <x-hero-slide-image
+                    slug="slide-3"
+                    desktop="theme/img/carousel-1.jpg"
+                    alt="Luxury Rental"
+                />
                 <div class="carousel-caption">
                     <div class="container py-4">
                         <div class="row hero-row">
