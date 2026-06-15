@@ -7,8 +7,8 @@ use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Support\PublicMedia;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PropertyController extends Controller
@@ -162,9 +162,8 @@ class PropertyController extends Controller
         $sort = (int) $property->images()->max('sort_order');
 
         foreach ($request->file('images') as $file) {
-            $path = $file->store('properties', 'public');
             $property->images()->create([
-                'path' => Storage::url($path),
+                'path' => PublicMedia::store($file, 'properties'),
                 'alt_text' => $property->title(),
                 'sort_order' => ++$sort,
             ]);
@@ -173,8 +172,6 @@ class PropertyController extends Controller
 
     protected function deleteImageFile(string $path): void
     {
-        if (str_starts_with($path, '/storage/')) {
-            Storage::disk('public')->delete(str_replace('/storage/', '', $path));
-        }
+        PublicMedia::deleteByUrl($path);
     }
 }

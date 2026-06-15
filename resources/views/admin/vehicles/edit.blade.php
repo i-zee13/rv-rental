@@ -109,7 +109,7 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 @foreach($vehicle->images as $img)
                     <div class="border rounded p-2">
-                        <img src="{{ $img->path }}" alt="" class="w-full h-32 object-cover mb-2">
+                        <img src="{{ $img->publicUrl() }}" alt="" class="w-full h-32 object-cover mb-2">
                         <form method="POST" action="{{ route('admin.vehicles.images.destroy', [$vehicle->id, $img->id]) }}">
                             @csrf
                             @method('DELETE')

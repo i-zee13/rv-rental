@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
-use Illuminate\Support\Facades\Storage;
+use App\Support\PublicMedia;
 use Illuminate\Support\Str;
 use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
@@ -43,9 +43,8 @@ class VehicleController extends Controller
         // handle images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $path = $file->store('vehicles', 'public');
                 $vehicle->images()->create([
-                    'path' => Storage::url($path),
+                    'path' => PublicMedia::store($file, 'vehicles'),
                     'alt_text' => $data['make'].' '.$data['model'] ?? null,
                 ]);
             }
@@ -82,9 +81,8 @@ class VehicleController extends Controller
         // handle new images upload
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $path = $file->store('vehicles', 'public');
                 $vehicle->images()->create([
-                    'path' => Storage::url($path),
+                    'path' => PublicMedia::store($file, 'vehicles'),
                     'alt_text' => ($data['make'] ?? $vehicle->make) . ' ' . ($data['model'] ?? $vehicle->model),
                 ]);
             }

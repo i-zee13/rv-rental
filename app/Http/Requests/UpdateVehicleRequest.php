@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UploadedImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateVehicleRequest extends FormRequest
@@ -27,7 +28,7 @@ class UpdateVehicleRequest extends FormRequest
             'title_es' => 'nullable|string|max:255',
             'description_es' => 'nullable|string',
             'images' => 'nullable|array',
-            'images.*' => 'image|max:4096',
+            'images.*' => ['nullable', 'file', 'max:4096', new UploadedImage],
             'delete_image_ids' => 'nullable|array',
             'delete_image_ids.*' => 'integer|exists:vehicle_images,id',
         ];

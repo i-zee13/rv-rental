@@ -11,6 +11,10 @@ class ClearController extends Controller
     {
         $commands = ['optimize:clear'];
 
+        if ($request->boolean('storage', true)) {
+            $commands[] = 'storage:link';
+        }
+
         if (! $request->boolean('no_cache')) {
             $commands = array_merge($commands, [
                 'config:cache',

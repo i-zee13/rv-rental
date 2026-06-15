@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UploadedImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePropertyRequest extends FormRequest
@@ -43,7 +44,7 @@ class StorePropertyRequest extends FormRequest
             'amenities' => 'nullable|array',
             'amenities.*' => 'string|max:50',
             'images' => 'nullable|array',
-            'images.*' => 'image|max:4096',
+            'images.*' => ['nullable', 'file', 'max:4096', new UploadedImage],
         ];
     }
 }

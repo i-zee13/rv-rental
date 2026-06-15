@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\PublicMedia;
 use Illuminate\Database\Eloquent\Model;
 
 class PropertyImage extends Model
@@ -15,5 +16,10 @@ class PropertyImage extends Model
     public function property()
     {
         return $this->belongsTo(Property::class);
+    }
+
+    public function publicUrl(): string
+    {
+        return PublicMedia::url($this->path ?? '');
     }
 }

@@ -130,7 +130,7 @@
                     <div class="grid grid-cols-4 gap-2 mt-4">
                         @foreach($property->images as $img)
                             <div class="relative">
-                                <img src="{{ $img->path }}" class="w-full h-20 object-cover rounded border">
+                                <img src="{{ $img->publicUrl() }}" class="w-full h-20 object-cover rounded border" alt="">
                                 <label class="absolute bottom-1 left-1 bg-white/90 text-xs px-1 rounded">
                                     <input type="checkbox" name="delete_image_ids[]" value="{{ $img->id }}"> Remove
                                 </label>

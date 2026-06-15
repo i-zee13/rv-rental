@@ -8,7 +8,7 @@
 <div class="categories-item p-3 h-100">
     <div class="categories-item-inner h-100 d-flex flex-column">
         <div class="categories-img rounded-top position-relative" style="height:200px; overflow:hidden;">
-            <img src="{{ $img->path ?? '/theme/img/carousel-2.jpg' }}"
+            <img src="{{ $img ? $img->publicUrl() : '/theme/img/carousel-2.jpg' }}"
                 class="img-fluid w-100"
                 style="height:200px; object-fit:cover;"
                 alt="{{ $t->title ?? $property->fullAddress() }}"

@@ -4,6 +4,7 @@
     $t = $property->translation();
     $img = $property->images->firstWhere('is_primary', true) ?? $property->images->first();
     $title = $t->title ?? $property->fullAddress();
+    $heroImg = $img ? $img->publicUrl() : '/theme/img/carousel-1.jpg';
 @endphp
 
 @section('title', $title)
@@ -12,7 +13,7 @@
 @section('content')
 
 <div class="container-fluid page-header py-5 mb-5 wow fadeIn"
-    style="background: linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.65)), url('{{ $img->path ?? '/theme/img/carousel-1.jpg' }}') center/cover no-repeat;">
+    style="background: linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.65)), url('{{ $heroImg }}') center/cover no-repeat;">
     <div class="container py-5">
         <h1 class="display-4 text-white mb-2 animated slideInDown">{{ $title }}</h1>
         <p class="text-white-50 mb-3"><i class="fas fa-map-marker-alt me-2"></i>{{ $property->fullAddress() }}</p>
@@ -32,7 +33,7 @@
 
             <div class="col-lg-8 wow fadeInLeft" data-wow-delay="0.1s">
                 <div class="rounded overflow-hidden mb-4 vehicle-detail-image" style="height:360px;">
-                    <img id="propertyMainImg" src="{{ $img->path ?? '/theme/img/carousel-1.jpg' }}" alt="{{ $title }}"
+                    <img id="propertyMainImg" src="{{ $heroImg }}" alt="{{ $title }}"
                         class="w-100 h-100" style="object-fit:cover;" onerror="this.src='/theme/img/carousel-1.jpg'">
                 </div>
 
@@ -40,9 +41,9 @@
                 <div class="row g-2 mb-4">
                     @foreach($property->images as $photo)
                     <div class="col-3 col-md-2">
-                        <img src="{{ $photo->path }}" alt="" class="img-fluid rounded border"
+                        <img src="{{ $photo->publicUrl() }}" alt="" class="img-fluid rounded border"
                             style="height:70px;width:100%;object-fit:cover;cursor:pointer;"
-                            onclick="document.getElementById('propertyMainImg').src='{{ $photo->path }}'">
+                            onclick="document.getElementById('propertyMainImg').src='{{ $photo->publicUrl() }}'">
                     </div>
                     @endforeach
                 </div>

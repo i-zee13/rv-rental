@@ -16,12 +16,13 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(SeoManager::class);
+
+        // Always register — cPanel often enables fileinfo for CLI but not for web PHP.
+        MimeTypes::getDefault()->registerGuesser(new ExtensionMimeTypeGuesser());
     }
 
     public function boot(): void
     {
-        $this->registerMimeTypeFallback();
-
         Schema::defaultStringLength(191);
 
         View::composer('layouts.app', function ($view) {
@@ -49,14 +50,5 @@ class AppServiceProvider extends ServiceProvider
         } catch (\Throwable) {
             // DB may be unavailable during deploy/migrate
         }
-    }
-
-    protected function registerMimeTypeFallback(): void
-    {
-        if (extension_loaded('fileinfo')) {
-            return;
-        }
-
-        MimeTypes::getDefault()->registerGuesser(new ExtensionMimeTypeGuesser());
     }
 }

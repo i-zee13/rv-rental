@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UploadedImage;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreVehicleRequest extends FormRequest
@@ -28,7 +29,7 @@ class StoreVehicleRequest extends FormRequest
             'title_es' => 'nullable|string|max:255',
             'description_es' => 'nullable|string',
             'images' => 'nullable|array',
-            'images.*' => 'image|max:2048',
+            'images.*' => ['nullable', 'file', 'max:4096', new UploadedImage],
         ];
     }
 }
