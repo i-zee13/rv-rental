@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\VehicleCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
@@ -98,6 +99,17 @@ class VehicleCategoryController extends Controller
         );
 
         return redirect()->route('admin.categories.index')->with('success', 'Category updated.');
+    }
+
+    public function seedDefaults()
+    {
+        Artisan::call('db:seed', [
+            '--class' => 'Database\\Seeders\\VehicleCategoriesSeeder',
+            '--force' => true,
+        ]);
+
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Default categories loaded. Existing categories and your vehicles were not deleted.');
     }
 
     public function destroy($id)

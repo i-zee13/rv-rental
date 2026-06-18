@@ -24,6 +24,9 @@ class MigrateController extends Controller
             'command' => $command,
             'exit_code' => $exitCode,
             'output' => trim(Artisan::output()),
+            'note' => $command === 'migrate:fresh'
+                ? 'WARNING: migrate:fresh deleted all tables. Do not use refresh=1 on live.'
+                : 'Safe: only runs new migrations. Your existing rows are kept. For categories use /seed?class=VehicleCategoriesSeeder — not /migrate?seed=1.',
         ], $exitCode === 0 ? 200 : 500);
     }
 }

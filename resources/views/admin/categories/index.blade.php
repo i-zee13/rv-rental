@@ -8,7 +8,13 @@
         <h1 class="text-xl font-semibold">Vehicle Categories</h1>
         <p class="text-sm text-gray-500 mt-1">Used in search filters and vehicle listings</p>
     </div>
-    <a href="{{ route('admin.categories.create') }}" class="bg-yellow-500 text-black px-4 py-2 rounded font-medium">Add Category</a>
+    <div class="flex flex-wrap gap-2">
+        <form method="POST" action="{{ route('admin.categories.seed-defaults') }}" onsubmit="return confirm('Load default categories (Cars, SUVs, RVs, etc.)? Existing data will not be deleted.')">
+            @csrf
+            <button type="submit" class="border border-gray-300 px-4 py-2 rounded text-sm">Load Default Categories</button>
+        </form>
+        <a href="{{ route('admin.categories.create') }}" class="bg-yellow-500 text-black px-4 py-2 rounded font-medium">Add Category</a>
+    </div>
 </div>
 
 <div class="admin-table-wrap bg-white border rounded-lg">
@@ -53,8 +59,11 @@
                 <tr>
                     <td colspan="6" class="p-6 text-center text-gray-500">
                         No categories yet.
-                        <a href="{{ route('admin.categories.create') }}" class="text-indigo-600">Add one</a>
-                        or run <code class="text-xs bg-gray-100 px-1 rounded">php artisan db:seed --class=VehicleCategoriesSeeder</code>
+                        <form method="POST" action="{{ route('admin.categories.seed-defaults') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-indigo-600 underline">Load defaults</button>
+                        </form>
+                        or <a href="{{ route('admin.categories.create') }}" class="text-indigo-600">add one</a>
                     </td>
                 </tr>
             @endforelse

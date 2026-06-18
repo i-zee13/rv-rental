@@ -3,6 +3,8 @@
 @php
     $t = $vehicle->translations->firstWhere('locale', app()->getLocale()) ?? $vehicle->translations->first();
     $vehicleTitle = $t->title ?? $vehicle->make.' '.$vehicle->model;
+    $mainImg = $vehicle->images->first()?->publicUrl() ?? '/theme/img/car-2.png';
+    $heroImg = $vehicle->images->first()?->publicUrl() ?? '/theme/img/carousel-1.jpg';
 @endphp
 
 @section('title', $vehicleTitle)
@@ -12,7 +14,7 @@
 
 {{-- Page Header --}}
 <div class="container-fluid page-header py-5 mb-5 wow fadeIn" data-wow-delay="0.1s"
-    style="background: linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.65)), url('{{ $vehicle->images->first()->path ?? '/theme/img/carousel-1.jpg' }}') center/cover no-repeat;">
+    style="background: linear-gradient(rgba(0,0,0,0.65),rgba(0,0,0,0.65)), url('{{ $heroImg }}') center/cover no-repeat;">
     <div class="container py-5">
         <h1 class="display-3 text-white mb-3 animated slideInDown">{{ $vehicleTitle }}</h1>
         <nav aria-label="breadcrumb animated slideInDown">
@@ -36,10 +38,10 @@
 
                 {{-- Main Image --}}
                 <div class="position-relative mb-4 rounded overflow-hidden vehicle-detail-image"
-                    x-data="{ activeImg: '{{ $vehicle->images->first()->path ?? '/theme/img/car-2.png' }}' }">
+                    x-data="{ activeImg: @js($mainImg) }">
                     <img :src="activeImg"
                         alt="{{ $vehicleTitle }}"
-                        class="w-100 h-100 rounded"
+                        class="vehicle-main-img w-100 h-100 rounded"
                         style="object-fit:cover;"
                         onerror="this.src='/theme/img/car-2.png'">
                     {{-- Status badge --}}
@@ -54,13 +56,13 @@
 
                 {{-- Thumbnail Gallery --}}
                 @if($vehicle->images->count() > 1)
-                <div class="row g-2 mb-4" x-data="{ activeImg: '' }">
+                <div class="row g-2 mb-4">
                     @foreach($vehicle->images as $img)
                     <div class="col-3 col-md-2">
-                        <img src="{{ $img->path }}" alt=""
+                        <img src="{{ $img->publicUrl() }}" alt=""
                             class="img-fluid rounded border border-2"
                             style="height:70px;width:100%;object-fit:cover;cursor:pointer;"
-                            onclick="document.querySelector('.vehicle-main-img').src='{{ $img->path }}'"
+                            onclick="document.querySelector('.vehicle-main-img').src='{{ $img->publicUrl() }}'"
                             onerror="this.src='/theme/img/car-2.png'">
                     </div>
                     @endforeach
@@ -193,7 +195,7 @@
                         <div class="categories-item p-3">
                             <div class="categories-item-inner">
                                 <div class="categories-img rounded-top">
-                                    <img src="{{ $rv->images->first()->path ?? '/theme/img/car-2.png' }}"
+                                    <img src="{{ $rv->images->first()?->publicUrl() ?? '/theme/img/car-2.png' }}"
                                         class="img-fluid w-100 rounded-top" style="height:180px;object-fit:cover;"
                                         alt="{{ $rt->title ?? $rv->make.' '.$rv->model }}"
                                         onerror="this.src='/theme/img/car-2.png'">

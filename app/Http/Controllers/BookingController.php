@@ -246,7 +246,7 @@ class BookingController extends Controller
         return [
             'vehicle' => $vehicle,
             'vehicle_title' => $vehicleTitle,
-            'vehicle_image' => $vehicle->images->first()->path ?? '/theme/img/car-2.png',
+            'vehicle_image' => $vehicle->images->first()?->publicUrl() ?? '/theme/img/car-2.png',
             'start' => $start,
             'end' => $end,
             'days' => $days,

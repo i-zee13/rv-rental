@@ -104,7 +104,7 @@
                             <div class="categories-item p-3">
                                 <div class="categories-item-inner">
                                     <div class="categories-img rounded-top" style="height:200px; overflow:hidden;">
-                                        <img src="{{ $v->images->first()->path ?? '/theme/img/car-2.png' }}"
+                                        <img src="{{ $v->images->first()?->publicUrl() ?? '/theme/img/car-2.png' }}"
                                             class="img-fluid w-100 rounded-top"
                                             style="height:200px; object-fit:cover;"
                                             alt="{{ $t->title ?? $v->make.' '.$v->model }}"

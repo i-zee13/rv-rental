@@ -386,7 +386,7 @@
                 <div class="categories-item p-4">
                     <div class="categories-item-inner">
                         <div class="categories-img rounded-top">
-                            <img src="{{ $v->images->first()->path ?? '/theme/img/Midas-Preview.png' }}"
+                            <img src="{{ $v->images->first()?->publicUrl() ?? '/theme/img/Midas-Preview.png' }}"
                                 class="img-fluid w-100 rounded-top"
                                 alt="{{ $t->title ?? $v->make.' '.$v->model }}"
                                 onerror="this.src='/theme/img/car-2.png'">
