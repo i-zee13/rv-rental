@@ -22,11 +22,19 @@
     </thead>
     <tbody>
         @foreach($vehicles as $v)
-            @php $t = $v->translations->firstWhere('locale', app()->getLocale()) ?? $v->translations->first(); @endphp
+            @php
+                $t = $v->translations->firstWhere('locale', app()->getLocale()) ?? $v->translations->first();
+                $categoryLabel = '-';
+                if ($v->category) {
+                    $catT = $v->category->translations->firstWhere('locale', app()->getLocale())
+                        ?? $v->category->translations->first();
+                    $categoryLabel = $catT->name ?? $v->category->slug ?? '-';
+                }
+            @endphp
             <tr class="border-t">
                 <td class="p-3">{{ $v->id }}</td>
                 <td class="p-3">{{ $t->title ?? $v->make.' '.$v->model }}</td>
-                <td class="p-3">{{ $v->category->translations->firstWhere('locale', app()->getLocale())->name ?? $v->category->slug ?? '-' }}</td>
+                <td class="p-3">{{ $categoryLabel }}</td>
                 <td class="p-3">${{ number_format($v->price_per_day,2) }}</td>
                 <td class="p-3">{{ ucfirst($v->status) }}</td>
                 <td class="p-3">

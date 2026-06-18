@@ -14,7 +14,7 @@ class VehicleController extends Controller
 {
     public function index(Request $request)
     {
-        $vehicles = Vehicle::with(['translations','images','category'])->paginate(20);
+        $vehicles = Vehicle::with(['translations', 'images', 'category.translations'])->paginate(20);
         return view('admin.vehicles.index', compact('vehicles'));
     }
 
