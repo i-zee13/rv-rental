@@ -32,7 +32,7 @@ class SeoEntityService
                 ? Str::limit(trim(strip_tags($data['og_description'])), 320, '')
                 : null,
             'og_image' => trim($data['og_image'] ?? '') ?: null,
-            'og_type' => trim($data['og_type'] ?? '') ?: null,
+            'og_type' => trim($data['og_type'] ?? '') ?: $this->defaultOgType($entityType),
             'robots' => trim($data['robots'] ?? '') ?: 'index,follow',
             'canonical' => trim($data['canonical'] ?? '') ?: null,
             'schema_json' => trim($data['schema_json'] ?? '') ?: null,
@@ -57,6 +57,15 @@ class SeoEntityService
             self::TYPE_BLOG_POST => 'blog.show',
             self::TYPE_PAGE => 'pages.show',
             default => 'global',
+        };
+    }
+
+    protected function defaultOgType(string $entityType): string
+    {
+        return match ($entityType) {
+            self::TYPE_VEHICLE => 'product',
+            self::TYPE_BLOG_POST => 'article',
+            default => 'website',
         };
     }
 }
