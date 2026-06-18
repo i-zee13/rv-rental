@@ -18,7 +18,7 @@ class PropertyController extends Controller
 {
     public function index()
     {
-        $properties = Property::with(['translations', 'images', 'type.translations'])->latest()->paginate(20);
+        $properties = Property::with(['translations', 'images', 'type.translations'])->latest()->get();
 
         return view('admin.properties.index', compact('properties'));
     }

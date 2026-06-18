@@ -3,11 +3,13 @@
 @section('title','Bookings')
 
 @section('content')
-<div>
-    <h1 class="text-xl font-semibold mb-4">Bookings</h1>
-    <div class="admin-table-wrap">
-    <table class="w-full bg-white border rounded">
-        <thead class="bg-gray-50">
+<div class="admin-page-header">
+    <h1 class="text-xl font-semibold">Bookings</h1>
+</div>
+
+<div class="admin-table-wrap bg-white border rounded-lg p-3">
+    <table class="admin-datatable w-full display">
+        <thead>
             <tr>
                 <th class="p-3 text-left">#</th>
                 <th class="p-3 text-left">Reference</th>
@@ -15,7 +17,7 @@
                 <th class="p-3 text-left">Dates</th>
                 <th class="p-3 text-left">Total</th>
                 <th class="p-3 text-left">Status</th>
-                <th class="p-3 text-left">Actions</th>
+                <th class="p-3 text-left no-sort">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -27,13 +29,15 @@
                     <td class="p-3">{{ $b->start_date }} → {{ $b->end_date }}</td>
                     <td class="p-3">${{ number_format($b->total,2) }}</td>
                     <td class="p-3">{{ ucfirst($b->status) }}</td>
-                    <td class="p-3"><a href="{{ route('admin.bookings.show', $b->id) }}" class="text-blue-600">View</a></td>
+                    <td class="p-3">
+                        <x-admin-table-actions
+                            :view="route('admin.bookings.show', $b->id)"
+                            view-target="_self"
+                        />
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    </div>
-
-    <div class="mt-4">{{ $bookings->links() }}</div>
 </div>
 @endsection

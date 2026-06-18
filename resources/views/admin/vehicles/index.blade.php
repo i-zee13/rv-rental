@@ -8,16 +8,16 @@
     <a href="{{ route('admin.vehicles.create') }}" class="bg-yellow-500 text-black px-3 py-2 rounded">Add Vehicle</a>
 </div>
 
-<div class="admin-table-wrap">
-<table class="w-full bg-white border rounded">
-    <thead class="bg-gray-50">
+<div class="admin-table-wrap bg-white border rounded-lg p-3">
+<table class="admin-datatable w-full display">
+    <thead>
         <tr>
             <th class="p-3 text-left">#</th>
             <th class="p-3 text-left">Title</th>
             <th class="p-3 text-left">Category</th>
             <th class="p-3 text-left">Price/day</th>
             <th class="p-3 text-left">Status</th>
-            <th class="p-3 text-left">Actions</th>
+            <th class="p-3 text-left no-sort">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -38,18 +38,14 @@
                 <td class="p-3">${{ number_format($v->price_per_day,2) }}</td>
                 <td class="p-3">{{ ucfirst($v->status) }}</td>
                 <td class="p-3">
-                    <a href="{{ route('admin.vehicles.edit', $v->id) }}" class="text-blue-600 mr-2">Edit</a>
-                    <form action="#" method="POST" class="inline-block">
-                        @csrf
-                        @method('DELETE')
-                        <button class="text-red-600">Delete</button>
-                    </form>
+                    <x-admin-table-actions
+                        :view="$v->slug ? route('vehicles.show', $v) : null"
+                        :edit="route('admin.vehicles.edit', $v->id)"
+                    />
                 </td>
             </tr>
         @endforeach
     </tbody>
 </table>
 </div>
-
-<div class="mt-4">{{ $vehicles->links() }}</div>
 @endsection

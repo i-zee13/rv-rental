@@ -13,15 +13,15 @@
 
 @if(session('success'))<div class="text-green-600 mb-3">{{ session('success') }}</div>@endif
 
-<div class="admin-table-wrap bg-white border rounded-lg">
-    <table class="w-full text-sm">
-        <thead class="bg-gray-50 text-left text-xs uppercase text-gray-500">
+<div class="admin-table-wrap bg-white border rounded-lg p-3">
+    <table class="admin-datatable w-full text-sm display">
+        <thead class="text-left text-xs uppercase text-gray-500">
             <tr>
                 <th class="p-3">Code</th>
                 <th class="p-3">Title</th>
                 <th class="p-3">Price</th>
                 <th class="p-3">Status</th>
-                <th class="p-3">Actions</th>
+                <th class="p-3 no-sort">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -39,11 +39,11 @@
                     @endif
                 </td>
                 <td class="p-3">
-                    <a href="{{ route('admin.addons.edit', $addon->id) }}" class="text-indigo-600 mr-3">Edit</a>
-                    <form action="{{ route('admin.addons.destroy', $addon->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this add-on?')">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="text-red-600">Delete</button>
-                    </form>
+                    <x-admin-table-actions
+                        :edit="route('admin.addons.edit', $addon->id)"
+                        :delete-action="route('admin.addons.destroy', $addon->id)"
+                        delete-confirm="Delete this add-on?"
+                    />
                 </td>
             </tr>
             @empty

@@ -33,10 +33,9 @@
         @endif
     </form>
 
-    <div class="bg-white border rounded-lg overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="bg-gray-50 text-left text-xs uppercase text-gray-500">
+    <div class="admin-table-wrap bg-white border rounded-lg p-3">
+        <table class="admin-datatable w-full text-sm display">
+                <thead class="text-left text-xs uppercase text-gray-500">
                     <tr>
                         <th class="p-3">Ref</th>
                         <th class="p-3">Customer</th>
@@ -45,7 +44,7 @@
                         <th class="p-3">Status</th>
                         <th class="p-3 hidden sm:table-cell">Source</th>
                         <th class="p-3">Date</th>
-                        <th class="p-3"></th>
+                        <th class="p-3 no-sort">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -81,7 +80,10 @@
                         <td class="p-3 hidden sm:table-cell text-gray-500 capitalize">{{ $lead->source }}</td>
                         <td class="p-3 text-gray-500 text-xs whitespace-nowrap">{{ $lead->created_at->format('M j, H:i') }}</td>
                         <td class="p-3">
-                            <a href="{{ route('admin.leads.show', $lead->id) }}" class="text-indigo-600 hover:underline font-medium">View</a>
+                            <x-admin-table-actions
+                                :view="route('admin.leads.show', $lead->id)"
+                                view-target="_self"
+                            />
                         </td>
                     </tr>
                     @empty
@@ -91,9 +93,6 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
     </div>
-
-    <div class="mt-4">{{ $leads->links() }}</div>
 </div>
 @endsection

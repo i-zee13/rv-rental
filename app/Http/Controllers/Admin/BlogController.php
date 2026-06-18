@@ -13,7 +13,7 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $posts = BlogPost::with('translations')->paginate(20);
+        $posts = BlogPost::with('translations')->latest()->get();
 
         return view('admin.blog.index', compact('posts'));
     }

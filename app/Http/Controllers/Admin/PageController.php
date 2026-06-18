@@ -10,7 +10,7 @@ class PageController extends Controller
 {
     public function index()
     {
-        $pages = Page::with('translations')->paginate(20);
+        $pages = Page::with('translations')->orderByDesc('id')->get();
         return view('admin.pages.index', compact('pages'));
     }
 

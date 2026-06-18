@@ -17,16 +17,16 @@
     </div>
 </div>
 
-<div class="admin-table-wrap bg-white border rounded-lg">
-    <table class="w-full text-sm">
-        <thead class="bg-gray-50 text-left text-xs uppercase text-gray-500">
+<div class="admin-table-wrap bg-white border rounded-lg p-3">
+    <table class="admin-datatable w-full text-sm display">
+        <thead class="text-left">
             <tr>
                 <th class="p-3">Slug</th>
                 <th class="p-3">Name (EN)</th>
                 <th class="p-3">Name (ES)</th>
                 <th class="p-3">Vehicles</th>
                 <th class="p-3">Status</th>
-                <th class="p-3">Actions</th>
+                <th class="p-3 no-sort">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -48,11 +48,12 @@
                         @endif
                     </td>
                     <td class="p-3">
-                        <a href="{{ route('admin.categories.edit', $cat->id) }}" class="text-indigo-600 mr-3">Edit</a>
-                        <form action="{{ route('admin.categories.destroy', $cat->id) }}" method="POST" class="inline" onsubmit="return confirm('Delete this category?')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="text-red-600">Delete</button>
-                        </form>
+                        <x-admin-table-actions
+                            :view="route('search', ['category' => $cat->slug])"
+                            :edit="route('admin.categories.edit', $cat->id)"
+                            :delete-action="route('admin.categories.destroy', $cat->id)"
+                            delete-confirm="Delete this category?"
+                        />
                     </td>
                 </tr>
             @empty

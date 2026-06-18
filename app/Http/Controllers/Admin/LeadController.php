@@ -25,7 +25,7 @@ class LeadController extends Controller
             });
         }
 
-        $leads = $query->paginate(20)->withQueryString();
+        $leads = $query->get();
         $counts = Lead::selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');

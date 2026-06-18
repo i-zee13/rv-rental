@@ -9,6 +9,7 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.min.css">
     <link rel="stylesheet" href="{{ asset('css/admin-dropify.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
@@ -19,6 +20,20 @@
         .admin-table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
         .admin-table-wrap table { min-width:640px; }
         .admin-page-header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.75rem; margin-bottom:1rem; }
+        .btn-sm { display:inline-flex; align-items:center; justify-content:center; padding:.25rem .625rem; font-size:.75rem; font-weight:500; line-height:1.25; border-radius:.375rem; border:1px solid transparent; transition:background .15s,color .15s; white-space:nowrap; }
+        .btn-sm-primary { background:#4f46e5; color:#fff; }
+        .btn-sm-primary:hover { background:#4338ca; }
+        .btn-sm-secondary { background:#fff; color:#374151; border-color:#d1d5db; }
+        .btn-sm-secondary:hover { background:#f9fafb; }
+        .btn-sm-warning { background:#eab308; color:#111; }
+        .btn-sm-warning:hover { background:#ca8a04; }
+        .btn-sm-danger { background:#fff; color:#dc2626; border-color:#fecaca; cursor:pointer; }
+        .btn-sm-danger:hover { background:#fef2f2; }
+        div.dt-container { font-size:.875rem; }
+        div.dt-container .dt-search input { border:1px solid #d1d5db; border-radius:.375rem; padding:.375rem .625rem; margin-left:.5rem; }
+        div.dt-container .dt-length select { border:1px solid #d1d5db; border-radius:.375rem; padding:.25rem .5rem; margin:0 .5rem; }
+        div.dt-container .dt-paging .dt-paging-button { border-radius:.375rem !important; }
+        table.admin-datatable thead th { background:#f9fafb; font-size:.75rem; text-transform:uppercase; letter-spacing:.025em; color:#6b7280; }
         @media (max-width: 639px) {
             .admin-page-header { flex-direction:column; align-items:stretch; }
             .admin-page-header a, .admin-page-header button { text-align:center; }
@@ -173,6 +188,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/js/dropify.min.js"></script>
 <script src="{{ asset('js/admin-dropify.js') }}"></script>
+<script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+<script src="{{ asset('js/admin-datatables.js') }}?v=1"></script>
 <script>
 window.MvAdminAi = {
     descriptionsUrl: @json(route('admin.ai.descriptions')),
