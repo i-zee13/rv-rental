@@ -6,7 +6,8 @@
 <div class="max-w-3xl bg-white p-6 rounded shadow">
     <h1 class="text-xl font-semibold mb-4">Edit Post</h1>
 
-    <form action="{{ route('admin.blog.update', $post->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.blog.update', $post->id) }}" method="POST" enctype="multipart/form-data"
+        data-ai-type="blog" data-ai-desc-en="content_en" data-ai-desc-es="content_es">
         @csrf
         @method('PUT')
         <label class="block mb-2">Slug
@@ -36,6 +37,9 @@
             <input name="title_en" class="w-full border rounded px-2 py-2" value="{{ old('title_en', $t_en->title ?? '') }}">
         </label>
         <label class="block mb-2">Content
+            <div class="flex items-center justify-end mb-1">
+                <x-admin-ai-desc-btn entity="blog" en-field="content_en" es-field="content_es" />
+            </div>
             <textarea name="content_en" rows="6" class="w-full border rounded px-2 py-2">{{ old('content_en', $t_en->content ?? '') }}</textarea>
         </label>
 
@@ -46,6 +50,8 @@
         <label class="block mb-2">Content (es)
             <textarea name="content_es" rows="6" class="w-full border rounded px-2 py-2">{{ old('content_es', $t_es->content ?? '') }}</textarea>
         </label>
+
+        <x-admin-seo-fields :seo="$seo ?? null" entity="blog" />
 
         <div class="mt-4">
             <button class="bg-yellow-500 text-black px-4 py-2 rounded">Update Post</button>

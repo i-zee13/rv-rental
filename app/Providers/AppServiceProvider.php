@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('layouts.app', function ($view) {
             if (request()->route()) {
-                app(SeoManager::class)->applyForRequest(request());
+                $view->with('seoHead', app(SeoManager::class)->buildForRequest(request()));
             }
         });
 

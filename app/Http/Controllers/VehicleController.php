@@ -2,20 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Vehicle;
+use Illuminate\Http\Request;
 
 class VehicleController extends Controller
 {
-    public function show($locale = null, $id = null)
+    public function show(Request $request, $locale = null, $slug = null)
     {
-        if (is_numeric($locale)) {
-            $id = $locale;
+        if ($slug === null && $locale !== null && ! in_array($locale, ['en', 'es'], true)) {
+            $slug = $locale;
             $locale = null;
         }
-        if ($locale) app()->setLocale($locale);
 
-        $vehicle = Vehicle::with(['translations', 'images', 'category.translations'])->findOrFail($id);
+        if ($locale) {
+            app()->setLocale($locale);
+        }
+
+        // 301 redirect old numeric URLs (/vehicles/1) to slug URLs
+        if (is_numeric($slug)) {
+            $legacy = Vehicle::find($slug);
+            if ($legacy?->slug) {
+                return redirect()->route('vehicles.show', $legacy->slug, 301);
+            }
+        }
+
+        $vehicle = Vehicle::with(['translations', 'images', 'category.translations'])
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         $relatedQuery = Vehicle::with(['translations', 'images'])
             ->where('id', '!=', $vehicle->id)

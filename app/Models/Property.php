@@ -26,13 +26,18 @@ class Property extends Model
     ];
 
     protected $fillable = [
-        'property_type_id', 'reference', 'address_line1', 'address_line2',
+        'property_type_id', 'reference', 'slug', 'address_line1', 'address_line2',
         'city', 'state', 'zip', 'neighborhood', 'latitude', 'longitude',
         'bedrooms', 'bathrooms', 'sqft', 'max_guests', 'min_nights',
         'price_per_month', 'price_per_week', 'price_per_night',
         'security_deposit', 'cleaning_fee', 'featured', 'instant_book',
         'pets_allowed', 'furnished', 'amenities', 'available_from', 'status',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     protected $casts = [
         'bedrooms' => 'integer',

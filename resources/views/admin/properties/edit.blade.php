@@ -3,5 +3,5 @@
 @section('title', 'Edit Property')
 
 @section('content')
-@include('admin.properties._form', ['property' => $property, 'types' => $types])
+@include('admin.properties._form', ['property' => $property, 'types' => $types, 'seo' => $seo ?? null])
 @endsection

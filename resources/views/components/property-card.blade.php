@@ -40,8 +40,8 @@
                     {{ $property->displayPrice() }}
                 </h5>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('properties.show', $property->id) }}" class="btn btn-secondary rounded-pill flex-fill btn-sm py-2">Details</a>
-                    <a href="{{ route('properties.show', $property->id) }}#inquire" class="btn btn-primary rounded-pill flex-fill btn-sm py-2">Inquire</a>
+                    <a href="{{ route('properties.show', $property) }}" class="btn btn-secondary rounded-pill flex-fill btn-sm py-2">Details</a>
+                    <a href="{{ route('properties.show', $property) }}#inquire" class="btn btn-primary rounded-pill flex-fill btn-sm py-2">Inquire</a>
                 </div>
             </div>
         </div>

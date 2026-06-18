@@ -7,7 +7,7 @@
     <h1 class="text-xl font-semibold mb-4">{{ $property ? 'Edit Property' : 'Add Property' }}</h1>
 
     <form action="{{ $property ? route('admin.properties.update', $property->id) : route('admin.properties.store') }}"
-          method="POST" enctype="multipart/form-data">
+          method="POST" enctype="multipart/form-data" data-ai-type="property">
         @csrf
         @if($property) @method('PUT') @endif
 
@@ -23,7 +23,10 @@
             </label>
 
             <label class="block md:col-span-2">
-                <div class="text-sm">Description (English)</div>
+                <div class="flex items-center justify-between gap-2 mb-1">
+                    <div class="text-sm">Description (English)</div>
+                    <x-admin-ai-desc-btn entity="property" />
+                </div>
                 <textarea name="description_en" rows="4" class="w-full border rounded px-2 py-2">{{ old('description_en', $en->description ?? '') }}</textarea>
             </label>
 
@@ -140,6 +143,12 @@
                 @endif
             </div>
         </div>
+
+        @if($property && $property->slug)
+            <p class="mt-4 text-sm text-gray-600">Public URL: <a href="{{ route('properties.show', $property) }}" class="text-indigo-600" target="_blank">{{ route('properties.show', $property) }}</a></p>
+        @endif
+
+        <x-admin-seo-fields :seo="$seo ?? null" entity="property" />
 
         <div class="mt-6 flex gap-3">
             <button class="bg-yellow-500 text-black px-4 py-2 rounded font-medium">Save Property</button>

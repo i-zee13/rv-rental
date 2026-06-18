@@ -16,8 +16,8 @@ use App\Http\Controllers\Admin\VehicleCategoryController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/rentals', [\App\Http\Controllers\PropertySearchController::class, 'index'])->name('properties.search');
-Route::get('/properties/{id}', [\App\Http\Controllers\PropertyController::class, 'show'])->name('properties.show');
-Route::get('/vehicles/{id}', [VehicleController::class, 'show'])->name('vehicles.show');
+Route::get('/properties/{slug}', [\App\Http\Controllers\PropertyController::class, 'show'])->name('properties.show')->where('slug', '[a-z0-9-]+');
+Route::get('/vehicles/{slug}', [VehicleController::class, 'show'])->name('vehicles.show')->where('slug', '[a-z0-9-]+');
 Route::get('/about-us', [\App\Http\Controllers\PagePublicController::class, 'about'])->name('about');
 Route::redirect('/pages/about', '/about-us', 301);
 Route::get('/pages/{slug}', [\App\Http\Controllers\PagePublicController::class, 'show'])->name('pages.show');
@@ -36,8 +36,8 @@ Route::prefix('{locale}')
         Route::get('/', [HomeController::class, 'index']);
         Route::get('/search', [SearchController::class, 'index']);
         Route::get('/rentals', [\App\Http\Controllers\PropertySearchController::class, 'index']);
-        Route::get('/properties/{id}', [\App\Http\Controllers\PropertyController::class, 'show']);
-        Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
+        Route::get('/properties/{slug}', [\App\Http\Controllers\PropertyController::class, 'show'])->where('slug', '[a-z0-9-]+');
+        Route::get('/vehicles/{slug}', [VehicleController::class, 'show'])->where('slug', '[a-z0-9-]+');
         Route::get('/about-us', [\App\Http\Controllers\PagePublicController::class, 'about']);
         Route::get('/pages/about', function (string $locale) {
             return redirect("/{$locale}/about-us", 301);
@@ -134,6 +134,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/seo', [\App\Http\Controllers\Admin\SeoController::class, 'index'])->name('seo.index');
         Route::get('/seo/{id}/edit', [\App\Http\Controllers\Admin\SeoController::class, 'edit'])->name('seo.edit');
         Route::put('/seo/{id}', [\App\Http\Controllers\Admin\SeoController::class, 'update'])->name('seo.update');
+
+        // AI content helpers (descriptions + SEO)
+        Route::post('/ai/descriptions', [\App\Http\Controllers\Admin\AdminAiController::class, 'descriptions'])->name('ai.descriptions');
+        Route::post('/ai/seo', [\App\Http\Controllers\Admin\AdminAiController::class, 'seo'])->name('ai.seo');
 
         // Site texts (static UI strings EN/ES)
         Route::get('/site-texts', [\App\Http\Controllers\Admin\SiteTextController::class, 'index'])->name('site-texts.index');

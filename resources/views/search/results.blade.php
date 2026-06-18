@@ -159,7 +159,7 @@
                                         </div>
 
                                         <div class="d-flex gap-2">
-                                            <a href="{{ route('vehicles.show', $v->id) }}"
+                                            <a href="{{ route('vehicles.show', $v) }}"
                                                 class="btn btn-secondary rounded-pill flex-fill btn-sm py-2">Details</a>
                                             @if($v->status === 'available')
                                             <a href="{{ route('booking.step1') }}?vehicle_id={{ $v->id }}"

@@ -427,7 +427,7 @@
                                 @endif
                             </div>
                             <div class="d-flex gap-2">
-                                <a href="{{ route('vehicles.show', $v->id) }}" class="btn btn-secondary rounded-pill flex-fill py-2">Details</a>
+                                <a href="{{ route('vehicles.show', $v) }}" class="btn btn-secondary rounded-pill flex-fill py-2">Details</a>
                                 <a href="{{ route('booking.step1') }}?vehicle_id={{ $v->id }}" class="btn btn-primary rounded-pill flex-fill py-2">Book Now</a>
                             </div>
                         </div>

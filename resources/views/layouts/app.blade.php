@@ -9,8 +9,8 @@
     <link rel="apple-touch-icon" href="{{ asset('favicon.svg') }}">
     <meta name="theme-color" content="#192a30">
 
-    {{-- SEO: artesaos/seotools (managed from Admin → SEO) --}}
-    {!! \Artesaos\SEOTools\Facades\SEOTools::generate() !!}
+    {{-- SEO: canonical, OG, Twitter, JSON-LD — see components/seo-meta.blade.php --}}
+    @include('components.seo-meta', ['seoHead' => $seoHead ?? []])
 
     <!-- Google Fonts (match original template) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

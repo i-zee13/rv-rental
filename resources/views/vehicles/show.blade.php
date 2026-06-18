@@ -207,7 +207,7 @@
                                         </span>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <a href="{{ route('vehicles.show', $rv->id) }}" class="btn btn-secondary rounded-pill flex-fill btn-sm">Details</a>
+                                        <a href="{{ route('vehicles.show', $rv) }}" class="btn btn-secondary rounded-pill flex-fill btn-sm">Details</a>
                                         <a href="{{ route('booking.step1') }}?vehicle_id={{ $rv->id }}" class="btn btn-primary rounded-pill flex-fill btn-sm">Book</a>
                                     </div>
                                 </div>

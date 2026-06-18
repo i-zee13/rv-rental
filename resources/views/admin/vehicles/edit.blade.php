@@ -10,7 +10,7 @@
         <div class="text-green-600 mb-3">{{ session('success') }}</div>
     @endif
 
-    <form action="{{ route('admin.vehicles.update', $vehicle->id) }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.vehicles.update', $vehicle->id) }}" method="POST" enctype="multipart/form-data" data-ai-type="vehicle">
         @csrf
         @method('PUT')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -91,7 +91,10 @@
                     <input name="title_en" class="w-full border rounded px-2 py-2" value="{{ old('title_en', $en->title ?? '') }}" placeholder="Leave blank to use Make + Model">
                 </label>
                 <label class="block">
-                    <div class="text-sm">Description (English)</div>
+                    <div class="flex items-center justify-between gap-2 mb-1">
+                        <div class="text-sm">Description (English)</div>
+                        <x-admin-ai-desc-btn entity="vehicle" />
+                    </div>
                     <textarea name="description_en" rows="4" class="w-full border rounded px-2 py-2">{{ old('description_en', $en->description ?? '') }}</textarea>
                 </label>
             </div>
@@ -110,6 +113,12 @@
                 </label>
             </div>
         </div>
+
+        @if($vehicle->slug)
+            <p class="mt-4 text-sm text-gray-600">Public URL: <a href="{{ route('vehicles.show', $vehicle) }}" class="text-indigo-600" target="_blank">{{ route('vehicles.show', $vehicle) }}</a></p>
+        @endif
+
+        <x-admin-seo-fields :seo="$seo ?? null" entity="vehicle" />
 
         <div class="mt-4">
             <button class="bg-yellow-500 text-black px-4 py-2 rounded">Update Vehicle</button>

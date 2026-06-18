@@ -11,8 +11,13 @@ class Vehicle extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'category_id','make','model','year','vin','internal_id','seats','doors','bags','transmission','fuel_type','price_per_day','price_per_week','price_per_month','security_deposit','cleaning_fee','delivery_fee','featured','instant_book','delivery_available','pet_friendly','smoking_allowed','status'
+        'category_id', 'slug', 'make', 'model', 'year', 'vin', 'internal_id', 'seats', 'doors', 'bags', 'transmission', 'fuel_type', 'price_per_day', 'price_per_week', 'price_per_month', 'security_deposit', 'cleaning_fee', 'delivery_fee', 'featured', 'instant_book', 'delivery_available', 'pet_friendly', 'smoking_allowed', 'status',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function category()
     {

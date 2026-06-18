@@ -41,7 +41,7 @@
                         </span>
                     </td>
                     <td class="px-4 py-3 text-right">
-                        <a href="{{ route('properties.show', $property->id) }}" class="text-blue-600 mr-3" target="_blank">View</a>
+                        <a href="{{ route('properties.show', $property) }}" class="text-blue-600 mr-3" target="_blank">View</a>
                         <a href="{{ route('admin.properties.edit', $property->id) }}" class="text-yellow-700">Edit</a>
                     </td>
                 </tr>

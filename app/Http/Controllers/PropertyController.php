@@ -7,11 +7,28 @@ use Illuminate\Http\Request;
 
 class PropertyController extends Controller
 {
-    public function show(Request $request, $id)
+    public function show(Request $request, $locale = null, $slug = null)
     {
+        if ($slug === null && $locale !== null && ! in_array($locale, ['en', 'es'], true)) {
+            $slug = $locale;
+            $locale = null;
+        }
+
+        if ($locale) {
+            app()->setLocale($locale);
+        }
+
+        if (is_numeric($slug)) {
+            $legacy = Property::find($slug);
+            if ($legacy?->slug) {
+                return redirect()->route('properties.show', $legacy->slug, 301);
+            }
+        }
+
         $property = Property::with(['translations', 'images', 'type.translations'])
             ->where('status', '!=', 'hidden')
-            ->findOrFail($id);
+            ->where('slug', $slug)
+            ->firstOrFail();
 
         $related = Property::with(['translations', 'images'])
             ->where('status', 'available')

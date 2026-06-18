@@ -7,7 +7,10 @@ use App\Http\Requests\StorePropertyRequest;
 use App\Http\Requests\UpdatePropertyRequest;
 use App\Models\Property;
 use App\Models\PropertyType;
+use App\Models\SeoMeta;
+use App\Services\SeoEntityService;
 use App\Support\PublicMedia;
+use App\Support\Slug;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -34,6 +37,7 @@ class PropertyController extends Controller
         $property = Property::create([
             'property_type_id' => $data['property_type_id'] ?? null,
             'reference' => 'PR' . strtoupper(uniqid()),
+            'slug' => Slug::unique(trim($data['title_en'] ?? 'property'), Property::class),
             'address_line1' => $data['address_line1'],
             'city' => $data['city'] ?? 'Miami',
             'state' => $data['state'] ?? 'FL',
@@ -59,6 +63,7 @@ class PropertyController extends Controller
         ]);
 
         $this->syncTranslations($property, $data);
+        $this->syncSeo($property, $request);
         $this->storeImages($property, $request);
 
         return redirect()->route('admin.properties.index')->with('success', 'Property created.');
@@ -68,8 +73,9 @@ class PropertyController extends Controller
     {
         $property = Property::with(['translations', 'images'])->findOrFail($id);
         $types = PropertyType::with('translations')->where('is_active', true)->orderBy('sort_order')->get();
+        $seo = SeoMeta::forEntity(SeoMeta::ENTITY_PROPERTY, $property->id, 'en');
 
-        return view('admin.properties.edit', compact('property', 'types'));
+        return view('admin.properties.edit', compact('property', 'types', 'seo'));
     }
 
     public function update(UpdatePropertyRequest $request, $id)
@@ -79,6 +85,11 @@ class PropertyController extends Controller
 
         $property->update([
             'property_type_id' => $data['property_type_id'] ?? $property->property_type_id,
+            'slug' => $property->slug ?: Slug::unique(
+                trim($data['title_en'] ?? $property->title() ?? 'property'),
+                Property::class,
+                $property->id
+            ),
             'address_line1' => $data['address_line1'] ?? $property->address_line1,
             'city' => $data['city'] ?? $property->city,
             'state' => $data['state'] ?? $property->state,
@@ -104,6 +115,7 @@ class PropertyController extends Controller
         ]);
 
         $this->syncTranslations($property, $data);
+        $this->syncSeo($property, $request);
         $this->storeImages($property, $request);
 
         if ($request->filled('delete_image_ids')) {
@@ -150,6 +162,20 @@ class PropertyController extends Controller
                     ? Str::limit(trim(strip_tags($data['description_es'])), 320, '')
                     : (isset($data['description_en']) ? Str::limit(trim(strip_tags($data['description_en'])), 320, '') : null),
             ]
+        );
+    }
+
+    protected function syncSeo(Property $property, Request $request): void
+    {
+        if (! $request->has('seo')) {
+            return;
+        }
+
+        app(SeoEntityService::class)->sync(
+            SeoEntityService::TYPE_PROPERTY,
+            $property->id,
+            $request->input('seo', []),
+            'en'
         );
     }
 

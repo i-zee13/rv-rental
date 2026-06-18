@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
 use App\Models\VehicleCategory;
+use App\Models\SeoMeta;
+use App\Services\SeoEntityService;
 use App\Support\PublicMedia;
+use App\Support\Slug;
 use Illuminate\Support\Str;
 use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
@@ -35,6 +38,10 @@ class VehicleController extends Controller
 
         $vehicle = Vehicle::create([
             'category_id' => $data['category_id'] ?? null,
+            'slug' => Slug::unique(
+                trim(($data['make'] ?? '').'-'.($data['model'] ?? '')),
+                Vehicle::class
+            ),
             'make' => $data['make'] ?? null,
             'model' => $data['model'] ?? null,
             'year' => $data['year'] ?? null,
@@ -45,6 +52,7 @@ class VehicleController extends Controller
         ]);
 
         $this->syncTranslations($vehicle, $data);
+        $this->syncSeo($vehicle, $request);
 
         // handle images
         if ($request->hasFile('images')) {
@@ -66,8 +74,9 @@ class VehicleController extends Controller
             ->where('is_active', true)
             ->orderBy('slug')
             ->get();
+        $seo = SeoMeta::forEntity(SeoMeta::ENTITY_VEHICLE, $vehicle->id, 'en');
 
-        return view('admin.vehicles.edit', compact('vehicle', 'categories'));
+        return view('admin.vehicles.edit', compact('vehicle', 'categories', 'seo'));
     }
 
     public function update(UpdateVehicleRequest $request, $id)
@@ -78,6 +87,11 @@ class VehicleController extends Controller
 
         $vehicle->update([
             'category_id' => $data['category_id'] ?? $vehicle->category_id,
+            'slug' => $vehicle->slug ?: Slug::unique(
+                trim(($data['make'] ?? $vehicle->make ?? '').'-'.($data['model'] ?? $vehicle->model ?? '')),
+                Vehicle::class,
+                $vehicle->id
+            ),
             'make' => $data['make'] ?? $vehicle->make,
             'model' => $data['model'] ?? $vehicle->model,
             'year' => $data['year'] ?? $vehicle->year,
@@ -88,6 +102,7 @@ class VehicleController extends Controller
         ]);
 
         $this->syncTranslations($vehicle, $data);
+        $this->syncSeo($vehicle, $request);
 
         // handle new images upload
         if ($request->hasFile('images')) {
@@ -159,6 +174,20 @@ class VehicleController extends Controller
                     ? Str::limit(trim(strip_tags($data['description_es'])), 320, '')
                     : (isset($data['description_en']) ? Str::limit(trim(strip_tags($data['description_en'])), 320, '') : null),
             ]
+        );
+    }
+
+    protected function syncSeo(Vehicle $vehicle, Request $request): void
+    {
+        if (! $request->has('seo')) {
+            return;
+        }
+
+        app(SeoEntityService::class)->sync(
+            SeoEntityService::TYPE_VEHICLE,
+            $vehicle->id,
+            $request->input('seo', []),
+            'en'
         );
     }
 }
