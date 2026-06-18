@@ -20,7 +20,7 @@ class SeoEntityService
         $payload = [
             'entity_type' => $entityType,
             'entity_id' => $entityId,
-            'page_key' => $this->fallbackPageKey($entityType),
+            'page_key' => $this->entityPageKey($entityType, $entityId),
             'locale' => $locale,
             'meta_title' => Str::limit(trim($data['meta_title'] ?? ''), 255, '') ?: null,
             'meta_description' => isset($data['meta_description'])
@@ -49,15 +49,9 @@ class SeoEntityService
         );
     }
 
-    protected function fallbackPageKey(string $entityType): string
+    protected function entityPageKey(string $entityType, int $entityId): string
     {
-        return match ($entityType) {
-            self::TYPE_VEHICLE => 'vehicles.show',
-            self::TYPE_PROPERTY => 'properties.show',
-            self::TYPE_BLOG_POST => 'blog.show',
-            self::TYPE_PAGE => 'pages.show',
-            default => 'global',
-        };
+        return "entity:{$entityType}:{$entityId}";
     }
 
     protected function defaultOgType(string $entityType): string
