@@ -86,6 +86,10 @@
                         Showing <strong>{{ $vehicles->firstItem() ?? 0 }}–{{ $vehicles->lastItem() ?? 0 }}</strong>
                         of <strong>{{ $vehicles->total() }}</strong> vehicles
                         @if(request('q'))<span> for "<span class="text-primary">{{ request('q') }}</span>"</span>@endif
+                        @if(request('category'))
+                            @php $activeCat = $categories->firstWhere('slug', request('category')); @endphp
+                            <span> in <span class="text-primary">{{ $activeCat?->translatedName() ?? request('category') }}</span></span>
+                        @endif
                     </p>
                 </div>
 
@@ -112,6 +116,10 @@
                                     </div>
                                     <div class="categories-content rounded-bottom p-3">
                                         <h5 class="mb-2">{{ $t->title ?? $v->make.' '.$v->model }}</h5>
+
+                                        @if($v->category)
+                                            <span class="badge bg-light text-dark border mb-2">{{ $v->category->translatedName() }}</span>
+                                        @endif
 
                                         {{-- Status badge --}}
                                         <div class="mb-2">

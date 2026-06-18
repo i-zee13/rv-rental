@@ -37,9 +37,8 @@
             <div class="col-lg-8 wow fadeInLeft" data-wow-delay="0.1s">
 
                 {{-- Main Image --}}
-                <div class="position-relative mb-4 rounded overflow-hidden vehicle-detail-image"
-                    x-data="{ activeImg: @js($mainImg) }">
-                    <img :src="activeImg"
+                <div class="position-relative mb-4 rounded overflow-hidden vehicle-detail-image">
+                    <img src="{{ $mainImg }}"
                         alt="{{ $vehicleTitle }}"
                         class="vehicle-main-img w-100 h-100 rounded"
                         style="object-fit:cover;"

@@ -11,20 +11,27 @@ class SearchController extends Controller
     {
         if ($locale) app()->setLocale($locale);
 
-        $q = $request->input('q');
+        $q = trim((string) $request->input('q', ''));
         $category = $request->input('category');
 
-        $query = Vehicle::with(['translations','images']);
+        $query = Vehicle::with(['translations', 'images', 'category.translations'])
+            ->where('status', 'available');
 
         if ($category) {
-            $query->whereHas('category', function($b) use ($category) {
-                $b->where('slug', $category);
+            $query->whereHas('category', function ($b) use ($category) {
+                $b->where('slug', $category)->where('is_active', true);
             });
         }
 
-        if ($q) {
-            $query->whereHas('translations', function($t) use ($q) {
-                $t->where('title', 'like', "%$q%");
+        if ($q !== '') {
+            $like = '%'.$q.'%';
+            $query->where(function ($sub) use ($like) {
+                $sub->where('make', 'like', $like)
+                    ->orWhere('model', 'like', $like)
+                    ->orWhereHas('translations', function ($t) use ($like) {
+                        $t->where('title', 'like', $like)
+                            ->orWhere('description', 'like', $like);
+                    });
             });
         }
 
