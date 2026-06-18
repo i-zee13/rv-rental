@@ -91,8 +91,7 @@
                                                 <select class="form-select" name="category">
                                                     <option value="">{{ __('ui.hero_all_categories') }}</option>
                                                     @foreach($categories as $cat)
-                                                        @php $ct = $cat->translations->firstWhere('locale', app()->getLocale()) ?? $cat->translations->first(); @endphp
-                                                        <option value="{{ $cat->slug }}">{{ $ct->name ?? $cat->slug }}</option>
+                                                        <option value="{{ $cat->slug }}">{{ $cat->translatedName() }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
@@ -213,6 +212,25 @@
         </div>
     </div>
 </div>
+
+@if($categories->isNotEmpty())
+<div class="container-fluid py-5 bg-light">
+    <div class="container py-3">
+        <div class="text-center mx-auto pb-4 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 720px;">
+            <h2 class="display-6 text-capitalize mb-2">Browse by Category</h2>
+            <p class="text-muted mb-0">Find the perfect vehicle for your Miami trip</p>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center gap-2 wow fadeInUp" data-wow-delay="0.15s">
+            @foreach($categories as $cat)
+                <a href="{{ route('search', ['category' => $cat->slug]) }}"
+                    class="btn btn-outline-primary rounded-pill px-4 py-2">
+                    {{ $cat->translatedName() }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+</div>
+@endif
 
 {{-- ============================================================
      ABOUT

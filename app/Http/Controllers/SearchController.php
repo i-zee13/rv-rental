@@ -30,6 +30,11 @@ class SearchController extends Controller
 
         $vehicles = $query->paginate(12)->withQueryString();
 
-        return view('search.results', compact('vehicles'));
+        $categories = \App\Models\VehicleCategory::with('translations')
+            ->where('is_active', true)
+            ->orderBy('slug')
+            ->get();
+
+        return view('search.results', compact('vehicles', 'categories'));
     }
 }

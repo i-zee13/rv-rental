@@ -37,20 +37,18 @@
                         </div>
                         <div class="mb-4">
                             <label class="form-label small fw-bold">Category</label>
-                            @php $cats = \App\Models\VehicleCategory::with('translations')->where('is_active',true)->get(); @endphp
                             <div>
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="radio" name="category" value="" id="cat_all"
                                         {{ !request('category') ? 'checked' : '' }}>
                                     <label class="form-check-label" for="cat_all">All Categories</label>
                                 </div>
-                                @foreach($cats as $cat)
-                                    @php $ct = $cat->translations->firstWhere('locale', app()->getLocale()) ?? $cat->translations->first(); @endphp
+                                @foreach($categories as $cat)
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="radio" name="category"
                                             value="{{ $cat->slug }}" id="cat_{{ $cat->id }}"
                                             {{ request('category') == $cat->slug ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="cat_{{ $cat->id }}">{{ $ct->name ?? $cat->slug }}</label>
+                                        <label class="form-check-label" for="cat_{{ $cat->id }}">{{ $cat->translatedName() }}</label>
                                     </div>
                                 @endforeach
                             </div>

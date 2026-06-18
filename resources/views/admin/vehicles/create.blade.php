@@ -30,6 +30,20 @@
                 <input name="year" class="w-full border rounded px-2 py-2" value="{{ old('year') }}">
             </label>
 
+            <label class="block md:col-span-2">
+                <div class="text-sm">Category</div>
+                <select name="category_id" class="w-full border rounded px-2 py-2">
+                    <option value="">— Select category —</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
+                            {{ $cat->translatedName('en') }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('category_id')<div class="text-red-600 text-sm">{{ $message }}</div>@enderror
+                <p class="text-xs text-gray-500 mt-1"><a href="{{ route('admin.categories.create') }}" class="text-indigo-600">Add new category</a></p>
+            </label>
+
             <label class="block">
                 <div class="text-sm">Price per day (USD)</div>
                 <input name="price_per_day" class="w-full border rounded px-2 py-2" value="{{ old('price_per_day') }}">

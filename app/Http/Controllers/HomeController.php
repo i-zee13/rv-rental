@@ -18,6 +18,7 @@ class HomeController extends Controller
 
         $categories = \App\Models\VehicleCategory::with('translations')
             ->where('is_active', true)
+            ->orderBy('slug')
             ->get();
 
         $latestPosts = \App\Models\BlogPost::with('translations')

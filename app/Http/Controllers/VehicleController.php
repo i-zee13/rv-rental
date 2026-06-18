@@ -17,12 +17,15 @@ class VehicleController extends Controller
 
         $vehicle = Vehicle::with(['translations', 'images', 'category.translations'])->findOrFail($id);
 
-        $related = Vehicle::with(['translations', 'images'])
+        $relatedQuery = Vehicle::with(['translations', 'images'])
             ->where('id', '!=', $vehicle->id)
-            ->where('status', 'available')
-            ->where('vehicle_category_id', $vehicle->vehicle_category_id)
-            ->take(3)
-            ->get();
+            ->where('status', 'available');
+
+        if ($vehicle->category_id) {
+            $relatedQuery->where('category_id', $vehicle->category_id);
+        }
+
+        $related = $relatedQuery->take(3)->get();
 
         return view('vehicles.show', compact('vehicle', 'related'));
     }

@@ -20,4 +20,12 @@ class VehicleCategory extends Model
     {
         return $this->hasMany(Vehicle::class, 'category_id');
     }
+
+    public function translatedName(?string $locale = null): string
+    {
+        $locale = $locale ?? app()->getLocale();
+        $t = $this->translations->firstWhere('locale', $locale) ?? $this->translations->first();
+
+        return $t?->name ?? ucfirst(str_replace('-', ' ', $this->slug));
+    }
 }

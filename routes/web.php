@@ -8,6 +8,7 @@ use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\VehicleController as AdminVehicleController;
+use App\Http\Controllers\Admin\VehicleCategoryController;
 
 // ============================================================
 // Public routes WITHOUT locale prefix (primary URLs)
@@ -82,6 +83,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/vehicles/{id}/edit', [AdminVehicleController::class, 'edit'])->name('vehicles.edit');
         Route::put('/vehicles/{id}', [AdminVehicleController::class, 'update'])->name('vehicles.update');
         Route::delete('/vehicles/{vehicleId}/images/{imageId}', [AdminVehicleController::class, 'destroyImage'])->name('vehicles.images.destroy');
+
+        // Vehicle categories
+        Route::get('/categories', [VehicleCategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/create', [VehicleCategoryController::class, 'create'])->name('categories.create');
+        Route::post('/categories', [VehicleCategoryController::class, 'store'])->name('categories.store');
+        Route::get('/categories/{id}/edit', [VehicleCategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('/categories/{id}', [VehicleCategoryController::class, 'update'])->name('categories.update');
+        Route::delete('/categories/{id}', [VehicleCategoryController::class, 'destroy'])->name('categories.destroy');
 
         // Properties (Homes & Apartments)
         Route::get('/properties', [\App\Http\Controllers\Admin\PropertyController::class, 'index'])->name('properties.index');

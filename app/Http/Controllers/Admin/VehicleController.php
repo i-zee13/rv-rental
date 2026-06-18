@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Vehicle;
+use App\Models\VehicleCategory;
 use App\Support\PublicMedia;
 use Illuminate\Support\Str;
 use App\Http\Requests\StoreVehicleRequest;
@@ -20,7 +21,12 @@ class VehicleController extends Controller
 
     public function create()
     {
-        return view('admin.vehicles.create');
+        $categories = VehicleCategory::with('translations')
+            ->where('is_active', true)
+            ->orderBy('slug')
+            ->get();
+
+        return view('admin.vehicles.create', compact('categories'));
     }
 
     public function store(StoreVehicleRequest $request)
@@ -55,8 +61,13 @@ class VehicleController extends Controller
 
     public function edit($id)
     {
-        $vehicle = Vehicle::with(['translations','images'])->findOrFail($id);
-        return view('admin.vehicles.edit', compact('vehicle'));
+        $vehicle = Vehicle::with(['translations', 'images'])->findOrFail($id);
+        $categories = VehicleCategory::with('translations')
+            ->where('is_active', true)
+            ->orderBy('slug')
+            ->get();
+
+        return view('admin.vehicles.edit', compact('vehicle', 'categories'));
     }
 
     public function update(UpdateVehicleRequest $request, $id)

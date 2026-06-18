@@ -59,6 +59,10 @@
                 class="sidebar-link {{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
                 <span class="icon">🚗</span> Vehicles
             </a>
+            <a href="{{ route('admin.categories.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+                <span class="icon">🏷️</span> Categories
+            </a>
             <a href="{{ route('admin.properties.index') }}"
                 class="sidebar-link {{ request()->routeIs('admin.properties.*') ? 'active' : '' }}">
                 <span class="icon">🏠</span> Homes & Apartments
