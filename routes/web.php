@@ -143,6 +143,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/site-texts', [\App\Http\Controllers\Admin\SiteTextController::class, 'index'])->name('site-texts.index');
         Route::put('/site-texts', [\App\Http\Controllers\Admin\SiteTextController::class, 'update'])->name('site-texts.update');
 
+        // FAQs
+        Route::get('/faqs', [\App\Http\Controllers\Admin\FaqController::class, 'index'])->name('faqs.index');
+        Route::get('/faqs/create', [\App\Http\Controllers\Admin\FaqController::class, 'create'])->name('faqs.create');
+        Route::post('/faqs', [\App\Http\Controllers\Admin\FaqController::class, 'store'])->name('faqs.store');
+        Route::get('/faqs/{id}/edit', [\App\Http\Controllers\Admin\FaqController::class, 'edit'])->name('faqs.edit');
+        Route::put('/faqs/{id}', [\App\Http\Controllers\Admin\FaqController::class, 'update'])->name('faqs.update');
+        Route::delete('/faqs/{id}', [\App\Http\Controllers\Admin\FaqController::class, 'destroy'])->name('faqs.destroy');
+
         // Leads
         Route::get('/leads', [\App\Http\Controllers\Admin\LeadController::class, 'index'])->name('leads.index');
         Route::get('/leads/{id}', [\App\Http\Controllers\Admin\LeadController::class, 'show'])->name('leads.show');

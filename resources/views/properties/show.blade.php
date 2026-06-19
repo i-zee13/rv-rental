@@ -178,6 +178,10 @@
             </div>
         </div>
         @endif
+
+        @if(isset($faqs) && $faqs->isNotEmpty())
+            <x-faq-section :faqs="$faqs" id="propertyFaq" />
+        @endif
     </div>
 </div>
 

@@ -13,6 +13,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        [x-cloak] { display: none !important; }
         .sidebar-link { display:flex; align-items:center; gap:.6rem; padding:.55rem .75rem; border-radius:.5rem; font-size:.875rem; font-weight:500; color:#4b5563; transition:all .15s; }
         .sidebar-link:hover { background:#f3f4f6; color:#111827; }
         .sidebar-link.active { background:#eef2ff; color:#4f46e5; font-weight:600; }
@@ -112,6 +113,10 @@
             <a href="{{ route('admin.pages.index') }}"
                 class="sidebar-link {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}">
                 <span class="icon">📄</span> Pages
+            </a>
+            <a href="{{ route('admin.faqs.index') }}"
+                class="sidebar-link {{ request()->routeIs('admin.faqs.*') ? 'active' : '' }}">
+                <span class="icon">❓</span> FAQs
             </a>
             <a href="{{ route('admin.site-texts.index') }}"
                 class="sidebar-link {{ request()->routeIs('admin.site-texts.*') ? 'active' : '' }}">

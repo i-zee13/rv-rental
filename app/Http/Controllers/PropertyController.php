@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faq;
 use App\Models\Property;
 use Illuminate\Http\Request;
 
@@ -37,6 +38,8 @@ class PropertyController extends Controller
             ->limit(3)
             ->get();
 
-        return view('properties.show', compact('property', 'related'));
+        $faqs = Faq::forPage('properties.show', [Faq::SCOPE_PROPERTY]);
+
+        return view('properties.show', compact('property', 'related', 'faqs'));
     }
 }

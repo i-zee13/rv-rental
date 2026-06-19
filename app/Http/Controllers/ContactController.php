@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faq;
 use App\Models\Vehicle;
 
 class ContactController extends Controller
@@ -12,6 +13,8 @@ class ContactController extends Controller
             ->where('status', 'available')
             ->get();
 
-        return view('contact', compact('vehicles'));
+        $faqs = Faq::forPage('contact');
+
+        return view('contact', compact('vehicles', 'faqs'));
     }
 }

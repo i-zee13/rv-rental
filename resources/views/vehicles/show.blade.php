@@ -218,6 +218,10 @@
             </div>
         </div>
         @endif
+
+        @if(isset($faqs) && $faqs->isNotEmpty())
+            <x-faq-section :faqs="$faqs" id="vehicleFaq" />
+        @endif
     </div>
 </div>
 

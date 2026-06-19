@@ -70,4 +70,8 @@
         </div>
     </div>
 </div>
+
+@if(isset($faqs) && $faqs->isNotEmpty())
+    <x-faq-section :faqs="$faqs" id="contactFaq" />
+@endif
 @endsection

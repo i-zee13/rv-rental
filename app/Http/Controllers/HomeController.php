@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Faq;
 use App\Models\Vehicle;
 
 class HomeController extends Controller
@@ -38,6 +39,8 @@ class HomeController extends Controller
             ->where('status', 'available')
             ->take(6)->get();
 
-        return view('home', compact('featured', 'categories', 'latestPosts', 'totalVehicles', 'allVehicles', 'featuredProperties'));
+        $faqs = Faq::forPage('home');
+
+        return view('home', compact('featured', 'categories', 'latestPosts', 'totalVehicles', 'allVehicles', 'featuredProperties', 'faqs'));
     }
 }

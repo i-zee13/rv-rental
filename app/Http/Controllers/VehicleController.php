@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faq;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
@@ -40,6 +41,8 @@ class VehicleController extends Controller
 
         $related = $relatedQuery->take(3)->get();
 
-        return view('vehicles.show', compact('vehicle', 'related'));
+        $faqs = Faq::forPage('vehicles.show', [Faq::SCOPE_VEHICLE]);
+
+        return view('vehicles.show', compact('vehicle', 'related', 'faqs'));
     }
 }
