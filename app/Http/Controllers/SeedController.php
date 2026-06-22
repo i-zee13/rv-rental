@@ -7,10 +7,11 @@ use Illuminate\Support\Facades\Artisan;
 
 class SeedController extends Controller
 {
-    /** Seeders safe to run on live — add/update only, never wipe user data. */
+    /** Seeders safe to run on live — add only, never wipe user data. */
     private const ALLOWED = [
         'VehicleCategoriesSeeder',
         'PropertyTypesSeeder',
+        'FaqSeeder',
     ];
 
     public function __invoke(Request $request)
@@ -34,7 +35,9 @@ class SeedController extends Controller
             'class' => $class,
             'exit_code' => $exitCode,
             'output' => trim(Artisan::output()),
-            'note' => 'Safe for live: only adds or updates default rows. Your vehicles, bookings, and users are not deleted.',
+            'note' => $class === 'FaqSeeder'
+                ? 'Safe for live: adds missing FAQ rows only. Existing FAQs are not changed or deleted.'
+                : 'Safe for live: only adds or updates default rows. Your vehicles, bookings, and users are not deleted.',
         ], $exitCode === 0 ? 200 : 500);
     }
 }
