@@ -172,26 +172,6 @@
 </section>
 @endif
 
-{{-- BUILDINGS / RENTALS — compact carousel (high on page) --}}
-@if(isset($carouselProperties) && $carouselProperties->isNotEmpty())
-<section class="home-cards-section home-cards-section--alt py-4">
-    <div class="container py-2">
-        <x-home-section-header
-            :title="__('ui.home_properties_title')"
-            :subtitle="__('ui.home_properties_sub')"
-            :view-all-url="route('properties.search')"
-            :view-all-label="__('ui.browse_rentals')" />
-        <x-home-cards-scroller>
-            @foreach($carouselProperties as $property)
-                <div class="home-cards-item">
-                    <x-home-property-card :property="$property" />
-                </div>
-            @endforeach
-        </x-home-cards-scroller>
-    </div>
-</section>
-@endif
-
 {{-- ============================================================
      FEATURES
 ============================================================ --}}
@@ -270,6 +250,26 @@
         </div>
     </div>
 </div>
+@endif
+
+{{-- BUILDINGS / RENTALS — after features & categories --}}
+@if(isset($carouselProperties) && $carouselProperties->isNotEmpty())
+<section class="home-cards-section home-cards-section--alt py-4">
+    <div class="container py-2">
+        <x-home-section-header
+            :title="__('ui.home_properties_title')"
+            :subtitle="__('ui.home_properties_sub')"
+            :view-all-url="route('properties.search')"
+            :view-all-label="__('ui.browse_rentals')" />
+        <x-home-cards-scroller>
+            @foreach($carouselProperties as $property)
+                <div class="home-cards-item">
+                    <x-home-property-card :property="$property" />
+                </div>
+            @endforeach
+        </x-home-cards-scroller>
+    </div>
+</section>
 @endif
 
 {{-- ============================================================
