@@ -379,13 +379,13 @@
             :subtitle="__('ui.home_fleet_sub')"
             :view-all-url="route('search')"
             :view-all-label="__('ui.home_view_all_vehicles')" />
-        <div class="home-cards-carousel owl-carousel wow fadeInUp" data-wow-delay="0.1s">
+        <x-home-cards-scroller>
             @foreach($carouselVehicles as $vehicle)
-                <div class="home-carousel-slide">
+                <div class="home-cards-item">
                     <x-home-vehicle-card :vehicle="$vehicle" />
                 </div>
             @endforeach
-        </div>
+        </x-home-cards-scroller>
     </div>
 </section>
 @endif
@@ -399,13 +399,13 @@
             :subtitle="__('ui.home_properties_sub')"
             :view-all-url="route('properties.search')"
             :view-all-label="__('ui.browse_rentals')" />
-        <div class="home-cards-carousel owl-carousel wow fadeInUp" data-wow-delay="0.1s">
+        <x-home-cards-scroller>
             @foreach($carouselProperties as $property)
-                <div class="home-carousel-slide">
+                <div class="home-cards-item">
                     <x-home-property-card :property="$property" />
                 </div>
             @endforeach
-        </div>
+        </x-home-cards-scroller>
     </div>
 </section>
 @endif
@@ -419,13 +419,13 @@
             :subtitle="__('ui.home_blog_sub')"
             :view-all-url="route('blog.index')"
             :view-all-label="__('ui.home_view_all_posts')" />
-        <div class="home-cards-carousel owl-carousel wow fadeInUp" data-wow-delay="0.1s">
+        <x-home-cards-scroller>
             @foreach($latestPosts as $post)
-                <div class="home-carousel-slide">
+                <div class="home-cards-item">
                     <x-home-blog-card :post="$post" />
                 </div>
             @endforeach
-        </div>
+        </x-home-cards-scroller>
     </div>
 </section>
 @endif

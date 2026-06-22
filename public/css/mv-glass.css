@@ -816,61 +816,117 @@ body.page-home .header-carousel .carousel-item > img {
     color: var(--mv-dark);
 }
 
-.home-carousel-slide {
+.home-carousel-slide,
+.home-cards-item {
     height: 100%;
+    flex: 0 0 78%;
+    min-width: 220px;
+    max-width: 280px;
+    scroll-snap-align: start;
 }
 
-.home-cards-carousel.owl-carousel .owl-stage-outer {
-    padding: 4px 0 8px;
+@media (min-width: 576px) {
+    .home-cards-item {
+        flex: 0 0 46%;
+        max-width: 300px;
+    }
 }
 
-.home-cards-carousel.owl-carousel .owl-nav {
-    margin-top: 0;
+@media (min-width: 768px) {
+    .home-cards-item {
+        flex: 0 0 32%;
+    }
 }
 
-.home-cards-carousel.owl-carousel .owl-nav button.owl-prev,
-.home-cards-carousel.owl-carousel .owl-nav button.owl-next {
-    position: absolute;
-    top: 38%;
-    transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
-    border-radius: 50% !important;
-    background: #fff !important;
-    border: 1px solid rgba(25, 42, 48, 0.12) !important;
-    color: var(--mv-dark) !important;
-    font-size: 0.85rem !important;
-    box-shadow: 0 4px 12px rgba(25, 42, 48, 0.08);
-    transition: background 0.2s ease, color 0.2s ease;
+@media (min-width: 1200px) {
+    .home-cards-item {
+        flex: 0 0 24%;
+        max-width: 290px;
+    }
 }
 
-.home-cards-carousel.owl-carousel .owl-nav button.owl-prev:hover,
-.home-cards-carousel.owl-carousel .owl-nav button.owl-next:hover {
-    background: var(--mv-brand) !important;
-    color: #fff !important;
-    border-color: var(--mv-brand) !important;
+/* Horizontal scroller — bottom scrollbar, no arrows */
+.home-cards-scroller {
+    position: relative;
+    margin-top: 0.25rem;
 }
 
-.home-cards-carousel.owl-carousel .owl-nav button.owl-prev {
-    left: -14px;
+.home-cards-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
+    padding: 4px 2px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: grab;
+    touch-action: pan-x;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
-.home-cards-carousel.owl-carousel .owl-nav button.owl-next {
-    right: -14px;
+.home-cards-track.is-dragging {
+    cursor: grabbing;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
 }
 
-.home-cards-carousel.owl-carousel .owl-dots {
-    margin-top: 0.75rem;
+.home-cards-track .home-mini-card-img img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    pointer-events: none;
 }
 
-.home-cards-carousel.owl-carousel .owl-dot span {
-    width: 8px;
+.home-cards-track::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+.home-cards-track:focus {
+    outline: none;
+}
+
+.home-cards-track:focus-visible {
+    box-shadow: 0 0 0 2px rgba(230, 132, 4, 0.35);
+    border-radius: 8px;
+}
+
+/* Always-visible progress bar under cards */
+.home-cards-scrolltrack {
+    position: relative;
     height: 8px;
-    background: #dee2e6;
+    margin-top: 10px;
+    background: #e2e6ea;
+    border-radius: 4px;
+    cursor: pointer;
+    touch-action: none;
 }
 
-.home-cards-carousel.owl-carousel .owl-dot.active span {
+.home-cards-scrolltrack.is-hidden {
+    display: none;
+}
+
+.home-cards-scrollthumb {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    min-width: 12%;
     background: var(--mv-brand);
+    border-radius: 4px;
+    transition: left 0.15s ease, width 0.15s ease;
+    pointer-events: auto;
+    cursor: grab;
+    touch-action: none;
+}
+
+.home-cards-scrollthumb.is-dragging {
+    cursor: grabbing;
+    transition: none;
 }
 
 /* FAQ section */
@@ -934,11 +990,7 @@ body.page-home .header-carousel .carousel-item > img {
 }
 
 @media (max-width: 1199.98px) {
-    .home-cards-carousel.owl-carousel .owl-nav button.owl-prev {
-        left: 0;
-    }
-
-    .home-cards-carousel.owl-carousel .owl-nav button.owl-next {
-        right: 0;
+    .home-cards-item {
+        max-width: 320px;
     }
 }

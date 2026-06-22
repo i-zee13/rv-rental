@@ -31,7 +31,7 @@
     <!-- Theme Style -->
     <link rel="stylesheet" href="{{ asset('theme/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('theme/css/theme-fixes.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/mv-glass.css') }}?v=7">
+    <link rel="stylesheet" href="{{ asset('css/mv-glass.css') }}?v=10">
 
     @include('partials.booking-chat-assets')
     @stack('styles')
@@ -201,7 +201,7 @@
     <script src="{{ asset('theme/js/waypoints.min.js') }}"></script>
     <script src="{{ asset('theme/js/counterup.min.js') }}"></script>
     <script src="{{ asset('theme/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('theme/js/main.js') }}"></script>
+    <script src="{{ asset('theme/js/main.js') }}?v=3"></script>
 
     @stack('scripts')
 
