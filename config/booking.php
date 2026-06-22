@@ -16,7 +16,7 @@ return [
     /*
     | Booking statuses that block a vehicle for overlapping dates.
     */
-    'blocking_statuses' => ['pending', 'confirmed', 'active', 'completed'],
+    'blocking_statuses' => ['pending', 'pending_payment', 'confirmed', 'active', 'completed'],
 
     'tax_rate' => env('TAX_RATE', 0.10),
 

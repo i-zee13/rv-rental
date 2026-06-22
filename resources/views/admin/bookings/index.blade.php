@@ -28,7 +28,13 @@
                     <td class="p-3">{{ $b->vehicle->make ?? '' }} {{ $b->vehicle->model ?? '' }}</td>
                     <td class="p-3">{{ $b->start_date }} → {{ $b->end_date }}</td>
                     <td class="p-3">${{ number_format($b->total,2) }}</td>
-                    <td class="p-3">{{ ucfirst($b->status) }}</td>
+                    <td class="p-3">
+                        @if($b->payments->contains('status', 'paid'))
+                            <span class="text-green-600 text-xs font-medium">Paid</span>
+                        @else
+                            {{ ucfirst($b->status) }}
+                        @endif
+                    </td>
                     <td class="p-3">
                         <x-admin-table-actions
                             :view="route('admin.bookings.show', $b->id)"

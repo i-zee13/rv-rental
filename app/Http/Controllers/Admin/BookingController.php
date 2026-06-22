@@ -10,13 +10,13 @@ class BookingController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::with('vehicle')->orderBy('created_at', 'desc')->get();
+        $bookings = Booking::with(['vehicle', 'payments'])->orderBy('created_at', 'desc')->get();
         return view('admin.bookings.index', compact('bookings'));
     }
 
     public function show($id)
     {
-        $booking = Booking::with(['vehicle','addons'])->findOrFail($id);
+        $booking = Booking::with(['vehicle', 'addons', 'payments'])->findOrFail($id);
         return view('admin.bookings.show', compact('booking'));
     }
 

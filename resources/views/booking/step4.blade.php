@@ -105,6 +105,7 @@
                 </div>
 
                 {{-- Stripe --}}
+                @if($stripeEnabled ?? false)
                 <div class="checkout-option checkout-option--featured">
                     <div class="checkout-option-badge">Recommended</div>
                     <div class="d-flex align-items-start gap-3 mb-3">
@@ -113,7 +114,7 @@
                         </div>
                         <div class="flex-grow-1">
                             <h5 class="mb-1">Pay with Card</h5>
-                            <p class="text-muted small mb-0">Instant confirmation via Stripe. Visa, Mastercard & Amex accepted.</p>
+                            <p class="text-muted small mb-0">Instant confirmation via Stripe. Visa, Mastercard, Amex &amp; more.</p>
                         </div>
                     </div>
                     <form method="POST" action="{{ route('booking.createCheckout') }}">
@@ -125,6 +126,11 @@
                 </div>
 
                 <div class="checkout-or"><span>or reserve now</span></div>
+                @else
+                <div class="alert alert-info rounded-3 mb-4 small">
+                    <i class="fas fa-info-circle me-2"></i>Online card payment is being set up. You can confirm your reservation now and pay at pickup.
+                </div>
+                @endif
 
                 {{-- Pay later --}}
                 <div class="checkout-option">

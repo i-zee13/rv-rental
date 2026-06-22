@@ -25,4 +25,15 @@ class Booking extends Model
     {
         return $this->hasMany(BookingAddon::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->payments()->where('status', 'paid')->exists()
+            || $this->status === 'confirmed';
+    }
 }

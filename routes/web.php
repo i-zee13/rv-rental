@@ -168,5 +168,6 @@ Route::post('/booking/step2', [\App\Http\Controllers\BookingController::class, '
 Route::get('/booking/step3', [\App\Http\Controllers\BookingController::class, 'step3'])->name('booking.step3');
 Route::post('/booking/step3', [\App\Http\Controllers\BookingController::class, 'postStep3'])->name('booking.postStep3');
 Route::get('/booking/step4', [\App\Http\Controllers\BookingController::class, 'step4'])->name('booking.step4');
-Route::post('/booking/confirm', [\App\Http\Controllers\BookingController::class, 'confirm'])->name('booking.confirm');
+Route::match(['get', 'post'], '/booking/confirm', [\App\Http\Controllers\BookingController::class, 'confirm'])->name('booking.confirm');
 Route::post('/booking/create-checkout', [\App\Http\Controllers\BookingController::class, 'createCheckout'])->name('booking.createCheckout');
+Route::post('/stripe/webhook', \App\Http\Controllers\StripeWebhookController::class)->name('stripe.webhook');

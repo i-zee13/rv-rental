@@ -53,9 +53,9 @@ class BookingCreatorService
         ];
     }
 
-    public function create(array $data, ?string $notes = null): Booking
+    public function create(array $data, ?string $notes = null, string $status = 'pending', bool $sendEmail = true): Booking
     {
-        $booking = DB::transaction(function () use ($data, $notes) {
+        $booking = DB::transaction(function () use ($data, $notes, $status) {
             $quote = $this->buildQuote($data);
             $vehicle = $quote['vehicle'];
             $start = $quote['start'];
@@ -86,7 +86,7 @@ class BookingCreatorService
                 'email' => $data['email'],
                 'phone' => $data['phone'] ?? null,
                 'notes' => $notes,
-                'status' => 'pending',
+                'status' => $status,
                 'subtotal' => $quote['subtotal'],
                 'taxes' => $quote['taxes'],
                 'total' => $quote['total'],
@@ -105,8 +105,26 @@ class BookingCreatorService
             return $booking->fresh(['vehicle', 'addons']);
         });
 
-        app(BookingEmailService::class)->sendConfirmationEmails($booking);
+        if ($sendEmail) {
+            app(BookingEmailService::class)->sendConfirmationEmails($booking);
+        }
 
         return $booking;
+    }
+
+    public function createFromSteps(array $step1, array $step2, array $step3, string $status = 'pending', bool $sendEmail = true): Booking
+    {
+        return $this->create([
+            'vehicle_id' => $step1['vehicle_id'],
+            'start_date' => $step1['start_date'],
+            'end_date' => $step1['end_date'],
+            'pickup_location' => $step1['pickup_location'] ?? null,
+            'dropoff_location' => $step1['dropoff_location'] ?? null,
+            'addon_ids' => $step2['addon_ids'] ?? [],
+            'first_name' => $step3['first_name'],
+            'last_name' => $step3['last_name'],
+            'email' => $step3['email'],
+            'phone' => $step3['phone'] ?? null,
+        ], $step3['notes'] ?? null, $status, $sendEmail);
     }
 }

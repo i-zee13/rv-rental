@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Vehicle;
 use App\Models\Addon;
-use App\Models\Booking;
-use App\Models\Customer;
+use App\Models\Vehicle;
 use App\Services\BookingCreatorService;
 use App\Services\BookingEmailService;
+use App\Services\StripeCheckoutService;
 use App\Services\VehicleAvailabilityService;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
@@ -41,7 +38,7 @@ class BookingController extends Controller
     {
         $addons = Addon::where('is_active', true)->with('translations')->orderBy('code')->get();
         $step1 = $request->session()->get('booking.step1');
-        if (!$step1) {
+        if (! $step1) {
             return redirect()->route('booking.step1');
         }
 
@@ -63,7 +60,7 @@ class BookingController extends Controller
     public function step3(Request $request)
     {
         $step1 = $request->session()->get('booking.step1');
-        if (!$step1) {
+        if (! $step1) {
             return redirect()->route('booking.step1');
         }
         $step2 = $request->session()->get('booking.step2', []);
@@ -86,178 +83,131 @@ class BookingController extends Controller
         return redirect()->route('booking.step4');
     }
 
-    public function step4(Request $request)
+    public function step4(Request $request, StripeCheckoutService $stripe)
     {
         $step1 = $request->session()->get('booking.step1');
         $step2 = $request->session()->get('booking.step2', []);
         $step3 = $request->session()->get('booking.step3');
-        if (!$step1 || !$step3) {
+        if (! $step1 || ! $step3) {
             return redirect()->route('booking.step1');
         }
 
         $quote = $this->buildQuote($step1, $step2);
+        $stripeEnabled = $stripe->isConfigured();
 
-        return view('booking.step4', compact('step1', 'step2', 'step3', 'quote'));
+        return view('booking.step4', compact('step1', 'step2', 'step3', 'quote', 'stripeEnabled'));
     }
 
-    public function createCheckout(Request $request)
+    public function createCheckout(Request $request, StripeCheckoutService $stripe, BookingCreatorService $creator)
     {
         $step1 = $request->session()->get('booking.step1');
         $step2 = $request->session()->get('booking.step2', []);
         $step3 = $request->session()->get('booking.step3');
-        if (!$step1 || !$step3) {
+
+        if (! $step1 || ! $step3) {
             return redirect()->route('booking.step1');
+        }
+
+        if (! $stripe->isConfigured()) {
+            return back()->with('error', 'Online payment is not available right now. Please reserve and pay at pickup, or contact us.');
         }
 
         $quote = $this->buildQuote($step1, $step2);
         $vehicle = $quote['vehicle'];
-
-        $stripeSecret = env('STRIPE_SECRET');
-        if (!$stripeSecret) {
-            return back()->with('error', 'Stripe not configured. Set STRIPE_SECRET in .env to enable Checkout.');
-        }
-
-        $payload = http_build_query([
-            'payment_method_types[]' => 'card',
-            'line_items[0][price_data][currency]' => strtolower(env('CURRENCY', 'usd')),
-            'line_items[0][price_data][product_data][name]' => $quote['vehicle_title'] . ' rental',
-            'line_items[0][price_data][unit_amount]' => intval(round($quote['total'] * 100)),
-            'line_items[0][quantity]' => 1,
-            'mode' => 'payment',
-            'success_url' => url('/booking/confirm?session_id={CHECKOUT_SESSION_ID}'),
-            'cancel_url' => url('/booking/step4'),
-        ]);
-
-        $ch = curl_init('https://api.stripe.com/v1/checkout/sessions');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-        curl_setopt($ch, CURLOPT_USERPWD, $stripeSecret . ':');
-        $resp = curl_exec($ch);
-        $err = curl_error($ch);
-        curl_close($ch);
-
-        if ($err) {
-            return back()->with('error', 'Stripe request failed: ' . $err);
-        }
-
-        $json = json_decode($resp, true);
-        if (isset($json['url'])) {
-            return redirect($json['url']);
-        }
-
-        return back()->with('error', 'Stripe error: ' . ($json['error']['message'] ?? 'unknown'));
-    }
-
-    public function confirm(Request $request)
-    {
-        $step1 = $request->session()->get('booking.step1');
-        $step2 = $request->session()->get('booking.step2', []);
-        $step3 = $request->session()->get('booking.step3');
-
-        if (!$step1 || !$step3) {
-            return redirect()->route('booking.step1');
-        }
-
-        $quote = $this->buildQuote($step1, $step2);
-        $vehicle = $quote['vehicle'];
-        $start = $quote['start'];
-        $end = $quote['end'];
 
         $availability = app(VehicleAvailabilityService::class);
-        if ($availability->isEnabled() && !$availability->isVehicleBookable($vehicle->id, $start->toDateString(), $end->toDateString())) {
+        if ($availability->isEnabled() && ! $availability->isVehicleBookable($vehicle->id, $quote['start']->toDateString(), $quote['end']->toDateString())) {
             return redirect()->route('booking.step1')->with('error', 'Selected vehicle is not available for those dates.');
         }
 
-        $customer = Customer::firstOrCreate(
-            ['email' => $step3['email']],
-            [
-                'first_name' => $step3['first_name'],
-                'last_name' => $step3['last_name'],
-                'phone' => $step3['phone'] ?? null,
-            ]
-        );
+        try {
+            $booking = $creator->createFromSteps($step1, $step2, $step3, 'pending_payment', sendEmail: false);
+            $session = $stripe->createSession($booking, $quote, $step3['email']);
 
-        $reference = 'BK' . strtoupper(uniqid());
+            return redirect()->away($session['url']);
+        } catch (\Throwable $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
 
-        $booking = Booking::create([
-            'reference' => $reference,
-            'vehicle_id' => $vehicle->id,
-            'user_id' => Auth::id(),
-            'customer_id' => $customer->id,
-            'pickup_at' => $start->copy()->setTime(12, 0),
-            'return_at' => $end->copy()->setTime(12, 0),
-            'start_date' => $start->toDateString(),
-            'end_date' => $end->toDateString(),
-            'pickup_location' => $step1['pickup_location'] ?? null,
-            'dropoff_location' => $step1['dropoff_location'] ?? null,
-            'first_name' => $step3['first_name'],
-            'last_name' => $step3['last_name'],
-            'email' => $step3['email'],
-            'phone' => $step3['phone'] ?? null,
-            'notes' => $step3['notes'] ?? null,
-            'status' => 'pending',
-            'subtotal' => $quote['subtotal'],
-            'taxes' => $quote['taxes'],
-            'total' => $quote['total'],
-            'currency' => env('CURRENCY', 'USD'),
-        ]);
-
-        foreach ($quote['selected_addons'] as $addon) {
-            $booking->addons()->create([
-                'addon_id' => $addon->id,
-                'price' => $addon->price,
-                'quantity' => 1,
-            ]);
+    public function confirm(Request $request, StripeCheckoutService $stripe, BookingCreatorService $creator)
+    {
+        if ($sessionId = $request->query('session_id')) {
+            return $this->confirmStripeReturn($request, $stripe, $sessionId);
         }
 
-        app(BookingEmailService::class)->sendConfirmationEmails($booking);
+        $step1 = $request->session()->get('booking.step1');
+        $step2 = $request->session()->get('booking.step2', []);
+        $step3 = $request->session()->get('booking.step3');
+
+        if (! $step1 || ! $step3) {
+            return redirect()->route('booking.step1');
+        }
+
+        $quote = $this->buildQuote($step1, $step2);
+        $vehicle = $quote['vehicle'];
+
+        $availability = app(VehicleAvailabilityService::class);
+        if ($availability->isEnabled() && ! $availability->isVehicleBookable($vehicle->id, $quote['start']->toDateString(), $quote['end']->toDateString())) {
+            return redirect()->route('booking.step1')->with('error', 'Selected vehicle is not available for those dates.');
+        }
+
+        $booking = $creator->createFromSteps($step1, $step2, $step3, 'pending');
+        $request->session()->forget('booking');
+
+        return view('booking.confirmation', [
+            'booking' => $booking,
+            'vehicle' => $vehicle,
+            'paid' => false,
+        ]);
+    }
+
+    protected function confirmStripeReturn(Request $request, StripeCheckoutService $stripe, string $sessionId)
+    {
+        $result = $stripe->fulfillSession($sessionId);
+
+        if (! $result) {
+            return redirect()->route('booking.step4')->with('error', 'Payment could not be verified. If you were charged, contact us with your booking reference.');
+        }
+
+        $booking = $result['booking'];
+        $vehicle = $booking->vehicle;
+
+        if ($result['fulfilled']) {
+            try {
+                app(BookingEmailService::class)->sendConfirmationEmails($booking);
+            } catch (\Throwable) {
+                // Booking is confirmed; email failure is non-fatal
+            }
+        }
 
         $request->session()->forget('booking');
 
-        return view('booking.confirmation', compact('booking', 'vehicle'));
+        return view('booking.confirmation', [
+            'booking' => $booking,
+            'vehicle' => $vehicle,
+            'paid' => true,
+        ]);
     }
 
     private function buildQuote(array $step1, array $step2): array
     {
-        $vehicle = Vehicle::with('translations', 'images')->findOrFail($step1['vehicle_id']);
+        $creator = app(BookingCreatorService::class);
+        $quote = $creator->buildQuote([
+            'vehicle_id' => $step1['vehicle_id'],
+            'start_date' => $step1['start_date'],
+            'end_date' => $step1['end_date'],
+            'addon_ids' => $step2['addon_ids'] ?? [],
+        ]);
+
+        $vehicle = $quote['vehicle'];
         $translation = $vehicle->translations->firstWhere('locale', app()->getLocale())
             ?? $vehicle->translations->first();
-        $vehicleTitle = $translation->title ?? trim($vehicle->make . ' ' . $vehicle->model);
 
-        $start = Carbon::parse($step1['start_date'])->startOfDay();
-        $end = Carbon::parse($step1['end_date'])->startOfDay();
-        $days = max(1, $start->diffInDays($end) + 1);
-
-        $base = round($days * floatval($vehicle->price_per_day), 2);
-        $selectedAddons = collect();
-        $addonsTotal = 0;
-
-        if (!empty($step2['addon_ids'])) {
-            $selectedAddons = Addon::whereIn('id', $step2['addon_ids'])->with('translations')->get();
-            $addonsTotal = round($selectedAddons->sum('price'), 2);
-        }
-
-        $subtotal = round($base + $addonsTotal, 2);
-        $taxRate = floatval(env('TAX_RATE', 0.10));
-        $taxes = round($subtotal * $taxRate, 2);
-        $total = round($subtotal + $taxes, 2);
-
-        return [
-            'vehicle' => $vehicle,
-            'vehicle_title' => $vehicleTitle,
+        return array_merge($quote, [
+            'vehicle_title' => $translation->title ?? trim($vehicle->make.' '.$vehicle->model),
             'vehicle_image' => $vehicle->images->first()?->publicUrl() ?? '/theme/img/car-2.png',
-            'start' => $start,
-            'end' => $end,
-            'days' => $days,
             'daily_rate' => floatval($vehicle->price_per_day),
-            'base' => $base,
-            'selected_addons' => $selectedAddons,
-            'addons_total' => $addonsTotal,
-            'subtotal' => $subtotal,
-            'taxes' => $taxes,
-            'tax_rate' => $taxRate,
-            'total' => $total,
-        ];
+        ]);
     }
 }

@@ -77,6 +77,35 @@
         </div>
     </div>
 
+    @php $payment = $booking->payments->firstWhere('status', 'paid') ?? $booking->payments->first(); @endphp
+    @if($payment)
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-5">
+        <h2 class="font-bold text-gray-900 text-base mb-4 pb-2 border-b border-gray-100">Payment</h2>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+            <div>
+                <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Provider</div>
+                <div class="font-semibold text-gray-900">{{ ucfirst($payment->provider ?? '—') }}</div>
+            </div>
+            <div>
+                <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Status</div>
+                <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ $payment->status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-800' }}">
+                    {{ ucfirst($payment->status) }}
+                </span>
+            </div>
+            <div>
+                <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Amount</div>
+                <div class="font-semibold text-gray-900">${{ number_format($payment->amount, 2) }} {{ strtoupper($payment->currency) }}</div>
+            </div>
+            @if($payment->provider_id)
+            <div class="col-span-2">
+                <div class="text-gray-400 text-xs uppercase tracking-wide mb-0.5">Stripe session</div>
+                <div class="font-mono text-xs text-gray-600 break-all">{{ $payment->provider_id }}</div>
+            </div>
+            @endif
+        </div>
+    </div>
+    @endif
+
     {{-- Status Update --}}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
         <h2 class="font-bold text-gray-900 text-base mb-4">Update Status</h2>

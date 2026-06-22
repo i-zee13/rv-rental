@@ -11,8 +11,14 @@
                 <i class="fas fa-check fa-3x text-white"></i>
             </div>
 
-            <h1 class="display-5 fw-bold mb-2">Booking Confirmed!</h1>
-            <p class="text-muted mb-4">Thank you! Your reservation has been successfully created.</p>
+            <h1 class="display-5 fw-bold mb-2">{{ ($paid ?? false) ? 'Payment Successful!' : 'Booking Confirmed!' }}</h1>
+            <p class="text-muted mb-4">
+                @if($paid ?? false)
+                    Thank you! Your payment was received and your reservation is confirmed.
+                @else
+                    Thank you! Your reservation has been successfully created.
+                @endif
+            </p>
 
             <div class="bg-secondary rounded p-4 mb-4 text-start text-white">
                 <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom border-white-50">
@@ -26,7 +32,11 @@
                     </div>
                     <div class="col-6">
                         <div class="text-white-50">Status</div>
-                        <span class="badge bg-warning text-dark">{{ ucfirst($booking->status) }}</span>
+                        @if($paid ?? false)
+                            <span class="badge bg-success">Paid &amp; Confirmed</span>
+                        @else
+                            <span class="badge bg-warning text-dark">{{ ucfirst($booking->status) }}</span>
+                        @endif
                     </div>
                     <div class="col-6">
                         <div class="text-white-50">Start Date</div>
