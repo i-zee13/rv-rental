@@ -12,6 +12,10 @@ class LeadNotificationService
 {
     public function sendEmails(Lead $lead): void
     {
+        if (config('mail.default') === 'log') {
+            Log::warning('MAIL_MAILER is "log" — lead emails go to laravel.log only. Set MAIL_MAILER=smtp on the server.');
+        }
+
         try {
             Mail::to($lead->email)->send(new LeadThankYouMail($lead));
             $lead->update(['customer_email_sent' => true]);

@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             LocationsSeeder::class,
             VehiclesSeeder::class,
             PropertiesSeeder::class,
+            BlogPostsSeeder::class,
+            FaqSeeder::class,
             AddonSeeder::class,
             SeoSeeder::class,
             SettingsSeeder::class,

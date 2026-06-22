@@ -76,4 +76,9 @@ return [
     'home_step2_text' => 'Select from our wide range of vehicles that best suit your needs and budget.',
     'home_step3_title' => 'Enjoy Your Ride',
     'home_step3_text' => 'Pick up your vehicle and enjoy a smooth, comfortable journey across Miami.',
+    'home_blog_title' => 'Blog & Travel Tips',
+    'home_blog_sub' => 'Guides, Miami travel ideas, and rental advice from our team.',
+    'home_view_all_posts' => 'View All Posts',
+    'faq_title' => 'Frequently Asked Questions',
+    'faq_sub' => 'Quick answers about vehicles, homes, bookings, and payments in Miami.',
 ];

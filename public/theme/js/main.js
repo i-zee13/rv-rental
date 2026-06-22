@@ -65,6 +65,28 @@
     });
 
 
+    // Homepage compact card carousels
+    $(".home-cards-carousel").owlCarousel({
+        autoplay: true,
+        smartSpeed: 800,
+        dots: true,
+        loop: true,
+        margin: 16,
+        nav: true,
+        navText: [
+            '<i class="fas fa-chevron-left"></i>',
+            '<i class="fas fa-chevron-right"></i>'
+        ],
+        responsiveClass: true,
+        responsive: {
+            0: { items: 1 },
+            576: { items: 2 },
+            992: { items: 3 },
+            1200: { items: 4 }
+        }
+    });
+
+
     // testimonial carousel
     $(".testimonial-carousel").owlCarousel({
         autoplay: true,

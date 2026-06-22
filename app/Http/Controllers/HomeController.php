@@ -12,10 +12,17 @@ class HomeController extends Controller
     {
         if ($locale) app()->setLocale($locale);
 
-        $featured = Vehicle::with(['translations','images'])
+        $featured = Vehicle::with(['translations', 'images'])
             ->where('featured', true)
             ->where('status', 'available')
             ->take(6)->get();
+
+        $carouselVehicles = Vehicle::with(['translations', 'images', 'category.translations'])
+            ->where('status', 'available')
+            ->orderByDesc('featured')
+            ->orderBy('price_per_day')
+            ->take(12)
+            ->get();
 
         $categories = \App\Models\VehicleCategory::with('translations')
             ->where('is_active', true)
@@ -25,7 +32,7 @@ class HomeController extends Controller
         $latestPosts = \App\Models\BlogPost::with('translations')
             ->where('status', 'published')
             ->latest()
-            ->take(3)
+            ->take(8)
             ->get();
 
         $totalVehicles = Vehicle::where('status', 'available')->count();
@@ -39,8 +46,25 @@ class HomeController extends Controller
             ->where('status', 'available')
             ->take(6)->get();
 
+        $carouselProperties = \App\Models\Property::with(['translations', 'images', 'type.translations'])
+            ->where('status', 'available')
+            ->orderByDesc('featured')
+            ->orderBy('price_per_month')
+            ->take(12)
+            ->get();
+
         $faqs = Faq::forPage('home');
 
-        return view('home', compact('featured', 'categories', 'latestPosts', 'totalVehicles', 'allVehicles', 'featuredProperties', 'faqs'));
+        return view('home', compact(
+            'featured',
+            'carouselVehicles',
+            'categories',
+            'latestPosts',
+            'totalVehicles',
+            'allVehicles',
+            'featuredProperties',
+            'carouselProperties',
+            'faqs'
+        ));
     }
 }

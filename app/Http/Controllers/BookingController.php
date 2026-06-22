@@ -173,13 +173,8 @@ class BookingController extends Controller
         $booking = $result['booking'];
         $vehicle = $booking->vehicle;
 
-        if ($result['fulfilled']) {
-            try {
-                app(BookingEmailService::class)->sendConfirmationEmails($booking);
-            } catch (\Throwable) {
-                // Booking is confirmed; email failure is non-fatal
-            }
-        }
+        // Always try — skipped automatically if already sent (e.g. user refreshes after 500 error)
+        app(BookingEmailService::class)->sendConfirmationEmails($booking);
 
         $request->session()->forget('booking');
 

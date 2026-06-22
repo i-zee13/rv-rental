@@ -204,8 +204,11 @@ class PropertiesSeeder extends Seeder
         ];
 
         foreach ($listings as $item) {
+            $slugBase = Str::slug($item['en_title'] ?? $item['ref']);
+
             $propertyData = [
                 'property_type_id' => $typeIds[$item['type']] ?? null,
+                'slug' => $slugBase,
                 'address_line1' => $item['address'],
                 'city' => $item['city'] ?? 'Miami',
                 'state' => $item['state'] ?? 'FL',
@@ -229,9 +232,16 @@ class PropertiesSeeder extends Seeder
             $existing = DB::table('properties')->where('reference', $item['ref'])->first();
 
             if ($existing) {
+                if (! empty($existing->slug)) {
+                    unset($propertyData['slug']);
+                } else {
+                    $propertyData['slug'] = $this->uniquePropertySlug($slugBase, (int) $existing->id);
+                }
+
                 DB::table('properties')->where('id', $existing->id)->update($propertyData);
                 $propertyId = $existing->id;
             } else {
+                $propertyData['slug'] = $this->uniquePropertySlug($slugBase);
                 $propertyId = DB::table('properties')->insertGetId(array_merge($propertyData, [
                     'reference' => $item['ref'],
                     'created_at' => $now,
@@ -277,5 +287,30 @@ class PropertiesSeeder extends Seeder
                 ]);
             }
         }
+    }
+
+    protected function uniquePropertySlug(string $base, ?int $ignoreId = null): string
+    {
+        $slug = $base ?: 'property';
+        $candidate = $slug;
+        $i = 1;
+
+        while ($this->propertySlugExists($candidate, $ignoreId)) {
+            $candidate = $slug.'-'.$i;
+            $i++;
+        }
+
+        return $candidate;
+    }
+
+    protected function propertySlugExists(string $slug, ?int $ignoreId = null): bool
+    {
+        $query = DB::table('properties')->where('slug', $slug);
+
+        if ($ignoreId) {
+            $query->where('id', '!=', $ignoreId);
+        }
+
+        return $query->exists();
     }
 }

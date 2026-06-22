@@ -76,4 +76,9 @@ return [
     'home_step2_text' => 'Seleccione de nuestra amplia gama de vehículos que se adapten a sus necesidades.',
     'home_step3_title' => 'Disfrute su viaje',
     'home_step3_text' => 'Recoja su vehículo y disfrute de un viaje cómodo por Miami.',
+    'home_blog_title' => 'Blog y consejos de viaje',
+    'home_blog_sub' => 'Guías, ideas para Miami y consejos de alquiler de nuestro equipo.',
+    'home_view_all_posts' => 'Ver todas las publicaciones',
+    'faq_title' => 'Preguntas frecuentes',
+    'faq_sub' => 'Respuestas rápidas sobre vehículos, viviendas, reservas y pagos en Miami.',
 ];

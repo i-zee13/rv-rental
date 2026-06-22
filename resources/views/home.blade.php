@@ -370,104 +370,68 @@
     </div>
 </div>
 
-{{-- ============================================================
-     VEHICLE CATEGORIES CAROUSEL
-============================================================ --}}
-@if($featured->isNotEmpty())
-<div class="container-fluid categories pb-5">
-    <div class="container pb-5">
-        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
-            <h1 class="display-5 text-capitalize mb-3">{{ __('ui.home_fleet_title') }}</h1>
-            <p class="mb-0">{{ __('ui.home_fleet_sub') }}</p>
-        </div>
-        <div class="categories-carousel owl-carousel wow fadeInUp" data-wow-delay="0.1s">
-            @foreach($featured as $v)
-                @php $t = $v->translations->firstWhere('locale', app()->getLocale()) ?? $v->translations->first(); @endphp
-                <div class="categories-item p-4">
-                    <div class="categories-item-inner">
-                        <div class="categories-img rounded-top">
-                            <img src="{{ $v->images->first()?->publicUrl() ?? '/theme/img/Midas-Preview.png' }}"
-                                class="img-fluid w-100 rounded-top"
-                                alt="{{ $t->title ?? $v->make.' '.$v->model }}"
-                                onerror="this.src='/theme/img/car-2.png'">
-                        </div>
-                        <div class="categories-content rounded-bottom p-4">
-                            <h4>{{ $t->title ?? $v->make.' '.$v->model }}</h4>
-                            <div class="categories-review mb-4">
-                                <div class="me-3">4.5 Review</div>
-                                <div class="d-flex justify-content-center text-secondary">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    <i class="fas fa-star text-body"></i>
-                                </div>
-                            </div>
-                            <div class="me-3 mb-4">Starting From</div>
-                            <div class="mb-4">
-                                <h4 class="bg-white text-primary rounded-pill py-2 px-4 mb-0">${{ number_format($v->price_per_day, 2) }}/Day</h4>
-                            </div>
-                            <div class="row gy-2 gx-0 text-center mb-4">
-                                <div class="col-4 border-end border-white">
-                                    <i class="fa fa-users text-dark"></i> <span class="text-body ms-1">{{ $v->seats ?? 4 }} Seat</span>
-                                </div>
-                                <div class="col-4 border-end border-white">
-                                    <i class="fa fa-cogs text-dark"></i> <span class="text-body ms-1">{{ strtoupper(substr($v->transmission ?? 'Auto',0,2)) }}</span>
-                                </div>
-                                <div class="col-4">
-                                    <i class="fa fa-gas-pump text-dark"></i> <span class="text-body ms-1">{{ ucfirst($v->fuel_type ?? 'Gas') }}</span>
-                                </div>
-                                @if($v->year)
-                                <div class="col-4 border-end border-white">
-                                    <i class="fa fa-car text-dark"></i> <span class="text-body ms-1">{{ $v->year }}</span>
-                                </div>
-                                @endif
-                                @if($v->bags)
-                                <div class="col-4">
-                                    <i class="fa fa-suitcase text-dark"></i> <span class="text-body ms-1">{{ $v->bags }} Bags</span>
-                                </div>
-                                @endif
-                            </div>
-                            <div class="d-flex gap-2">
-                                <a href="{{ route('vehicles.show', $v) }}" class="btn btn-secondary rounded-pill flex-fill py-2">Details</a>
-                                <a href="{{ route('booking.step1') }}?vehicle_id={{ $v->id }}" class="btn btn-primary rounded-pill flex-fill py-2">Book Now</a>
-                            </div>
-                        </div>
-                    </div>
+{{-- VEHICLES — compact carousel --}}
+@if(isset($carouselVehicles) && $carouselVehicles->isNotEmpty())
+<section class="home-cards-section py-5">
+    <div class="container py-2">
+        <x-home-section-header
+            :title="__('ui.home_fleet_title')"
+            :subtitle="__('ui.home_fleet_sub')"
+            :view-all-url="route('search')"
+            :view-all-label="__('ui.home_view_all_vehicles')" />
+        <div class="home-cards-carousel owl-carousel wow fadeInUp" data-wow-delay="0.1s">
+            @foreach($carouselVehicles as $vehicle)
+                <div class="home-carousel-slide">
+                    <x-home-vehicle-card :vehicle="$vehicle" />
                 </div>
             @endforeach
         </div>
-        <div class="text-center mt-4">
-            <a href="{{ route('search') }}" class="btn btn-primary rounded-pill py-3 px-5">
-                <i class="fas fa-car me-2"></i>{{ __('ui.home_view_all_vehicles') }}
-            </a>
-        </div>
     </div>
-</div>
+</section>
 @endif
 
-{{-- ============================================================
-     HOMES & APARTMENTS
-============================================================ --}}
-@if(isset($featuredProperties) && $featuredProperties->isNotEmpty())
-<div class="container-fluid py-5 bg-light">
-    <div class="container py-5">
-        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
-            <h1 class="display-5 text-capitalize mb-3">{{ __('ui.home_properties_title') }}</h1>
-            <p class="mb-0">{{ __('ui.home_properties_sub') }}</p>
-        </div>
-        <div class="row g-4">
-            @foreach($featuredProperties as $property)
-            <div class="col-md-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
-                <x-property-card :property="$property" />
-            </div>
+{{-- BUILDINGS / RENTALS — compact carousel --}}
+@if(isset($carouselProperties) && $carouselProperties->isNotEmpty())
+<section class="home-cards-section home-cards-section--alt py-5">
+    <div class="container py-2">
+        <x-home-section-header
+            :title="__('ui.home_properties_title')"
+            :subtitle="__('ui.home_properties_sub')"
+            :view-all-url="route('properties.search')"
+            :view-all-label="__('ui.browse_rentals')" />
+        <div class="home-cards-carousel owl-carousel wow fadeInUp" data-wow-delay="0.1s">
+            @foreach($carouselProperties as $property)
+                <div class="home-carousel-slide">
+                    <x-home-property-card :property="$property" />
+                </div>
             @endforeach
         </div>
-        <div class="text-center mt-4">
-            <a href="{{ route('properties.search') }}" class="btn btn-primary rounded-pill py-3 px-5">
-                <i class="fas fa-home me-2"></i>{{ __('ui.browse_rentals') }}
-            </a>
+    </div>
+</section>
+@endif
+
+{{-- BLOG — compact carousel --}}
+@if(isset($latestPosts) && $latestPosts->isNotEmpty())
+<section class="home-cards-section py-5">
+    <div class="container py-2">
+        <x-home-section-header
+            :title="__('ui.home_blog_title')"
+            :subtitle="__('ui.home_blog_sub')"
+            :view-all-url="route('blog.index')"
+            :view-all-label="__('ui.home_view_all_posts')" />
+        <div class="home-cards-carousel owl-carousel wow fadeInUp" data-wow-delay="0.1s">
+            @foreach($latestPosts as $post)
+                <div class="home-carousel-slide">
+                    <x-home-blog-card :post="$post" />
+                </div>
+            @endforeach
         </div>
     </div>
-</div>
+</section>
+@endif
+
+@if(isset($faqs) && $faqs->isNotEmpty())
+    <x-home-faq :faqs="$faqs" />
 @endif
 
 {{-- ============================================================
@@ -504,53 +468,6 @@
         </div>
     </div>
 </div>
-
-{{-- ============================================================
-     BLOG
-============================================================ --}}
-@if(isset($latestPosts) && $latestPosts->isNotEmpty())
-<div class="container-fluid blog py-5">
-    <div class="container py-5">
-        <div class="text-center mx-auto pb-5 wow fadeInUp" data-wow-delay="0.1s" style="max-width: 800px;">
-            <h1 class="display-5 text-capitalize mb-3">MV Rental<span class="text-primary"> Blog &amp; News</span></h1>
-            <p class="mb-0">Stay informed with the latest updates, travel tips, and industry insights through our blog.</p>
-        </div>
-        <div class="row g-4">
-            @foreach($latestPosts as $i => $post)
-                @php $pt = $post->translations->firstWhere('locale', app()->getLocale()) ?? $post->translations->first(); @endphp
-                <div class="col-lg-4 wow fadeInUp" data-wow-delay="{{ ($i*0.2)+0.1 }}s">
-                    <div class="blog-item">
-                        <div class="blog-img">
-                            <img src="/theme/img/blog-{{ ($i%3)+1 }}.jpg" class="img-fluid rounded-top w-100" alt="{{ $pt->title ?? '' }}"
-                                onerror="this.src='/theme/img/features-img.png'">
-                        </div>
-                        <div class="blog-content rounded-bottom p-4">
-                            <div class="blog-date">{{ $post->created_at ? $post->created_at->format('d M Y') : date('d M Y') }}</div>
-                            <div class="blog-comment my-3">
-                                <div class="small"><span class="fa fa-user text-primary"></span><span class="ms-2">Admin</span></div>
-                            </div>
-                            <a href="{{ route('blog.show', $post->slug) }}" class="h4 d-block mb-3">
-                                {{ $pt->title ?? 'Untitled' }}
-                            </a>
-                            <p class="mb-3">{{ Str::limit(strip_tags($pt->excerpt ?? $pt->content ?? ''), 100) }}</p>
-                            <a href="{{ route('blog.show', $post->slug) }}">
-                                Read More <i class="fa fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-        <div class="text-center mt-4">
-            <a href="{{ route('blog.index') }}" class="btn btn-primary rounded-pill py-3 px-5">View All Posts</a>
-        </div>
-    </div>
-</div>
-@endif
-
-@if(isset($faqs) && $faqs->isNotEmpty())
-    <x-faq-section :faqs="$faqs" id="homeFaq" />
-@endif
 
 {{-- ============================================================
      CTA BANNER

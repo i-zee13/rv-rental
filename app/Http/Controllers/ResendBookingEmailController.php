@@ -28,7 +28,7 @@ class ResendBookingEmailController extends Controller
             ], 404);
         }
 
-        $emails->sendConfirmationEmails($booking);
+        $emails->sendConfirmationEmails($booking, force: true);
 
         return response()->json([
             'status' => 'ok',
