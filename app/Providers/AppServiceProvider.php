@@ -37,11 +37,15 @@ class AppServiceProvider extends ServiceProvider
     protected function loadSiteTextOverrides(): void
     {
         try {
-            if (! Schema::hasTable('site_texts')) {
-                return;
-            }
+            $grouped = \Illuminate\Support\Facades\Cache::remember('site_texts_by_locale', 3600, function () {
+                if (! Schema::hasTable('site_texts')) {
+                    return collect();
+                }
 
-            SiteText::query()->get()->groupBy('locale')->each(function ($items, $locale) {
+                return SiteText::query()->get()->groupBy('locale');
+            });
+
+            $grouped->each(function ($items, $locale) {
                 $lines = $items->pluck('value', 'key')->filter(fn ($v) => $v !== null && $v !== '')->all();
                 if ($lines) {
                     Lang::addLines($lines, $locale, 'ui');

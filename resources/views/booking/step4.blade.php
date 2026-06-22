@@ -127,8 +127,13 @@
 
                 <div class="checkout-or"><span>or reserve now</span></div>
                 @else
-                <div class="alert alert-info rounded-3 mb-4 small">
-                    <i class="fas fa-info-circle me-2"></i>Online card payment is being set up. You can confirm your reservation now and pay at pickup.
+                <div class="alert alert-warning rounded-3 mb-4 small">
+                    <i class="fas fa-credit-card me-2"></i>
+                    <strong>Pay with card</strong> will appear here once Stripe is active on the server.
+                    You can still confirm below and pay at pickup.
+                    @if(config('app.debug'))
+                        <div class="mt-2 text-muted">Admin: set <code>STRIPE_SECRET</code> in server <code>.env</code>, then open <code>/clear?no_cache=1</code></div>
+                    @endif
                 </div>
                 @endif
 

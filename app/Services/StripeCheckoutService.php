@@ -12,7 +12,16 @@ class StripeCheckoutService
 {
     public function isConfigured(): bool
     {
-        return filled(config('stripe.secret'));
+        $secret = $this->secretKey();
+
+        return $secret !== null && str_starts_with($secret, 'sk_');
+    }
+
+    protected function secretKey(): ?string
+    {
+        $secret = trim((string) (config('stripe.secret') ?: env('STRIPE_SECRET', '')));
+
+        return $secret !== '' ? $secret : null;
     }
 
     /**
@@ -20,7 +29,7 @@ class StripeCheckoutService
      */
     public function createSession(Booking $booking, array $quote, string $customerEmail): array
     {
-        $secret = config('stripe.secret');
+        $secret = $this->secretKey();
         if (! $secret) {
             throw new RuntimeException('Stripe is not configured.');
         }
@@ -90,7 +99,7 @@ class StripeCheckoutService
 
     public function retrieveSession(string $sessionId): ?array
     {
-        $secret = config('stripe.secret');
+        $secret = $this->secretKey();
         if (! $secret) {
             return null;
         }
