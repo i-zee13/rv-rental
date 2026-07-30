@@ -76,6 +76,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware([\App\Http\Middleware\AdminMiddleware::class])->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
 
+        // Profile settings
+        Route::get('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [\App\Http\Controllers\Admin\ProfileController::class, 'update'])->name('profile.update');
+
         // Vehicles
         Route::get('/vehicles', [AdminVehicleController::class, 'index'])->name('vehicles.index');
         Route::get('/vehicles/create', [AdminVehicleController::class, 'create'])->name('vehicles.create');

@@ -12,7 +12,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'preferred_language', 'is_active'
+        'name', 'email', 'password', 'role', 'preferred_language', 'avatar', 'is_active',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -25,5 +25,14 @@ class User extends Authenticatable
     public function isRole(string $role): bool
     {
         return $this->role === $role;
+    }
+
+    public function avatarUrl(): ?string
+    {
+        if (! filled($this->avatar)) {
+            return null;
+        }
+
+        return \App\Support\PublicMedia::url($this->avatar);
     }
 }

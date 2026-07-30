@@ -166,8 +166,45 @@
                     ✓ {{ session('success') }}
                 </div>
                 @endif
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
-                    {{ substr(auth()->user()?->name ?? 'A', 0, 1) }}
+
+                @php
+                    $headerUser = auth()->user();
+                    $headerAvatar = $headerUser?->avatarUrl();
+                @endphp
+                <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+                    <button type="button" @click="open = !open"
+                        class="flex items-center gap-2 rounded-full hover:bg-gray-50 p-1 pr-2 transition"
+                        aria-label="Account menu">
+                        @if($headerAvatar)
+                            <img src="{{ $headerAvatar }}" alt="{{ $headerUser->name }}"
+                                class="w-8 h-8 rounded-full object-cover border border-indigo-100">
+                        @else
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                                {{ strtoupper(substr($headerUser?->name ?? 'A', 0, 1)) }}
+                            </div>
+                        @endif
+                        <span class="hidden sm:block text-sm font-medium text-gray-700 max-w-[120px] truncate">{{ $headerUser?->name }}</span>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+                    <div x-show="open" x-cloak x-transition
+                        class="absolute right-0 mt-2 w-52 bg-white rounded-xl border border-gray-100 shadow-lg py-1 z-50">
+                        <div class="px-3 py-2 border-b border-gray-50">
+                            <div class="text-sm font-semibold text-gray-900 truncate">{{ $headerUser?->name }}</div>
+                            <div class="text-xs text-gray-400 truncate">{{ $headerUser?->email }}</div>
+                        </div>
+                        <a href="{{ route('admin.profile.edit') }}"
+                            class="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 {{ request()->routeIs('admin.profile.*') ? 'bg-indigo-50 text-indigo-700' : '' }}">
+                            <span>👤</span> Profile settings
+                        </a>
+                        <form method="POST" action="{{ route('admin.logout') }}">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 text-left">
+                                <span>🚪</span> Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </header>
