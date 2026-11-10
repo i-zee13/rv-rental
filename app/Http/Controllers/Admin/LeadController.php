@@ -49,7 +49,7 @@ class LeadController extends Controller
 
         $lead = Lead::findOrFail($id);
         $lead->status = $request->input('status');
-        if ($request->filled('admin_notes')) {
+        if ($request->has('admin_notes')) {
             $lead->admin_notes = $request->input('admin_notes');
         }
         if (in_array($lead->status, ['contacted', 'qualified', 'converted']) && !$lead->contacted_at) {

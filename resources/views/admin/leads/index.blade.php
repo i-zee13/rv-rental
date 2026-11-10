@@ -62,20 +62,24 @@
                             @else — @endif
                         </td>
                         <td class="p-3">
-                            @php
-                                $colors = [
-                                    'new' => 'bg-blue-100 text-blue-700',
-                                    'lead' => 'bg-indigo-100 text-indigo-700',
-                                    'contacted' => 'bg-yellow-100 text-yellow-800',
-                                    'qualified' => 'bg-purple-100 text-purple-700',
-                                    'converted' => 'bg-green-100 text-green-700',
-                                    'spam' => 'bg-red-100 text-red-700',
-                                    'closed' => 'bg-gray-100 text-gray-600',
-                                ];
-                            @endphp
-                            <span class="px-2 py-0.5 rounded-full text-xs font-medium {{ $colors[$lead->status] ?? 'bg-gray-100' }}">
-                                {{ $lead->status_label }}
-                            </span>
+                            <form method="POST" action="{{ route('admin.leads.status', $lead->id) }}" class="inline-block">
+                                @csrf
+                                <select name="status" onchange="this.form.submit()"
+                                    class="border rounded-lg px-2 py-1 text-xs font-medium
+                                    @switch($lead->status)
+                                        @case('new') bg-blue-50 text-blue-700 border-blue-200 @break
+                                        @case('lead') bg-indigo-50 text-indigo-700 border-indigo-200 @break
+                                        @case('contacted') bg-yellow-50 text-yellow-800 border-yellow-200 @break
+                                        @case('qualified') bg-purple-50 text-purple-700 border-purple-200 @break
+                                        @case('converted') bg-green-50 text-green-700 border-green-200 @break
+                                        @case('spam') bg-red-50 text-red-700 border-red-200 @break
+                                        @default bg-gray-50 text-gray-600 border-gray-200
+                                    @endswitch">
+                                    @foreach(\App\Models\Lead::STATUSES as $key => $label)
+                                        <option value="{{ $key }}" {{ $lead->status == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                    @endforeach
+                                </select>
+                            </form>
                         </td>
                         <td class="p-3 hidden sm:table-cell text-gray-500 capitalize">{{ $lead->source }}</td>
                         <td class="p-3 text-gray-500 text-xs whitespace-nowrap">{{ $lead->created_at->format('M j, H:i') }}</td>
