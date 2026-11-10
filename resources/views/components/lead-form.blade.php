@@ -131,10 +131,10 @@
             <input class="form-control" type="text" name="dropoff_location" value="{{ old('dropoff_location') }}" placeholder="Drop-off (optional)">
         </div>
         <div class="col-md-6">
-            <input class="form-control" type="date" name="pickup_date" value="{{ old('pickup_date') }}" min="{{ date('Y-m-d') }}" placeholder="Pick-up date">
+            <input class="form-control" type="date" name="pickup_date" value="{{ old('pickup_date') }}" min="{{ date('Y-m-d') }}" placeholder="Pick-up date" required>
         </div>
         <div class="col-md-6">
-            <input class="form-control" type="date" name="dropoff_date" value="{{ old('dropoff_date') }}" min="{{ date('Y-m-d') }}" placeholder="Drop-off date">
+            <input class="form-control" type="date" name="dropoff_date" value="{{ old('dropoff_date') }}" min="{{ date('Y-m-d') }}" placeholder="Drop-off date" required>
         </div>
 
         <div class="col-12">

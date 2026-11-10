@@ -152,7 +152,7 @@
                             <input type="tel" name="phone" class="form-control" placeholder="Phone" value="{{ old('phone') }}">
                         </div>
                         <div class="mb-3">
-                            <input type="date" name="pickup_date" class="form-control" min="{{ date('Y-m-d') }}" placeholder="Move-in date">
+                            <input type="date" name="pickup_date" class="form-control" min="{{ date('Y-m-d') }}" placeholder="Move-in date" required>
                         </div>
                         <div class="mb-3">
                             <textarea name="message" class="form-control" rows="3" placeholder="Tell us about your rental needs...">{{ old('message') }}</textarea>

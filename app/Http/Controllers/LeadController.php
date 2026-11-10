@@ -5,13 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Lead;
 use App\Models\Vehicle;
 use App\Services\LeadNotificationService;
+use App\Services\LeadSpamGuard;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\Rule;
 
 class LeadController extends Controller
 {
     public function __construct(
         protected LeadNotificationService $leadNotifier,
+        protected LeadSpamGuard $spamGuard,
     ) {}
 
     public function store(Request $request)
@@ -27,6 +30,9 @@ class LeadController extends Controller
         }
         RateLimiter::hit($key, 3600);
 
+        $isProperty = $request->filled('property_id')
+            || in_array($request->input('source'), ['property'], true);
+
         $validated = $request->validate([
             'first_name'       => 'required|string|max:100',
             'last_name'        => 'nullable|string|max:100',
@@ -36,13 +42,20 @@ class LeadController extends Controller
             'property_id'      => 'nullable|integer|exists:properties,id',
             'pickup_location'  => 'nullable|string|max:255',
             'dropoff_location' => 'nullable|string|max:255',
-            'pickup_date'      => 'nullable|date|after_or_equal:today',
-            'dropoff_date'     => 'nullable|date|after_or_equal:pickup_date',
+            'pickup_date'      => ['required', 'date', 'after_or_equal:today'],
+            'dropoff_date'     => [
+                Rule::requiredIf(! $isProperty),
+                'nullable',
+                'date',
+                'after_or_equal:pickup_date',
+            ],
             'pickup_time'      => 'nullable|string|max:20',
             'dropoff_time'     => 'nullable|string|max:20',
             'message'          => 'nullable|string|max:5000',
             'source'           => 'nullable|string|max:50',
         ]);
+
+        $spam = $this->spamGuard->analyze($validated['message'] ?? null);
 
         $vehicleName = null;
         $propertyName = null;
@@ -64,7 +77,7 @@ class LeadController extends Controller
 
         $lead = Lead::create([
             'reference'        => Lead::generateReference(),
-            'status'           => 'new',
+            'status'           => $spam['is_spam'] ? 'spam' : 'new',
             'source'           => $validated['source'] ?? 'website',
             'vehicle_id'       => $validated['vehicle_id'] ?? null,
             'vehicle_name'     => $vehicleName,
@@ -84,9 +97,14 @@ class LeadController extends Controller
             'ip_address'       => $request->ip(),
             'user_agent'       => substr((string) $request->userAgent(), 0, 500),
             'locale'           => app()->getLocale(),
+            'admin_notes'      => $spam['is_spam']
+                ? 'Auto-flagged spam: '.implode(', ', $spam['reasons']).' (score '.$spam['score'].')'
+                : null,
         ]);
 
-        $this->leadNotifier->sendEmails($lead);
+        if (! $spam['is_spam']) {
+            $this->leadNotifier->sendEmails($lead);
+        }
 
         return redirect()->route('leads.thank-you', ['ref' => $lead->reference])
             ->with('success', 'Thank you! We received your inquiry.');
