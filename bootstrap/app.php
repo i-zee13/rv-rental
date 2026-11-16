@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
         then: function () {
             require base_path('routes/deploy.php');
+            require base_path('routes/mcp.php');
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
