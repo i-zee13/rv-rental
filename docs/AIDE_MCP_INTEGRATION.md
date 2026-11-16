@@ -48,14 +48,12 @@ HTTP 401 means the token is missing, wrong, expired, or revoked. The message is 
 | Question | Tool |
 | --- | --- |
 | What is the business snapshot this month? | `mv_get_business_overview` |
-| Which vehicles are in the fleet, by category or status? | `mv_list_vehicles`, `mv_get_fleet_summary` |
-| Is this vehicle bookable on these dates under the current website rules? | `mv_check_vehicle_availability` |
-| Which bookings were created, are upcoming, or are out today? | `mv_list_bookings`, `mv_get_upcoming_bookings`, `mv_get_active_rentals` |
-| How much cash was collected, as opposed to booking totals? | `mv_get_revenue_summary` |
-| Which reservations are unpaid or waiting on Stripe? | `mv_list_pending_payments` |
-| Which leads are new, and which are property inquiries? | `mv_list_leads`, `mv_get_uncontacted_leads`, `mv_get_property_inquiries` |
+| Which vehicles are in the fleet? | `mv_list_vehicles` |
+| Is this vehicle bookable on these dates? | `mv_check_vehicle_availability` |
+| Which bookings / unpaid / active today? | `mv_list_bookings` (status / payment_state / rental dates) |
+| How much cash was collected? | `mv_get_revenue_summary` |
+| Which leads / property inquiries / uncontacted? | `mv_list_leads` |
 | Which homes allow pets? | `mv_list_properties` with `pets_allowed` |
-| What does a published FAQ say? | `mv_search_faqs` |
 
 Read `limitations` on the overview before answering. In particular:
 

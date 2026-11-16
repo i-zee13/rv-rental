@@ -4,8 +4,6 @@ namespace Tests\Feature;
 
 use App\Mcp\McpTokenService;
 use App\Models\Booking;
-use App\Models\Faq;
-use App\Models\FaqTranslation;
 use App\Models\Lead;
 use App\Models\McpAccessToken;
 use App\Models\Payment;
@@ -58,9 +56,11 @@ class McpServerTest extends TestCase
         $tools = $this->mcpCall('tools/list')->assertOk()->json('result.tools');
         $names = array_column($tools, 'name');
 
+        $this->assertCount(11, $names);
         $this->assertContains('mv_check_vehicle_availability', $names);
         $this->assertContains('mv_get_revenue_summary', $names);
         $this->assertNotContains('mv_create_booking', $names);
+        $this->assertNotContains('mv_search_faqs', $names);
 
         foreach ($tools as $tool) {
             $this->assertTrue($tool['annotations']['readOnlyHint']);
@@ -183,7 +183,7 @@ class McpServerTest extends TestCase
         $this->assertSame('USD', $revenue['collected_revenue']['currency']);
         $this->assertEquals(700, $revenue['booking_totals_created_in_period']['amount']);
 
-        $pending = $this->tool('mv_list_pending_payments', []);
+        $pending = $this->tool('mv_list_bookings', ['payment_state' => 'pay_at_pickup']);
         $pendingIds = array_column($pending['bookings'], 'id');
         $this->assertContains($unpaid->id, $pendingIds);
         $this->assertNotContains($paid->id, $pendingIds);
@@ -202,13 +202,18 @@ class McpServerTest extends TestCase
         $this->assertSame('ada@example.com', $detailResponse->json('result.structuredContent.customer.email'));
     }
 
-    public function test_active_rentals_require_confirmed_or_active_status(): void
+    public function test_list_bookings_can_filter_confirmed_rentals_overlapping_today(): void
     {
         $vehicle = $this->vehicle('available');
+        $today = now()->toDateString();
         $active = $this->booking($vehicle, 'confirmed', now()->subDay()->toDateString(), now()->addDay()->toDateString());
         $pending = $this->booking($vehicle, 'pending', now()->subDay()->toDateString(), now()->addDay()->toDateString());
 
-        $result = $this->tool('mv_get_active_rentals', []);
+        $result = $this->tool('mv_list_bookings', [
+            'status' => 'confirmed',
+            'rental_from' => $today,
+            'rental_to' => $today,
+        ]);
         $ids = array_column($result['bookings'], 'id');
 
         $this->assertContains($active->id, $ids);
@@ -255,23 +260,18 @@ class McpServerTest extends TestCase
         $this->assertStringContainsString('Miami', $detail['address']);
         $this->assertFalse($detail['reservations_supported']);
 
-        $inquiries = $this->tool('mv_get_property_inquiries', ['property_id' => $property->id]);
-        $this->assertSame('property_inquiry', $inquiries['inquiries'][0]['lead_type']);
-        $this->assertArrayNotHasKey('email', $inquiries['inquiries'][0]);
+        $inquiries = $this->tool('mv_list_leads', [
+            'lead_type' => 'property_inquiry',
+            'property_id' => $property->id,
+        ]);
+        $this->assertSame('property_inquiry', $inquiries['leads'][0]['lead_type']);
+        $this->assertArrayNotHasKey('email', $inquiries['leads'][0]);
 
         $lead = $this->tool('mv_get_lead', ['reference' => 'LD-PROP1']);
         $this->assertSame('grace@example.com', $lead['customer']['email']);
-
-        $stats = $this->tool('mv_get_lead_statistics', [
-            'from' => now()->toDateString(),
-            'to' => now()->toDateString(),
-        ]);
-        $this->assertNull($stats['booking_conversion_rate']);
-        $this->assertFalse($stats['booking_conversion_rate_available']);
-        $this->assertSame(1, $stats['by_type']['property_inquiry']);
     }
 
-    public function test_uncontacted_leads_and_faqs(): void
+    public function test_list_leads_can_filter_uncontacted(): void
     {
         Lead::create([
             'reference' => 'LD-NEW',
@@ -289,25 +289,12 @@ class McpServerTest extends TestCase
             'contacted_at' => now(),
         ]);
 
-        $uncontacted = $this->tool('mv_get_uncontacted_leads', []);
+        $uncontacted = $this->tool('mv_list_leads', [
+            'status' => 'new',
+            'contacted' => false,
+        ]);
         $refs = array_column($uncontacted['leads'], 'reference');
         $this->assertSame(['LD-NEW'], $refs);
-
-        $faq = Faq::create(['scope' => 'general', 'is_active' => true, 'sort_order' => 1, 'page_keys' => ['home']]);
-        FaqTranslation::create([
-            'faq_id' => $faq->id,
-            'locale' => 'en',
-            'question' => 'Where do I pick up the car?',
-            'answer' => 'Miami FL 33122',
-        ]);
-
-        $found = $this->tool('mv_search_faqs', ['query' => 'pick up']);
-        $this->assertSame('Where do I pick up the car?', $found['faqs'][0]['translations']['en']['question']);
-
-        $this->mcpCall('tools/call', [
-            'name' => 'mv_search_faqs',
-            'arguments' => ['query' => 'a'],
-        ])->assertOk()->assertJsonPath('result.isError', true);
     }
 
     public function test_resources_and_overview_do_not_invent_conversion(): void
@@ -323,13 +310,6 @@ class McpServerTest extends TestCase
         $this->assertFalse($overview['limitations']['booking_conversion_rate_supported']);
         $this->assertFalse($overview['limitations']['property_reservations_supported']);
         $this->assertArrayNotHasKey('email', $overview);
-
-        $fleet = $this->tool('mv_get_fleet_summary', []);
-        $this->assertSame(0, $fleet['total']);
-
-        $site = $this->tool('mv_get_site_information', []);
-        $this->assertSame('MV Miami Rental', $site['brand']);
-        $this->assertIsBool($site['stripe_checkout_configured']);
     }
 
     public function test_rate_limit_and_non_post_methods(): void

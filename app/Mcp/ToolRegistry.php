@@ -94,8 +94,7 @@ class ToolRegistry
                 'start' => 'required|date_format:Y-m-d',
                 'end' => 'required|date_format:Y-m-d|after_or_equal:start',
             ], ['vehicle_id', 'start', 'end']),
-            $this->tool('mv_get_fleet_summary', 'Fleet summary', 'Vehicle counts by category and status. Not a date calendar.', 'fleetSummary', [], []),
-            $this->tool('mv_list_bookings', 'List bookings', 'Booking list without customer contact details. created_* filters created_at. rental_* filters overlapping rental dates.', 'listBookings', $page + [
+            $this->tool('mv_list_bookings', 'List bookings', 'Booking list without customer contact. Use payment_state for unpaid/pay-at-pickup/pending Stripe. Use rental_from/rental_to with status confirmed for active/overlapping rentals.', 'listBookings', $page + [
                 'status' => ['type' => 'string'],
                 'payment_state' => ['type' => 'string', 'enum' => ['paid', 'pending', 'pay_at_pickup', 'unpaid']],
                 'vehicle_id' => ['type' => 'integer'],
@@ -118,11 +117,6 @@ class ToolRegistry
                 'id' => ['type' => 'integer'],
                 'reference' => ['type' => 'string'],
             ], ['id' => 'nullable|integer|required_without:reference', 'reference' => 'nullable|string|required_without:id']),
-            $this->tool('mv_get_upcoming_bookings', 'Upcoming bookings', 'Reservations with start_date today or later in pending, pending_payment, confirmed, or active.', 'upcomingBookings', $page + [
-                'within_days' => ['type' => 'integer'],
-            ], $pageRules + ['within_days' => 'sometimes|integer|min:1|max:366']),
-            $this->tool('mv_get_active_rentals', 'Active rentals', 'Confirmed or active bookings whose dates include today. Pending checkouts are excluded.', 'activeRentals', $page, $pageRules),
-            $this->tool('mv_get_booking_statistics', 'Booking statistics', 'Counts and stored booking totals by status. Not collected revenue.', 'bookingStatistics', $period, $periodRules),
             $this->tool('mv_list_properties', 'List properties', 'Housing listings. Reservations are not supported. Price filters use price_per_month.', 'listProperties', $page + [
                 'type' => ['type' => 'string'],
                 'status' => ['type' => 'string'],
@@ -150,18 +144,7 @@ class ToolRegistry
                 'id' => ['type' => 'integer'],
                 'slug' => ['type' => 'string'],
             ], ['id' => 'nullable|integer|required_without:slug', 'slug' => 'nullable|string|required_without:id']),
-            $this->tool('mv_get_property_inquiries', 'Property inquiries', 'Leads linked to a property. Contact details are on mv_get_lead.', 'propertyInquiries', $page + [
-                'property_id' => ['type' => 'integer'],
-                'status' => ['type' => 'string'],
-                'created_from' => ['type' => 'string'],
-                'created_to' => ['type' => 'string'],
-            ], $pageRules + [
-                'property_id' => 'sometimes|integer',
-                'status' => 'sometimes|string|max:40',
-                'created_from' => 'sometimes|date_format:Y-m-d',
-                'created_to' => 'sometimes|date_format:Y-m-d',
-            ]),
-            $this->tool('mv_list_leads', 'List leads', 'Lead list without contact details.', 'listLeads', $page + [
+            $this->tool('mv_list_leads', 'List leads', 'Lead list without contact details. Use lead_type=property_inquiry for housing inquiries. Use status=new and contacted=false for uncontacted leads.', 'listLeads', $page + [
                 'status' => ['type' => 'string'],
                 'source' => ['type' => 'string'],
                 'lead_type' => ['type' => 'string', 'enum' => ['property_inquiry', 'vehicle_inquiry', 'general']],
@@ -184,21 +167,7 @@ class ToolRegistry
                 'id' => ['type' => 'integer'],
                 'reference' => ['type' => 'string'],
             ], ['id' => 'nullable|integer|required_without:reference', 'reference' => 'nullable|string|required_without:id']),
-            $this->tool('mv_get_lead_statistics', 'Lead statistics', 'Lead counts by status, source, and type. Does not calculate a booking conversion rate.', 'leadStatistics', $period, $periodRules),
-            $this->tool('mv_get_uncontacted_leads', 'Uncontacted leads', 'Leads with status new and no contacted_at.', 'uncontactedLeads', $page + [
-                'created_from' => ['type' => 'string'],
-                'created_to' => ['type' => 'string'],
-            ], $pageRules + [
-                'created_from' => 'sometimes|date_format:Y-m-d',
-                'created_to' => 'sometimes|date_format:Y-m-d',
-            ]),
-            $this->tool('mv_get_payment_summary', 'Payment summary', 'Payment counts and totals by stored status. No card or Stripe identifiers.', 'paymentSummary', $period, $periodRules),
             $this->tool('mv_get_revenue_summary', 'Revenue summary', 'Collected revenue from payments with status paid, separate from booking totals.', 'revenueSummary', $period, $periodRules),
-            $this->tool('mv_list_pending_payments', 'Pending payments', 'Bookings with no paid payment row, including pay-at-pickup reservations.', 'pendingPayments', $page, $pageRules),
-            $this->tool('mv_search_faqs', 'Search FAQs', 'Search active FAQ questions and answers in English and Spanish.', 'searchFaqs', [
-                'query' => ['type' => 'string'],
-            ], ['query' => 'required|string|min:2|max:100'], ['query']),
-            $this->tool('mv_get_site_information', 'Site information', 'Public business facts, tax rate, and published page titles. No secrets.', 'siteInformation', [], []),
         ];
     }
 
