@@ -11,9 +11,10 @@ Transport: Streamable HTTP, one JSON-RPC message per POST, response `application
 Send:
 
 - `Authorization: Bearer <token>`
-- `X-Aide-Workspace-Id: <workspace bound to that token>`
 - `Accept: application/json, text/event-stream`
 - `Content-Type: application/json`
+
+Workspace headers (`X-Aide-Workspace-Id`, `X-Wwt-Workspace`) are optional and ignored for authorization. Auth is token-only.
 
 The server stays dark until `MCP_ENABLED=true`. Until then `/mcp` is HTTP 404.
 
@@ -27,11 +28,11 @@ php artisan mcp:tokens
 php artisan mcp:revoke 1
 ```
 
-`--user` is the email or id of an active `super_admin`, `admin`, or `manager`. Tokens never expire by default. Pass `--days=90` only if you want an expiry. The command prints the token once. Store it in Aide's secret store for that workspace. Revoke with `mcp:revoke` when access should end.
+`--user` is the email or id of an active `super_admin`, `admin`, or `manager`. Tokens never expire by default. Pass `--days=90` only if you want an expiry. The command prints the token once. Store it in Aide. Revoke with `mcp:revoke` when access should end.
 
 Revoke accepts the numeric id or the token prefix. Revocation takes effect on the next request. Deactivating the MV user also blocks the token.
 
-The workspace id on the token is the only workspace that token will serve. Sending a different `X-Aide-Workspace-Id` returns HTTP 403. MV Miami Rental is one business, not a tenant per workspace.
+The workspace argument on `mcp:issue` is only a label for `mcp:tokens`. Requests authenticate with the bearer token alone.
 
 ## Health
 
@@ -71,7 +72,6 @@ import { createMvMcpClient } from "./mv-mcp-client";
 const client = createMvMcpClient({
   endpoint: env.MV_MCP_URL,
   token: env.MV_MCP_TOKEN,
-  workspaceId: env.MV_MCP_WORKSPACE_ID,
 });
 
 await client.initialize();

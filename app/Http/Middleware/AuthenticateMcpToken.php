@@ -35,7 +35,7 @@ class AuthenticateMcpToken
         }
 
         try {
-            $token = $this->tokens->authenticate($plain, $request->header('X-Aide-Workspace-Id'));
+            $token = $this->tokens->authenticate($plain);
         } catch (McpAuthException $exception) {
             RateLimiter::hit($ipKey, 60);
             $this->audit($request, null, $exception->status, $exception->outcome, $exception->getMessage());
@@ -72,7 +72,7 @@ class AuthenticateMcpToken
         McpAuditLog::create([
             'mcp_access_token_id' => $token?->id,
             'user_id' => $token?->user_id,
-            'workspace_id' => $token?->workspace_id ?? substr((string) $request->header('X-Aide-Workspace-Id'), 0, 100),
+            'workspace_id' => $token?->workspace_id,
             'method' => 'auth',
             'tool' => null,
             'outcome' => $outcome,

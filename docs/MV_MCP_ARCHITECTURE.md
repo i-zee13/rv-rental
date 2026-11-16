@@ -7,7 +7,7 @@ The MCP connector is a read-only Streamable HTTP endpoint inside this Laravel ap
 `POST /mcp` is registered outside the `web` middleware group.
 
 1. `EnsureMcpEnabled` reads `config('mcp.enabled')`. When it is false the response is HTTP 404. Authentication, tool code, business queries, and audit writes do not run.
-2. `AuthenticateMcpToken` checks the bearer token, the `X-Aide-Workspace-Id` header, the bound admin user, and the rate limit.
+2. `AuthenticateMcpToken` checks the bearer token, the bound admin user, and the rate limit. Workspace headers are not required.
 3. `McpController` handles one JSON-RPC message and writes `mcp_audit_logs`.
 
 `GET` and `DELETE` use the same gate. When MCP is enabled they return HTTP 405. This server does not open a server-sent-events stream and does not issue an `Mcp-Session-Id`. Each request is stateless.
@@ -34,11 +34,11 @@ Tokens are issued only by Artisan. The plaintext value is shown once. The databa
 
 Each token is bound to:
 
-- one Aide workspace id
 - one MV user whose role is `super_admin`, `admin`, or `manager` and whose `is_active` is true
 - the scope `operations:read`
+- an optional workspace label for listing only (not checked on requests)
 
-The workspace header must match the token. A workspace id by itself is not authorization. Customer accounts, including `booking_agent`, cannot use MCP. There is no website screen that mints tokens.
+Auth is bearer-token only. Customer accounts, including `booking_agent`, cannot use MCP. There is no website screen that mints tokens.
 
 Deactivating the user, changing the role, or setting `revoked_at` stops the token. Expiry is checked on every request. Default life is 90 days.
 

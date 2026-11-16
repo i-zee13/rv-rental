@@ -103,13 +103,13 @@ class McpServerTest extends TestCase
         McpAccessToken::query()->where('token_hash', hash('sha256', $revokedPlain))->update(['revoked_at' => now()]);
         $this->mcpCall('ping', [], ['Authorization' => 'Bearer '.$revokedPlain])->assertUnauthorized();
 
-        $this->mcpCall('ping', [], ['X-Aide-Workspace-Id' => 'other-workspace'])->assertForbidden();
+        $this->mcpCall('ping', [], ['X-Aide-Workspace-Id' => 'other-workspace'])->assertOk();
+        $this->mcpCall('ping', [], ['X-Wwt-Workspace' => 'anything'])->assertOk();
 
         $agent = User::factory()->create(['role' => 'booking_agent', 'is_active' => true]);
         $agentToken = $this->storeToken($agent, 'ws_aide');
         $this->mcpCall('ping', [], ['Authorization' => 'Bearer '.$agentToken])->assertForbidden();
 
-        $this->assertDatabaseHas('mcp_audit_logs', ['outcome' => 'workspace_mismatch']);
         $this->assertDatabaseHas('mcp_audit_logs', ['outcome' => 'revoked']);
         $this->assertDatabaseHas('mcp_audit_logs', ['outcome' => 'expired']);
     }
@@ -387,7 +387,6 @@ class McpServerTest extends TestCase
     {
         return [
             'Authorization' => 'Bearer '.$this->plain,
-            'X-Aide-Workspace-Id' => 'ws_aide',
             'Accept' => 'application/json, text/event-stream',
         ];
     }

@@ -1,7 +1,7 @@
 export type McpClientConfig = {
   endpoint: string;
   token: string;
-  workspaceId: string;
+  workspaceId?: string;
 };
 
 type JsonRpcSuccess = {
@@ -20,19 +20,24 @@ export type McpToolResult<T> = {
 let nextId = 1;
 
 export function createMvMcpClient(config: McpClientConfig) {
-  if (!config.endpoint || !config.token || !config.workspaceId) {
-    throw new Error("MV MCP endpoint, token, and workspace id are required.");
+  if (!config.endpoint || !config.token) {
+    throw new Error("MV MCP endpoint and token are required.");
   }
 
   async function request(method: string, params?: Record<string, unknown>): Promise<unknown> {
+    const headers: Record<string, string> = {
+      Authorization: `Bearer ${config.token}`,
+      Accept: "application/json, text/event-stream",
+      "Content-Type": "application/json",
+    };
+
+    if (config.workspaceId) {
+      headers["X-Wwt-Workspace"] = config.workspaceId;
+    }
+
     const response = await fetch(config.endpoint, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${config.token}`,
-        "X-Aide-Workspace-Id": config.workspaceId,
-        Accept: "application/json, text/event-stream",
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         jsonrpc: "2.0",
         id: nextId++,
@@ -62,14 +67,19 @@ export function createMvMcpClient(config: McpClientConfig) {
         clientInfo: { name: "aide", version: "1.0.0" },
       });
 
+      const notifyHeaders: Record<string, string> = {
+        Authorization: `Bearer ${config.token}`,
+        Accept: "application/json, text/event-stream",
+        "Content-Type": "application/json",
+      };
+
+      if (config.workspaceId) {
+        notifyHeaders["X-Wwt-Workspace"] = config.workspaceId;
+      }
+
       await fetch(config.endpoint, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${config.token}`,
-          "X-Aide-Workspace-Id": config.workspaceId,
-          Accept: "application/json, text/event-stream",
-          "Content-Type": "application/json",
-        },
+        headers: notifyHeaders,
         body: JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }),
       });
 

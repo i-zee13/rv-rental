@@ -1,6 +1,6 @@
 # MV MCP tool catalog
 
-Every tool requires a non-revoked, unexpired token with scope `operations:read`, an `X-Aide-Workspace-Id` matching that token, and an active user in `super_admin`, `admin`, or `manager`.
+Every tool requires a non-revoked, unexpired bearer token with scope `operations:read`, and an active user in `super_admin`, `admin`, or `manager`. Workspace headers are not required.
 
 All tools are read-only. List responses omit customer email, phone, and street address. `mv_get_booking` and `mv_get_lead` return contact details. `mv_get_property` returns the street address.
 

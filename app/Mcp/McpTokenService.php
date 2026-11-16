@@ -31,7 +31,7 @@ class McpTokenService
         return ['token' => $token, 'plain' => $plain];
     }
 
-    public function authenticate(string $plain, ?string $workspaceId): McpAccessToken
+    public function authenticate(string $plain): McpAccessToken
     {
         $token = McpAccessToken::query()
             ->where('token_hash', hash('sha256', $plain))
@@ -51,10 +51,6 @@ class McpTokenService
 
         if (! in_array(BusinessRules::READ_SCOPE, $token->scopes ?? [], true)) {
             throw new McpAuthException('Credential is not authorized.', 403, 'insufficient_scope');
-        }
-
-        if ($workspaceId === null || $workspaceId === '' || ! hash_equals($token->workspace_id, $workspaceId)) {
-            throw new McpAuthException('Workspace mismatch.', 403, 'workspace_mismatch');
         }
 
         $user = User::query()->find($token->user_id);
