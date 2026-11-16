@@ -12,7 +12,8 @@ return [
 
     'auth_failures_per_minute' => (int) env('MCP_AUTH_RATE_LIMIT', 20),
 
-    'token_ttl_days' => (int) env('MCP_TOKEN_TTL_DAYS', 90),
+    // Unused by default issuance. Tokens never expire unless mcp:issue --days=N is set.
+    'token_ttl_days' => null,
 
     'protocol_version' => '2025-03-26',
 

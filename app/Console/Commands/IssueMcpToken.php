@@ -8,9 +8,9 @@ use Illuminate\Console\Command;
 
 class IssueMcpToken extends Command
 {
-    protected $signature = 'mcp:issue {name} {workspace} {--user=} {--days=} {--no-expiry}';
+    protected $signature = 'mcp:issue {name} {workspace} {--user=} {--days=}';
 
-    protected $description = 'Issue a revocable read-only MCP token for an Aide workspace';
+    protected $description = 'Issue a revocable read-only MCP token for an Aide workspace (never expires unless --days is set)';
 
     public function handle(McpTokenService $tokens): int
     {
@@ -31,14 +31,13 @@ class IssueMcpToken extends Command
         }
 
         $expiresAt = null;
+        $daysOption = $this->option('days');
 
-        if (! $this->option('no-expiry')) {
-            $days = $this->option('days') === null || $this->option('days') === ''
-                ? (int) config('mcp.token_ttl_days', 90)
-                : (int) $this->option('days');
+        if ($daysOption !== null && $daysOption !== '') {
+            $days = (int) $daysOption;
 
             if ($days < 1 || $days > 365) {
-                $this->error('Days must be between 1 and 365, or pass --no-expiry.');
+                $this->error('Days must be between 1 and 365. Omit --days for a token that never expires.');
 
                 return self::FAILURE;
             }

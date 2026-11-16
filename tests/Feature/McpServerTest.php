@@ -350,11 +350,11 @@ class McpServerTest extends TestCase
             'name' => 'Aide production',
             'workspace' => 'ws_prod',
             '--user' => $this->admin->email,
-            '--days' => 30,
         ])->assertSuccessful();
 
         $row = McpAccessToken::query()->where('workspace_id', 'ws_prod')->first();
         $this->assertNotNull($row);
+        $this->assertNull($row->expires_at);
         $this->assertMatchesRegularExpression('/^[a-f0-9]{64}$/', $row->token_hash);
         $this->assertStringStartsWith('mvmcp_', $row->token_prefix);
 

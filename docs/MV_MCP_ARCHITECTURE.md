@@ -66,7 +66,7 @@ Collected revenue is the sum of `payments.amount` where `status` is `paid`. Book
 | `MCP_ENABLED` | `false` |
 | `MCP_RATE_LIMIT` | `60` |
 | `MCP_AUTH_RATE_LIMIT` | `20` |
-| `MCP_TOKEN_TTL_DAYS` | `90` |
+| Token expiry | Never by default (`expires_at` null). Optional `mcp:issue --days=N` |
 
 The string `"false"` is parsed with `FILTER_VALIDATE_BOOLEAN`, so it does not enable the endpoint.
 

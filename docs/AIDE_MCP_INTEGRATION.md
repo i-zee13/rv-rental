@@ -22,12 +22,12 @@ The server stays dark until `MCP_ENABLED=true`. Until then `/mcp` is HTTP 404.
 On the app server, after the MCP migration has been applied:
 
 ```bash
-php artisan mcp:issue "Aide" "ws_your_workspace" --user=admin@example.com --days=90
+php artisan mcp:issue "Aide" "ws_your_workspace" --user=admin@example.com
 php artisan mcp:tokens
 php artisan mcp:revoke 1
 ```
 
-`--user` is the email or id of an active `super_admin`, `admin`, or `manager`. `--no-expiry` is optional and should be avoided. The command prints the token once. Store it in Aide's secret store for that workspace.
+`--user` is the email or id of an active `super_admin`, `admin`, or `manager`. Tokens never expire by default. Pass `--days=90` only if you want an expiry. The command prints the token once. Store it in Aide's secret store for that workspace. Revoke with `mcp:revoke` when access should end.
 
 Revoke accepts the numeric id or the token prefix. Revocation takes effect on the next request. Deactivating the MV user also blocks the token.
 
